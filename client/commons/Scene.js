@@ -9,6 +9,7 @@ class Scene extends THREE.Scene {
   constructor(id) {
     super()
     this.name = id || ''
+    this.gl = aquarae.gl
     sceneManager.add(id || this.id, this)
   }
 

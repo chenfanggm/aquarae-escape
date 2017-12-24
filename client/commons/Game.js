@@ -6,13 +6,13 @@ import Renderer from './Renderer';
 class Game {
   constructor(opts = {}) {
     const { canvas, gl } = opts
-    // meta
+
     this.canvas = canvas
     this.renderer = new Renderer(gl)
     this.runningLoop = null
-
-    this.width = this.canvas.width / 1.2
-    this.height = this.canvas.height / 1.2
+    // default meta
+    this.width = this.canvas.width
+    this.height = this.canvas.height
     this.devicePixelRatio = window.devicePixelRatio || 1
     this.bgColor = 0xDDDDDD
 
@@ -38,7 +38,6 @@ class Game {
     sceneManager.getCurScene().init()
     this.update()
     this.render()
-    this.canvas.appendChild(this.renderer.domElement)
   }
 
   loop() {
@@ -54,7 +53,7 @@ class Game {
   render() {
     const curScene = sceneManager.getCurScene()
     curScene.render()
-    this.renderer.render()
+    this.renderer.render(curScene)
   }
 
   clear() {

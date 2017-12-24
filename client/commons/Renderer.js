@@ -9,8 +9,15 @@ class Renderer {
     this.rgba = [0, 0, 0, 1]
   }
 
-  render() {
-    this.gl.clear(aquarae.gl.COLOR_BUFFER_BIT);
+  render(scene) {
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT)
+    this.gl.useProgram(scene.program)
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, scene.object.vertexBuffer)
+
+    this.gl.drawArrays(scene.object.primitiveType, 0, scene.object.vertexCount)
+
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null)
+    this.gl.useProgram(null)
   }
 
   setSize(width, height) {
