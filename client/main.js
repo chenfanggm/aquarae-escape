@@ -2,30 +2,34 @@ import './statics/main.scss'
 import './normalize'
 import config from '../config'
 import Detector from './commons/libs/Detector'
-import AveragePath from './games/AveragePath'
+import Escape from './games/Escape'
+
 
 // global debug flag
 window.__DEBUG__ = true
 
-// setup game
-const canvasDom = document.getElementById('mainCanvas')
-let game = null
 if (Detector.webgl) {
-  game = new AveragePath({ canvasDom })
+  // global gl ref object
+  const canvas = document.getElementById('mainCanvas')
+  const gl = canvas.getContext('webgl')
+  window.aquarae = { canvas, gl }
+  // create game
+  const game = new Escape({ canvas, gl })
   game.start()
+
+  // HMR
+  if (config.env === 'development' && module.hot) {
+    module.hot.accept('./main', () => {
+      game && game.reload && game.reload()
+    })
+  }
+  // resize
+  window.addEventListener('resize', () => {
+    game && game.reload && game.reload()
+  })
+
+
 } else {
   const warning = Detector.getWebGLErrorMessage()
   document.getElementById('mainCanvas').appendChild(warning)
 }
-
-
-// HMR setting
-if (config.env === 'development' && module.hot) {
-  module.hot.accept('./main', () => {
-    game.reload()
-  })
-}
-
-window.addEventListener('resize', () => {
-  game.reload()
-})

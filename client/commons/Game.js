@@ -1,15 +1,21 @@
-import * as THREE from 'three'
 import objectManager from './managers/objectManager'
 import sceneManager from './managers/sceneManager'
+import Renderer from './Renderer';
 
 
 class Game {
   constructor(opts = {}) {
-    const { canvasDom } = opts
+    const { canvas, gl } = opts
     // meta
+    this.canvas = canvas
+    this.renderer = new Renderer(gl)
     this.runningLoop = null
-    this.canvasDom = canvasDom
-    // bind
+
+    this.width = this.canvas.width / 1.2
+    this.height = this.canvas.height / 1.2
+    this.devicePixelRatio = window.devicePixelRatio || 1
+    this.bgColor = 0xDDDDDD
+
     this.loop = this.loop.bind(this)
   }
 
@@ -25,16 +31,20 @@ class Game {
   }
 
   init() {
+    // renderer
+    this.renderer.setSize(this.width, this.height)
+    this.renderer.setClearColor(this.bgColor, 1)
+    // scene
     sceneManager.getCurScene().init()
     this.update()
     this.render()
-    this.canvasDom.appendChild(this.renderer.domElement)
+    this.canvas.appendChild(this.renderer.domElement)
   }
 
   loop() {
-    this.runningLoop = window.requestAnimationFrame(this.loop)
     this.update()
     this.render()
+    this.runningLoop = window.requestAnimationFrame(this.loop)
   }
 
   update() {
@@ -44,7 +54,7 @@ class Game {
   render() {
     const curScene = sceneManager.getCurScene()
     curScene.render()
-    this.renderer.render(curScene, this.mainCamera)
+    this.renderer.render()
   }
 
   clear() {
@@ -60,8 +70,8 @@ class Game {
     }
 
     // clean canvas
-    if (this.canvasDom.childNodes[0]) {
-      this.canvasDom.removeChild(this.canvasDom.childNodes[0])
+    if (this.canvas.childNodes[0]) {
+      this.canvas.removeChild(this.canvas.childNodes[0])
     }
   }
 }
