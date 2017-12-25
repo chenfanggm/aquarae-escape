@@ -1,13 +1,38 @@
-import * as THREE from 'three'
-
 
 class StateManager {
   constructor() {
-    this.clock = new THREE.Clock()
+    this.startTime = null
+    this.prevTime = null
+    this.nowTime = null
+    this.isReadingTime = false
   }
 
-  getClock() {
-    return this.clock
+  getDelta() {
+    if (!this.startTime || !this.prevTime) {
+      this.startTime = this.prevTime = Date.now()
+      return 0
+    } else if (!this.isReadingTime) {
+      this.isReadingTime = true
+      this.nowTime = Date.now()
+      this.elapsedTime = parseFloat(this.nowTime - this.prevTime)
+      this.prevTime = this.nowTime
+      return this.elapsedTime
+    } else {
+      return this.elapsedTime
+    }
+  }
+
+  getTimeElapsed() {
+    if (!this.startTime || !this.prevTime) {
+      this.startTime = this.prevTime = Date.now()
+      return 0
+    } else {
+      return parseFloat(Date.now() - this.startTime)
+    }
+  }
+
+  resetDelta() {
+    this.isReadingTime = false
   }
 }
 

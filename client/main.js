@@ -1,4 +1,4 @@
-import './statics/main.scss'
+import './main.scss'
 import './normalize'
 import config from '../config'
 import Detector from './commons/libs/Detector'
@@ -11,6 +11,8 @@ window.__DEBUG__ = true
 if (Detector.webgl) {
   // global gl ref object
   const canvas = document.getElementById('mainCanvas')
+  canvas.width = window.innerWidth
+  canvas.height = window.innerHeight
   const gl = canvas.getContext('webgl')
   window.aquarae = { canvas, gl }
   // create game
@@ -25,6 +27,8 @@ if (Detector.webgl) {
   }
   // resize
   window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
     game && game.reload && game.reload()
   })
 

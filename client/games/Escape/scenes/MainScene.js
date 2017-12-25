@@ -1,11 +1,4 @@
-import dat from 'dat-gui'
-import '../../../commons/libs/OrbitAndPanControls.new'
 import Scene from '../../../commons/Scene'
-import Maze from '../objects/Maze/Maze'
-import AmbientLight from '../objects/AmbientLight'
-import DirectionalLight from '../objects/DirectionalLight'
-import objectManager from '../../../commons/managers/objectManager'
-import stateManager from '../../../commons/managers/stateManager'
 import Square from '../objects/Square'
 
 
@@ -37,7 +30,6 @@ class MainScene extends Scene {
   }
 
   update() {
-    const delta = stateManager.getClock().getDelta()
     //this.cameraControls.update(delta)
     super.update()
   }

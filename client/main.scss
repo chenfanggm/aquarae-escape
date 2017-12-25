@@ -1,5 +1,5 @@
 :global {
-  @import "../../node_modules/normalize.css/normalize.css";
+  @import "../node_modules/normalize.css/normalize.css";
 
   html {
     height: 100%;
@@ -26,13 +26,13 @@
   }
 }
 
-.mainTitle {
+.main-title {
   position: absolute;
   width: 100%;
   text-align: center;
 }
 
-.mainCanvas {
+.canvas-container {
   width: 100%;
   height: 100%;
   display: flex;

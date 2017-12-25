@@ -26,7 +26,7 @@ class SceneManager {
   }
 
   clearAll() {
-    this.scenes.forEach((scene) => {
+    Object.values(this.scenes).forEach((scene) => {
       scene.clear()
     })
     this.scenes = {}

@@ -14,18 +14,6 @@ class GameObject extends THREE.Object3D {
   }
 
   init() {
-    // mesh
-    if (this.mesh && this.program) {
-      this.program.init()
-      this.program.enable()
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.mesh.vertexBuffer)
-      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.mesh.vertices), this.gl.STATIC_DRAW)
-      this.program.enableAttr('pos', 2, 0, 0)
-      // clear
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null)
-      this.program.disable()
-    }
-
     this.children.forEach((obj) => {
       if (obj instanceof GameObject && typeof obj.init === 'function')
         obj.init()
@@ -40,21 +28,16 @@ class GameObject extends THREE.Object3D {
   }
 
   render() {
-    // mesh
-    if (this.mesh && this.program) {
-      // bind
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.mesh.vertexBuffer)
-      this.program.enable()
-      // draw
-      this.gl.drawArrays(this.mesh.primitiveType, 0, this.mesh.vertexCount)
-      // clear
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null)
-      this.program.disable()
-    }
-
     this.children.forEach((obj) => {
       if (obj instanceof GameObject && typeof obj.render === 'function')
         obj.render()
+    })
+  }
+
+  postRender() {
+    this.children.forEach((obj) => {
+      if (obj instanceof GameObject && typeof obj.postRender === 'function')
+        obj.postRender()
     })
   }
 

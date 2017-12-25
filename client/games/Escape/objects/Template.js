@@ -1,4 +1,3 @@
-import * as THREE from 'three'
 import GameObject from '../../../commons/GameObject';
 import sceneManager from '../../../commons/managers/sceneManager'
 

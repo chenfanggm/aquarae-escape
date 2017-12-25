@@ -1,3 +1,4 @@
+import stateManager from './managers/stateManager'
 import objectManager from './managers/objectManager'
 import sceneManager from './managers/sceneManager'
 import utils from './utils'
@@ -29,20 +30,24 @@ class Game {
   }
 
   init() {
+    console.log(this.width, this.height)
     this.setSize(this.width, this.height)
     this.setClearColor(this.bgColor, 1)
     sceneManager.getCurScene().init()
     this.update()
     this.render()
+    this.postRender()
   }
 
   loop() {
     this.update()
     this.render()
+    this.postRender()
     this.runningLoop = window.requestAnimationFrame(this.loop)
   }
 
   update() {
+    const delta = stateManager.getDelta()
     sceneManager.getCurScene().update()
   }
 
@@ -51,6 +56,10 @@ class Game {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT)
     // render scene
     sceneManager.getCurScene().render()
+  }
+
+  postRender() {
+    stateManager.resetDelta()
   }
 
   clear() {
