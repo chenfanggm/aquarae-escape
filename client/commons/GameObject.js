@@ -34,17 +34,17 @@ class GameObject extends THREE.Object3D {
     })
   }
 
-  postRender() {
-    this.children.forEach((obj) => {
-      if (obj instanceof GameObject && typeof obj.postRender === 'function')
-        obj.postRender()
-    })
-  }
-
   clear() {
     this.children.forEach((obj) => {
       if (obj instanceof GameObject && typeof obj.clear === 'function')
         obj.clear()
+    })
+  }
+
+  reset() {
+    this.children.forEach((obj) => {
+      if (obj instanceof GameObject && typeof obj.reset === 'function')
+        obj.reset()
     })
   }
 }

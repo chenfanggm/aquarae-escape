@@ -19,9 +19,9 @@ class Template extends GameObject {
     super.render()
   }
 
-  clear() {
+  reset() {
     sceneManager.getCurScene().remove(this.mesh)
-    super.clear()
+    super.reset()
   }
 }
 

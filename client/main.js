@@ -1,5 +1,6 @@
 import './main.scss'
 import './normalize'
+import './commons/libs/gl-matrix'
 import config from '../config'
 import Detector from './commons/libs/Detector'
 import Escape from './games/Escape'

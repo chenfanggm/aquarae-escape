@@ -33,9 +33,9 @@ class ObjectManager {
     return Object.values(this.objs)
   }
 
-  clearAll() {
+  reset() {
     Object.values(this.objs).forEach((obj) => {
-      obj.clear()
+      obj.reset()
     })
     this.objs = {}
   }

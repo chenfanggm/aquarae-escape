@@ -1,38 +1,26 @@
 
 class StateManager {
   constructor() {
-    this.startTime = null
-    this.prevTime = null
-    this.nowTime = null
-    this.isReadingTime = false
+    this.prevTime = 0
+    this.nowTime = 0
+    this.delta = 0
+  }
+
+  setTime(timestamp) {
+    this.prevTime = this.nowTime
+    this.nowTime = timestamp
   }
 
   getDelta() {
-    if (!this.startTime || !this.prevTime) {
-      this.startTime = this.prevTime = Date.now()
-      return 0
-    } else if (!this.isReadingTime) {
-      this.isReadingTime = true
-      this.nowTime = Date.now()
-      this.elapsedTime = parseFloat(this.nowTime - this.prevTime)
-      this.prevTime = this.nowTime
-      return this.elapsedTime
-    } else {
-      return this.elapsedTime
-    }
-  }
-
-  getTimeElapsed() {
-    if (!this.startTime || !this.prevTime) {
-      this.startTime = this.prevTime = Date.now()
-      return 0
-    } else {
-      return parseFloat(Date.now() - this.startTime)
-    }
+    return this.nowTime - this.prevTime
   }
 
   resetDelta() {
-    this.isReadingTime = false
+    this.delta = 0
+  }
+
+  getTimeElapsed() {
+    return this.nowTime
   }
 }
 

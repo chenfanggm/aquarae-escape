@@ -8,7 +8,7 @@ import simpleVertexShader from '../shaders/simpleVertexShader'
 import simpleFragmentShader from '../shaders/simpleFragmentShader'
 
 
-class Square extends GameObject {
+class Cube extends GameObject {
   constructor() {
     super()
     // shader
@@ -19,13 +19,19 @@ class Square extends GameObject {
     // mesh
     this.mesh = {
       vertexBuffer: this.gl.createBuffer(),
-      vertexCount: 4,
+      vertexCount: 10,
       primitiveType: this.gl.TRIANGLE_STRIP,
       vertices: [
-        +0.75, +0.75, 0, +1.0, 0.0, +0.0,
-        -0.75, +0.75, 0, 0.0, +1.0, +1.0,
-        +0.75, -0.75, 0, 0.0, +0.0, +1.0,
-        -0.75, -0.75, 0, 0.0, +0.5, +0.5
+        -0.75, +0.75, +0.75,    +0.0, +1.0, +0.0, /* front-top-left */
+        -0.75, -0.75, +0.75,    +1.0, +0.0, +1.0, /* front-bottom-left */
+        +0.75, +0.75, +0.75,    +0.75,+0.25,+0.5, /* front-top-right */
+        +0.75, -0.75, +0.75,    +0.5, +0.25,+0.0, /* front-bottom-right */
+        +0.75, +0.75, -0.75,    +0.25,+0.75,+1.0, /* rear-top-right */
+        +0.75, -0.75, -0.75,    +1.0, +1.0, +0.0, /* rear-bottom-right */
+        -0.75, +0.75, -0.75,    +0.0, +0.0, +1.0, /* rear-top-left */
+        -0.75, -0.75, -0.75,    +0.0, +1.0, +0.0, /* rear-bottom-left */
+        -0.75, +0.75, +0.75,    +0.0, +1.0, +0.0, /* front-top-left */
+        -0.75, -0.75, +0.75,    +1.0, +0.0, +1.0  /* front-bottom-left */
       ]
     }
   }
@@ -65,10 +71,10 @@ class Square extends GameObject {
     const elapsedTime = stateManager.getTimeElapsed()
     this.program.setFloatUniform('uTime', elapsedTime)
 
-    const delta = stateManager.getDelta()
+    const delta = parseFloat(stateManager.getDelta() / 250)
     glm.mat4.rotate(this.mMatrix, this.mMatrix, delta, [0, 1, 0])
     this.program.setMatrixUniform('mMatrix', this.mMatrix)
-
+    console.log(delta)
     // clear
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null)
     this.program.disable()
@@ -92,4 +98,4 @@ class Square extends GameObject {
   }
 }
 
-export default Square
+export default Cube

@@ -28,14 +28,14 @@ class DirectionalLight extends GameObject {
   }
 
   render() {
-    if (this.hidden) return this.clear()
+    if (this.hidden) return this.reset()
     sceneManager.getCurScene().add(this.mesh)
     super.render()
   }
 
-  clear() {
+  reset() {
     sceneManager.getCurScene().remove(this.mesh)
-    super.clear()
+    super.reset()
   }
 }
 

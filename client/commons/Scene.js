@@ -34,18 +34,18 @@ class Scene {
     })
   }
 
-  postRender() {
+  clear() {
     this.children.forEach((obj) => {
-      if (obj instanceof GameObject && typeof obj.postRender === 'function') {
-        obj.postRender()
+      if (obj instanceof GameObject && typeof obj.clear === 'function') {
+        obj.clear()
       }
     })
   }
 
-  clear() {
+  reset() {
     this.children.forEach((obj) => {
       console.log(obj)
-      obj.clear()
+      obj.reset()
     })
     this.children = []
   }

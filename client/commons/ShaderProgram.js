@@ -38,9 +38,14 @@ class ShaderProgram {
     this.gl.vertexAttrib1f(attr, value)
   }
 
-  setMatrix(uniName, value) {
+  setMatrixUniform(uniName, value) {
     const uniform = this.gl.getUniformLocation(this.program, uniName)
     this.gl.uniformMatrix4fv(uniform, false, value)
+  }
+
+  setFloatUniform(uniName, value) {
+    const uniform = this.gl.getUniformLocation(this.program, uniName)
+    this.gl.uniform1f(uniform, value)
   }
 }
 

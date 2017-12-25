@@ -1,5 +1,6 @@
 import Scene from '../../../commons/Scene'
 import Square from '../objects/Square'
+import Cube from '../objects/Cube'
 
 
 class MainScene extends Scene {
@@ -25,7 +26,8 @@ class MainScene extends Scene {
     //   position: new THREE.Vector3(100, 100, 100),
     //   target: objectManager.get('maze')
     // }))
-    this.add(new Square())
+    //this.add(new Square())
+    this.add(new Cube())
     super.init()
   }
 

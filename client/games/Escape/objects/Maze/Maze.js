@@ -41,14 +41,14 @@ class Maze extends GameObject {
   }
 
   render() {
-    if (this.hidden) return this.clear()
+    if (this.hidden) return this.reset()
     sceneManager.getCurScene().add(this.ground)
     super.render()
   }
 
-  clear() {
+  reset() {
     sceneManager.getCurScene().remove(this.ground)
-    super.clear()
+    super.reset()
   }
 
   generateTileMap(width, height) {

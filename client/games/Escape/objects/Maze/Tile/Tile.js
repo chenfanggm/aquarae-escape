@@ -47,16 +47,16 @@ class Tile extends GameObject {
   }
   
   render() {
-    if (this.hidden) return this.clear()
+    if (this.hidden) return this.reset()
     if (this.mesh) {
       sceneManager.getCurScene().add(this.mesh)
     }
     super.render()
   }
 
-  clear() {
+  reset() {
     sceneManager.getCurScene().remove(this.mesh)
-    super.clear()
+    super.reset()
   }
 
   getTileBlockMesh() {

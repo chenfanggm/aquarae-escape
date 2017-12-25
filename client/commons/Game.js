@@ -19,57 +19,59 @@ class Game {
   }
 
   reload() {
-    this.clear()
+    this.reset()
     this.start()
   }
 
   start() {
     this.init()
-    this.loop()
+    this.loop(0)
     console.info('Game started...')
   }
 
   init() {
-    console.log(this.width, this.height)
-    this.setSize(this.width, this.height)
-    this.setClearColor(this.bgColor, 1)
+    this.setupEnv()
     sceneManager.getCurScene().init()
     this.update()
     this.render()
-    this.postRender()
+    this.clear()
   }
 
-  loop() {
+  loop(timestamp) {
+    stateManager.setTime(timestamp)
     this.update()
     this.render()
-    this.postRender()
+    this.clear()
     this.runningLoop = window.requestAnimationFrame(this.loop)
   }
 
   update() {
-    const delta = stateManager.getDelta()
     sceneManager.getCurScene().update()
   }
 
   render() {
-    // clear viewport
-    this.gl.clear(this.gl.COLOR_BUFFER_BIT)
-    // render scene
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
     sceneManager.getCurScene().render()
   }
 
-  postRender() {
+  clear() {
     stateManager.resetDelta()
   }
 
-  clear() {
+  reset() {
     // clean animation
     if (this.runningLoop) {
       cancelAnimationFrame(this.runningLoop)
     }
     // clear manager
-    objectManager.clearAll()
-    sceneManager.clearAll()
+    objectManager.reset()
+    sceneManager.reset()
+  }
+
+  setupEnv() {
+    this.setSize(this.width, this.height)
+    this.setClearColor(this.bgColor, 1)
+    this.gl.enable(this.gl.DEPTH_TEST)
   }
 
   setSize(width, height) {
