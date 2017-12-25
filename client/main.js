@@ -14,7 +14,7 @@ if (Detector.webgl) {
   const gl = canvas.getContext('webgl')
   window.aquarae = { canvas, gl }
   // create game
-  const game = new Escape({ canvas, gl })
+  const game = new Escape()
   game.start()
 
   // HMR

@@ -1,15 +1,14 @@
-import * as THREE from 'three'
 import helper from '../utils/helper'
 import GameObject from './GameObject'
 import sceneManager from './managers/sceneManager'
 import objectManager from './managers/objectManager'
 
 
-class Scene extends THREE.Scene {
+class Scene {
   constructor(id) {
-    super()
     this.name = id || ''
     this.gl = aquarae.gl
+    this.children = []
     sceneManager.add(id || this.id, this)
   }
 
@@ -20,7 +19,7 @@ class Scene extends THREE.Scene {
       }
     })
     if (__DEBUG__) {
-      this.setupHelper()
+      this.renderHelper()
     }
   }
 
@@ -41,17 +40,24 @@ class Scene extends THREE.Scene {
   }
 
   clear() {
-    // remove objects from scene
-    if (this.children) {
-      this.children.forEach((obj) => {
-        this.remove(obj)
-      })
-    }
-    // remove objects from pool
-    objectManager.clearAll()
+    this.children.forEach((obj) => {
+      obj.clear()
+    })
+    this.children = []
   }
 
-  setupHelper() {
+  add(obj) {
+    this.children.push(obj)
+  }
+
+  remove(obj) {
+    const objIndex = this.children.indexOf(obj)
+    if (objIndex > -1) {
+      this.children.splice(objIndex, 1)
+    }
+  }
+
+  renderHelper() {
     helper.renderOriginIndicator(this)
   }
 }
