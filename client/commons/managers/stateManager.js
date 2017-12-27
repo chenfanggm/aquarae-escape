@@ -6,7 +6,17 @@ class StateManager {
     this.delta = 0
   }
 
-  setTime(timestamp) {
+  reset() {
+    this.prevTime = 0
+    this.nowTime = 0
+    this.delta = 0
+  }
+
+  setNowTime(timestamp) {
+    this.nowTime = timestamp
+  }
+
+  updateTime(timestamp) {
     this.prevTime = this.nowTime
     this.nowTime = timestamp
   }

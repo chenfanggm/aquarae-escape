@@ -12,39 +12,36 @@ class Scene {
 
   init() {
     this.children.forEach((obj) => {
-      if (obj instanceof GameObject && typeof obj.init === 'function') {
-        obj.init()
-      }
+      obj.init()
+    })
+  }
+
+  input() {
+    this.children.forEach((obj) => {
+      obj.input()
     })
   }
 
   update() {
     this.children.forEach((obj) => {
-      if (obj instanceof GameObject && typeof obj.update === 'function') {
-        obj.update()
-      }
+      obj.update()
     })
   }
 
   render() {
     this.children.forEach((obj) => {
-      if (obj instanceof GameObject && typeof obj.render === 'function') {
-        obj.render()
-      }
+      obj.render()
     })
   }
 
   clear() {
     this.children.forEach((obj) => {
-      if (obj instanceof GameObject && typeof obj.clear === 'function') {
-        obj.clear()
-      }
+      obj.clear()
     })
   }
 
   reset() {
     this.children.forEach((obj) => {
-      console.log(obj)
       obj.reset()
     })
     this.children = []

@@ -1,51 +1,85 @@
-import * as THREE from 'three'
 import uuid from 'uuid/v4'
 import objectManager from './managers/objectManager'
+import * as glm from './libs/gl-matrix'
 
 
-class GameObject extends THREE.Object3D {
+class GameObject {
   constructor(id) {
-    super()
     this.gl = aquarae.gl
     this.name = id || uuid()
-    objectManager.add(this.name, this)
+    this.children = []
+    this.components = []
+    this.transform = glm.mat4.create()
     this.program = null
     this.mesh = null
+
+    objectManager.add(this.name, this)
   }
 
   init() {
+    this.components.forEach((component) => {
+      component.init()
+    })
     this.children.forEach((obj) => {
-      if (obj instanceof GameObject && typeof obj.init === 'function')
-        obj.init()
+      obj.init()
+    })
+  }
+
+  input() {
+    this.components.forEach((component) => {
+      component.input()
+    })
+    this.children.forEach((obj) => {
+      obj.input()
     })
   }
 
   update() {
+    this.components.forEach((component) => {
+      component.update()
+    })
     this.children.forEach((obj) => {
-      if (obj instanceof GameObject && typeof obj.update === 'function')
-        obj.update()
+      obj.update()
     })
   }
 
   render() {
+    this.components.forEach((component) => {
+      component.render()
+    })
     this.children.forEach((obj) => {
-      if (obj instanceof GameObject && typeof obj.render === 'function')
-        obj.render()
+      obj.render()
     })
   }
 
   clear() {
+    this.components.forEach((component) => {
+      component.clear()
+    })
     this.children.forEach((obj) => {
-      if (obj instanceof GameObject && typeof obj.clear === 'function')
         obj.clear()
     })
   }
 
   reset() {
+    this.components.forEach((component) => {
+      component.reset()
+    })
     this.children.forEach((obj) => {
-      if (obj instanceof GameObject && typeof obj.reset === 'function')
         obj.reset()
     })
+  }
+
+  addChild(obj) {
+    this.children.push(obj)
+  }
+
+  addComponent(component) {
+    this.components.push(component)
+  }
+
+  getTransform() {
+    return this.transform
   }
 }
 

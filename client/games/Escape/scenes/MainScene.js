@@ -30,15 +30,6 @@ class MainScene extends Scene {
     this.add(new Cube())
     super.init()
   }
-
-  update() {
-    //this.cameraControls.update(delta)
-    super.update()
-  }
-
-  render() {
-    super.render()
-  }
 }
 
 export default MainScene

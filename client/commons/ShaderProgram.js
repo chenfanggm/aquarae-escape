@@ -11,6 +11,12 @@ class ShaderProgram {
 
   init() {
     this.gl.linkProgram(this.program)
+    if (!this.gl.getProgramParameter(this.program, this.gl.LINK_STATUS))
+      throw this.gl.getProgramInfoLog(this.program)
+
+    this.gl.validateProgram(this.program)
+    if (!this.gl.getProgramParameter(this.program, this.gl.VALIDATE_STATUS))
+      throw this.gl.getProgramInfoLog(this.program)
   }
 
   add(shaders) {
@@ -30,7 +36,7 @@ class ShaderProgram {
   enableAttr(attrName, attrType, index, stride, offset) {
     const attr = this.gl.getAttribLocation(this.program, attrName)
     this.gl.enableVertexAttribArray(attr)
-    this.gl.vertexAttribPointer(attr, index, attrType, false, stride, offset)
+    this.gl.vertexAttribPointer(attr, index, attrType, this.gl.FALSE, stride, offset)
   }
 
   setFloatAttr(attrName, value) {

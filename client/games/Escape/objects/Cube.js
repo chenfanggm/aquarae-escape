@@ -1,95 +1,149 @@
 import * as glm from '../../../commons/libs/gl-matrix'
-import stateManager from '../../../commons/managers/stateManager'
 import sceneManager from '../../../commons/managers/sceneManager'
+import stateManager from '../../../commons/managers/stateManager'
+import shaderManager from '../../../commons/managers/shaderManager'
 import GameObject from '../../../commons/GameObject'
 import ShaderProgram from '../../../commons/ShaderProgram'
-import Shader from '../../../commons/Shader'
-import simpleVertexShader from '../shaders/simpleVertexShader'
-import simpleFragmentShader from '../shaders/simpleFragmentShader'
+import MeshRenderer from '../../../commons/MeshRenderer'
+import utils from '../../../commons/utils'
 
 
 class Cube extends GameObject {
   constructor() {
     super()
-    // shader
-    this.program = new ShaderProgram([
-      new Shader(simpleVertexShader, this.gl.VERTEX_SHADER),
-      new Shader(simpleFragmentShader, this.gl.FRAGMENT_SHADER)
-    ])
-    // mesh
+    this.isFinishLoading = false
+    this.angle = 0
+    this.material = {
+      program: new ShaderProgram([
+        shaderManager.get('simpleVertexShader'),
+        shaderManager.get('simpleFragmentShader')
+      ])
+    }
     this.mesh = {
       vertexBuffer: this.gl.createBuffer(),
-      vertexCount: 10,
-      primitiveType: this.gl.TRIANGLE_STRIP,
+      indexBuffer: this.gl.createBuffer(),
+      texBuffer: this.gl.createTexture(),
+      vertexCount: 24,
+      primitiveType: this.gl.TRIANGLES,
       vertices: [
-        -0.75, +0.75, +0.75,    +0.0, +1.0, +0.0, /* front-top-left */
-        -0.75, -0.75, +0.75,    +1.0, +0.0, +1.0, /* front-bottom-left */
-        +0.75, +0.75, +0.75,    +0.75,+0.25,+0.5, /* front-top-right */
-        +0.75, -0.75, +0.75,    +0.5, +0.25,+0.0, /* front-bottom-right */
-        +0.75, +0.75, -0.75,    +0.25,+0.75,+1.0, /* rear-top-right */
-        +0.75, -0.75, -0.75,    +1.0, +1.0, +0.0, /* rear-bottom-right */
-        -0.75, +0.75, -0.75,    +0.0, +0.0, +1.0, /* rear-top-left */
-        -0.75, -0.75, -0.75,    +0.0, +1.0, +0.0, /* rear-bottom-left */
-        -0.75, +0.75, +0.75,    +0.0, +1.0, +0.0, /* front-top-left */
-        -0.75, -0.75, +0.75,    +1.0, +0.0, +1.0  /* front-bottom-left */
+        // X, Y, Z           U, V
+        // Top
+        -1.0, 1.0, -1.0,   0, 0,
+        -1.0, 1.0, 1.0,    0, 1,
+        1.0, 1.0, 1.0,     1, 1,
+        1.0, 1.0, -1.0,    1, 0,
+        // Left
+        -1.0, 1.0, 1.0,    0, 0,
+        -1.0, -1.0, 1.0,   1, 0,
+        -1.0, -1.0, -1.0,  1, 1,
+        -1.0, 1.0, -1.0,   0, 1,
+        // Right
+        1.0, 1.0, 1.0,    1, 1,
+        1.0, -1.0, 1.0,   0, 1,
+        1.0, -1.0, -1.0,  0, 0,
+        1.0, 1.0, -1.0,   1, 0,
+        // Front
+        1.0, 1.0, 1.0,    1, 1,
+        1.0, -1.0, 1.0,    1, 0,
+        -1.0, -1.0, 1.0,    0, 0,
+        -1.0, 1.0, 1.0,    0, 1,
+        // Back
+        1.0, 1.0, -1.0,    0, 0,
+        1.0, -1.0, -1.0,    0, 1,
+        -1.0, -1.0, -1.0,    1, 1,
+        -1.0, 1.0, -1.0,    1, 0,
+        // Bottom
+        -1.0, -1.0, -1.0,   1, 1,
+        -1.0, -1.0, 1.0,    1, 0,
+        1.0, -1.0, 1.0,     0, 0,
+        1.0, -1.0, -1.0,    0, 1,
+      ],
+      indices: [
+        // Top
+        0, 1, 2,
+        0, 2, 3,
+        // Left
+        5, 4, 6,
+        6, 4, 7,
+        // Right
+        8, 9, 10,
+        8, 10, 11,
+        // Front
+        13, 12, 14,
+        15, 14, 12,
+        // Back
+        16, 17, 18,
+        16, 18, 19,
+        // Bottom
+        21, 20, 22,
+        22, 20, 23
       ]
     }
+
+    this.preload()
+    this.addComponent(new MeshRenderer(this.mesh, this.material))
+  }
+
+  preload() {
+    utils.loadTexture('/textures/wood_crate.png', this.mesh, () => {
+      this.isFinishLoading = true
+    })
   }
 
   init() {
+    this.material.program.init()
     // bind
-    this.program.init()
-    this.program.enable()
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.mesh.vertexBuffer)
-    this.program.enableAttr('pos', this.gl.FLOAT, 3, Float32Array.BYTES_PER_ELEMENT * 6, 0)
-    this.program.enableAttr('color', this.gl.FLOAT, 3, Float32Array.BYTES_PER_ELEMENT * 6, Float32Array.BYTES_PER_ELEMENT * 3)
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.mesh.vertices), this.gl.STATIC_DRAW)
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.mesh.indexBuffer)
+    this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.mesh.indices), this.gl.STATIC_DRAW)
+    this.material.program.enableAttr('aPos', this.gl.FLOAT, 3, Float32Array.BYTES_PER_ELEMENT * 5, 0)
+    this.material.program.enableAttr('aTexCoord', this.gl.FLOAT, 2, Float32Array.BYTES_PER_ELEMENT * 5, Float32Array.BYTES_PER_ELEMENT * 3)
 
     this.pMatrix = glm.mat4.create()
-    glm.mat4.perspective(this.pMatrix, 0.75, aquarae.canvas.width/aquarae.canvas.height, 0.1, 100)
-    this.program.setMatrixUniform('pMatrix', this.pMatrix)
-
     this.vMatrix = glm.mat4.create()
-    this.program.setMatrixUniform('vMatrix', this.vMatrix)
-
     this.mMatrix = glm.mat4.create()
-    glm.mat4.identity(this.mMatrix)
-    glm.mat4.translate(this.mMatrix, this.mMatrix, [0, 0, -5])
-    this.program.setMatrixUniform('mMatrix', this.mMatrix)
+    glm.mat4.perspective(this.pMatrix, glm.glMatrix.toRadian(45), aquarae.canvas.width/aquarae.canvas.height, 0.1, 1000.0)
+    glm.mat4.lookAt(this.vMatrix, new Float32Array([0, 0, -5]), [0, 0, 0], [0, 1, 0])
 
+    this.material.program.enable()
+    this.material.program.setMatrixUniform('pMatrix', this.pMatrix)
+    this.material.program.setMatrixUniform('vMatrix', this.vMatrix)
+    this.material.program.setMatrixUniform('mMatrix', this.mMatrix)
     // clear
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null)
-    this.program.disable()
+    this.material.program.disable()
     super.init()
   }
 
-  update() {
-    // bind
-    this.program.enable()
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.mesh.vertexBuffer)
-    // update
-    const elapsedTime = stateManager.getTimeElapsed()
-    this.program.setFloatUniform('uTime', elapsedTime)
+  input() {
+    super.input()
+  }
 
-    const delta = parseFloat(stateManager.getDelta() / 250)
-    glm.mat4.rotate(this.mMatrix, this.mMatrix, delta, [0, 1, 0])
-    this.program.setMatrixUniform('mMatrix', this.mMatrix)
-    console.log(delta)
-    // clear
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null)
-    this.program.disable()
-    super.update()
+  update() {
+    if (this.isFinishLoading) {
+      // bind
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.mesh.vertexBuffer)
+      this.material.program.enable()
+      // update
+      const elapsedTime = stateManager.getTimeElapsed()
+      this.material.program.setFloatUniform('uTime', elapsedTime)
+
+      this.angle += stateManager.getDelta() / 1000 / 6 * 2 * Math.PI
+      if (this.angle > 360) this.angle -= 360
+      glm.mat4.rotate(this.mMatrix, utils.getIdentityMatrix(), this.angle, [0, 1, 0])
+      this.material.program.setMatrixUniform('mMatrix', this.mMatrix)
+      // clear
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null)
+      this.material.program.disable()
+      super.update()
+    }
   }
 
   render() {
-    // bind
-    this.program.enable()
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.mesh.vertexBuffer)
-    this.gl.drawArrays(this.mesh.primitiveType, 0, this.mesh.vertexCount)
-    // clear
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null)
-    this.program.disable()
-    super.render()
+    if (this.isFinishLoading) {
+      super.render()
+    }
   }
 
   reset() {

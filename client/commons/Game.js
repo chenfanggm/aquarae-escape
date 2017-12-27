@@ -1,13 +1,16 @@
+import sceneManager from './managers/sceneManager'
 import stateManager from './managers/stateManager'
 import objectManager from './managers/objectManager'
-import sceneManager from './managers/sceneManager'
+import shaderManager from './managers/shaderManager'
 import utils from './utils'
 
 
 class Game {
-  constructor() {
-    this.gl = aquarae.gl
-    this.canvas = aquarae.canvas
+  constructor({gl, canvas, frameRate}) {
+    this.gl = gl
+    this.canvas = canvas
+    this.frameTime = 1000 / frameRate
+    this.prevTime = this.nowTime = 0
     this.runningLoop = null
     // default meta
     this.width = this.canvas.width
@@ -25,12 +28,17 @@ class Game {
 
   start() {
     this.init()
-    this.loop(0)
+    window.requestAnimationFrame(this.loop)
     console.info('Game started...')
   }
 
   init() {
-    this.setupEnv()
+    this.gl.enable(this.gl.DEPTH_TEST)
+    this.gl.enable(this.gl.CULL_FACE)
+    this.gl.frontFace(this.gl.CCW)
+    this.gl.cullFace(this.gl.BACK)
+    this.setSize(this.width, this.height)
+    this.setClearColor(this.bgColor, 1)
     sceneManager.getCurScene().init()
     this.update()
     this.render()
@@ -38,11 +46,19 @@ class Game {
   }
 
   loop(timestamp) {
-    stateManager.setTime(timestamp)
-    this.update()
-    this.render()
-    this.clear()
+    stateManager.setNowTime(timestamp)
+    if (stateManager.getDelta() > this.frameTime) {
+      this.input()
+      this.update()
+      this.render()
+      this.clear()
+      stateManager.updateTime(timestamp)
+    }
     this.runningLoop = window.requestAnimationFrame(this.loop)
+  }
+
+  input() {
+    sceneManager.getCurScene().input()
   }
 
   update() {
@@ -59,19 +75,15 @@ class Game {
   }
 
   reset() {
-    // clean animation
+    // reset animation
     if (this.runningLoop) {
       cancelAnimationFrame(this.runningLoop)
     }
-    // clear manager
+    // reset manager
     objectManager.reset()
     sceneManager.reset()
-  }
-
-  setupEnv() {
-    this.setSize(this.width, this.height)
-    this.setClearColor(this.bgColor, 1)
-    this.gl.enable(this.gl.DEPTH_TEST)
+    stateManager.reset()
+    shaderManager.reset()
   }
 
   setSize(width, height) {
@@ -83,7 +95,7 @@ class Game {
   setClearColor(colorHex = '0xFFFFFF', alpha = 1.0) {
     const rgb = utils.hexToRGB(colorHex)
     const rgba = [...rgb, alpha]
-    this.gl.clearColor(rgba[0], rgba[1], rgba[2], rgba[3])
+    this.gl.clearColor(rgba[0]/255, rgba[1]/255, rgba[2]/255, rgba[3])
   }
 }
 

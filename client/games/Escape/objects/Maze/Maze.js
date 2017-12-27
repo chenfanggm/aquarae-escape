@@ -31,7 +31,7 @@ class Maze extends GameObject {
     this.tileMap = tileMap.map
     this.tiles = tileMap.tiles
     this.tiles.forEach((tile) => {
-      this.add(tile)
+      this.addChild(tile)
     })
     super.init()
   }
