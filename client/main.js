@@ -3,7 +3,7 @@ import './normalize'
 import './commons/libs/gl-matrix'
 import config from '../config'
 import Detector from './commons/libs/Detector'
-import Escape from './games/Escape'
+import Escape from './game/index'
 import utils from './commons/utils'
 
 

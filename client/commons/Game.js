@@ -17,7 +17,6 @@ class Game {
     this.height = this.canvas.height
     this.devicePixelRatio = window.devicePixelRatio || 1
     this.bgColor = 0xFFFFFF
-
     this.loop = this.loop.bind(this)
   }
 
@@ -34,9 +33,9 @@ class Game {
 
   init() {
     this.gl.enable(this.gl.DEPTH_TEST)
-    this.gl.enable(this.gl.CULL_FACE)
     this.gl.frontFace(this.gl.CCW)
     this.gl.cullFace(this.gl.BACK)
+    this.gl.enable(this.gl.CULL_FACE)
     this.setSize(this.width, this.height)
     this.setClearColor(this.bgColor, 1)
     sceneManager.getCurScene().init()

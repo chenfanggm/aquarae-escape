@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import GameObject from '../../../../../commons/GameObject';
-import sceneManager from '../../../../../commons/managers/sceneManager'
-import loadingManager from '../../../../../commons/managers/loadingManager'
+import GameObject from '../../../../commons/GameObject';
+import sceneManager from '../../../../commons/managers/sceneManager'
+import loadingManager from '../../../../commons/managers/loadingManager'
 
 
 export const TILE_TYPE = {

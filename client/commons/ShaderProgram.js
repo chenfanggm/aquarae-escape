@@ -1,11 +1,12 @@
+import Shader from './Shader'
+
 
 class ShaderProgram {
-  constructor(shaders) {
+  constructor({id, vSource, fSource}) {
     this.gl = aquarae.gl
+    this.id = id
     this.program = this.gl.createProgram()
-    if (shaders) {
-      this.add(shaders)
-    }
+    this.add([new Shader(vSource, this.gl.VERTEX_SHADER), new Shader(fSource, this.gl.FRAGMENT_SHADER)])
     this.link()
   }
 

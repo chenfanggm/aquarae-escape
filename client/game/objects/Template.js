@@ -1,5 +1,5 @@
-import GameObject from '../../../commons/GameObject';
-import sceneManager from '../../../commons/managers/sceneManager'
+import GameObject from '../../commons/GameObject';
+import sceneManager from '../../commons/managers/sceneManager'
 
 
 class Template extends GameObject {

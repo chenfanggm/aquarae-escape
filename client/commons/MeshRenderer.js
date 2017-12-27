@@ -47,7 +47,7 @@ class MeshRenderer extends GameComponent {
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.material.texBuffer)
     this.gl.activeTexture(this.gl.TEXTURE0)
     this.material.program.enable()
-    this.gl.drawElements(this.mesh.primitiveType, this.mesh.indices.length, this.gl.UNSIGNED_SHORT, 0)
+    this.gl.drawElements(this.mesh.primitiveType, this.mesh.indices && this.mesh.indices.length || this.mesh.vertexCount, this.gl.UNSIGNED_SHORT, 0)
     this.clear()
   }
 

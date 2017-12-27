@@ -1,4 +1,4 @@
-import Scene from '../../../commons/Scene'
+import Scene from '../../commons/Scene'
 import Square from '../objects/Square'
 import Cube from '../objects/Cube'
 

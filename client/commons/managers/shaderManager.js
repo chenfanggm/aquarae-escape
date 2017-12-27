@@ -5,13 +5,13 @@ class ShaderManager {
   }
 
   register(id, shader) {
-    if (typeof id === 'object') {
+    if (Array.isArray(id)) {
       const shaders = id
-      for (const id in shaders) {
-        if (this.shaders[id])
-          throw new Error(`shader with id [${id}] has already registered`)
-        this.shaders[id] = shaders[id]
-      }
+      shaders.forEach((shader) => {
+        if (this.shaders[shader.id])
+          throw new Error(`shader with id [${shader.id}] has already registered`)
+        this.shaders[shader.id] = shader
+      })
     } else {
       if (this.shaders[id])
         throw new Error(`shader with id [${id}] has already registered`)

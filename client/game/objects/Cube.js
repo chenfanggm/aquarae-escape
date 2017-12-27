@@ -1,25 +1,21 @@
-import stateManager from '../../../commons/managers/stateManager'
-import shaderManager from '../../../commons/managers/shaderManager'
-import GameObject from '../../../commons/GameObject'
-import ShaderProgram from '../../../commons/ShaderProgram'
-import MeshRenderer from '../../../commons/MeshRenderer'
-import utils from '../../../commons/utils'
+import stateManager from '../../commons/managers/stateManager'
+import shaderManager from '../../commons/managers/shaderManager'
+import GameObject from '../../commons/GameObject'
+import MeshRenderer from '../../commons/MeshRenderer'
+import utils from '../../commons/utils'
 
 
 class Cube extends GameObject {
   constructor() {
     super()
     this.material = {
-      program: new ShaderProgram([
-        shaderManager.get('simpleVertexShader'),
-        shaderManager.get('simpleFragmentShader')
-      ]),
+      program: shaderManager.get('simpleDiffuseShader'),
       texBuffer: this.gl.createTexture()
     }
     this.mesh = {
       vertexBuffer: this.gl.createBuffer(),
       indexBuffer: this.gl.createBuffer(),
-      vertexCount: 24,
+      vertexCount: 36,
       primitiveType: this.gl.TRIANGLES,
       vertices: [
         // X, Y, Z           U, V
