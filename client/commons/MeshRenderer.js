@@ -27,10 +27,10 @@ class MeshRenderer extends GameComponent {
     // set mvp matrix
     glm.mat4.lookAt(this.vMatrix, new Float32Array([0, 0, -5]), [0, 0, 0], [0, 1, 0])
     glm.mat4.perspective(this.pMatrix, glm.glMatrix.toRadian(45), aquarae.canvas.width/aquarae.canvas.height, 0.1, 1000.0)
-    this.genMVPMatrix()
-    this.material.program.enable()
-    this.material.program.setMatrixUniform('mvpMatrix', this.mvpMatrix)
-    this.clear()
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null)
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null)
+    this.gl.bindTexture(this.gl.TEXTURE_2D, null)
+    this.material.program.disable()
   }
 
   update() {
