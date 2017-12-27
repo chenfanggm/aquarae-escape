@@ -27,7 +27,7 @@ class SceneManager {
 
   reset() {
     Object.values(this.scenes).forEach((scene) => {
-      scene.clear()
+      scene.reset()
     })
     this.scenes = {}
   }

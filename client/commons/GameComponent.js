@@ -2,8 +2,9 @@
 
 class GameComponent {
 
-  constructor() {
+  constructor(owner) {
     this.gl = aquarae.gl
+    this.owner = owner
   }
 
   init() {
@@ -19,10 +20,6 @@ class GameComponent {
   }
 
   render() {
-
-  }
-
-  clear() {
 
   }
 

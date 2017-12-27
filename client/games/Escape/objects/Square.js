@@ -35,7 +35,7 @@ class Square extends GameObject {
     this.program.init()
     this.program.enable()
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.mesh.vertexBuffer)
-    this.program.enableAttr('aPos', this.gl.FLOAT, 3, Float32Array.BYTES_PER_ELEMENT * 6, 0)
+    this.program.enableAttr('aVertCoord', this.gl.FLOAT, 3, Float32Array.BYTES_PER_ELEMENT * 6, 0)
     this.program.enableAttr('aColor', this.gl.FLOAT, 3, Float32Array.BYTES_PER_ELEMENT * 6, Float32Array.BYTES_PER_ELEMENT * 3)
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.mesh.vertices), this.gl.STATIC_DRAW)
 

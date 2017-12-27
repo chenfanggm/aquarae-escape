@@ -3,13 +3,11 @@ class StateManager {
   constructor() {
     this.prevTime = 0
     this.nowTime = 0
-    this.delta = 0
   }
 
   reset() {
     this.prevTime = 0
     this.nowTime = 0
-    this.delta = 0
   }
 
   setNowTime(timestamp) {
@@ -23,10 +21,6 @@ class StateManager {
 
   getDelta() {
     return this.nowTime - this.prevTime
-  }
-
-  resetDelta() {
-    this.delta = 0
   }
 
   getTimeElapsed() {

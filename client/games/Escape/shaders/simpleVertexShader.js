@@ -1,16 +1,15 @@
 const source = `
   precision mediump float;
   
-  attribute vec3 aPos;
+  attribute vec3 aVertCoord;
   attribute vec2 aTexCoord;
   varying vec2 vTexCoord;
   
-  uniform float uTime;
-  uniform mat4 pMatrix, vMatrix, mMatrix;
+  uniform mat4 mvpMatrix;
   
   void main() {
     vTexCoord = aTexCoord;
-    gl_Position = pMatrix * vMatrix * mMatrix * vec4(aPos, 1.0);
+    gl_Position = mvpMatrix * vec4(aVertCoord, 1.0);
   }
 `
 export default source

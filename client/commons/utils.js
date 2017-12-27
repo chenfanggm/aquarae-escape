@@ -11,12 +11,12 @@ export default {
     return [r, g, b]
   },
 
-  loadTexture(path, mesh, callback) {
+  loadTexture(path, material, callback) {
     const gl = aquarae.gl
     const image = new Image()
     image.src = path
     image.onload = () => {
-      gl.bindTexture(gl.TEXTURE_2D, mesh.texBuffer)
+      gl.bindTexture(gl.TEXTURE_2D, material.texBuffer)
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false)
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image)
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)

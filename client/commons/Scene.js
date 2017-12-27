@@ -24,19 +24,17 @@ class Scene {
 
   update() {
     this.children.forEach((obj) => {
-      obj.update()
+      if (obj.isReady) {
+        obj.update()
+      }
     })
   }
 
   render() {
     this.children.forEach((obj) => {
-      obj.render()
-    })
-  }
-
-  clear() {
-    this.children.forEach((obj) => {
-      obj.clear()
+      if (obj.isReady) {
+        obj.render()
+      }
     })
   }
 

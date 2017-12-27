@@ -1,6 +1,6 @@
 import uuid from 'uuid/v4'
 import objectManager from './managers/objectManager'
-import * as glm from './libs/gl-matrix'
+import Transform from './Transform'
 
 
 class GameObject {
@@ -9,10 +9,12 @@ class GameObject {
     this.name = id || uuid()
     this.children = []
     this.components = []
-    this.transform = glm.mat4.create()
-    this.program = null
+    this.transform = new Transform(this)
     this.mesh = null
+    this.material = null
+    this.isReady = true
 
+    this.addComponent(this.transform)
     objectManager.add(this.name, this)
   }
 
@@ -52,21 +54,12 @@ class GameObject {
     })
   }
 
-  clear() {
-    this.components.forEach((component) => {
-      component.clear()
-    })
-    this.children.forEach((obj) => {
-        obj.clear()
-    })
-  }
-
   reset() {
     this.components.forEach((component) => {
       component.reset()
     })
     this.children.forEach((obj) => {
-        obj.reset()
+      obj.reset()
     })
   }
 
@@ -76,10 +69,6 @@ class GameObject {
 
   addComponent(component) {
     this.components.push(component)
-  }
-
-  getTransform() {
-    return this.transform
   }
 }
 

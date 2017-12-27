@@ -1,5 +1,4 @@
 
-
 class ShaderProgram {
   constructor(shaders) {
     this.gl = aquarae.gl
@@ -7,9 +6,10 @@ class ShaderProgram {
     if (shaders) {
       this.add(shaders)
     }
+    this.link()
   }
 
-  init() {
+  link() {
     this.gl.linkProgram(this.program)
     if (!this.gl.getProgramParameter(this.program, this.gl.LINK_STATUS))
       throw this.gl.getProgramInfoLog(this.program)

@@ -40,9 +40,6 @@ class Game {
     this.setSize(this.width, this.height)
     this.setClearColor(this.bgColor, 1)
     sceneManager.getCurScene().init()
-    this.update()
-    this.render()
-    this.clear()
   }
 
   loop(timestamp) {
@@ -51,7 +48,6 @@ class Game {
       this.input()
       this.update()
       this.render()
-      this.clear()
       stateManager.updateTime(timestamp)
     }
     this.runningLoop = window.requestAnimationFrame(this.loop)
@@ -68,10 +64,6 @@ class Game {
   render() {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
     sceneManager.getCurScene().render()
-  }
-
-  clear() {
-    stateManager.resetDelta()
   }
 
   reset() {
