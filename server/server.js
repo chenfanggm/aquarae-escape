@@ -38,7 +38,7 @@ if (config.env === 'development') {
   app.use(express.static(path.resolve(config.baseDir, config.staticDir)))
 
   // fallback all routes to index.html
-  app.use('*', function (req, res, next) {
+  app.use('/', function (req, res, next) {
     const filename = path.join(compiler.outputPath, 'index.html')
     compiler.outputFileSystem.readFile(filename, (err, result) => {
       if (err) {

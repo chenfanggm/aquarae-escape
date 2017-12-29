@@ -2,6 +2,7 @@ import sceneManager from './managers/sceneManager'
 import stateManager from './managers/stateManager'
 import objectManager from './managers/objectManager'
 import shaderManager from './managers/shaderManager'
+import resourceManager from './managers/resourceManager'
 import utils from './utils'
 
 
@@ -20,15 +21,26 @@ class Game {
     this.loop = this.loop.bind(this)
   }
 
-  reload() {
-    this.reset()
-    this.start()
+  preloadResource() {
+    const resourcesToLoad = [
+      //resourceManager.loadText()
+      Promise.resolve()
+    ]
+    return Promise.all(resourcesToLoad)
   }
 
   start() {
-    this.init()
-    window.requestAnimationFrame(this.loop)
-    console.info('Game started...')
+    this.preloadResource()
+      .then(() => {
+        this.init()
+        window.requestAnimationFrame(this.loop)
+        console.info('Game started...')
+      })
+  }
+
+  reload() {
+    this.reset()
+    this.start()
   }
 
   init() {

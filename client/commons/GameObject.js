@@ -25,6 +25,7 @@ class GameObject {
     this.children.forEach((obj) => {
       obj.init()
     })
+    this.isReady = true
   }
 
   input() {

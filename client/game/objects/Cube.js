@@ -1,54 +1,47 @@
 import stateManager from '../../commons/managers/stateManager'
 import shaderManager from '../../commons/managers/shaderManager'
+import resourceManager from '../../commons/managers/resourceManager'
 import GameObject from '../../commons/GameObject'
 import MeshRenderer from '../../commons/MeshRenderer'
-import utils from '../../commons/utils'
 
 
 class Cube extends GameObject {
   constructor() {
     super()
     this.material = {
-      program: shaderManager.get('simpleDiffuseShader'),
-      texBuffer: this.gl.createTexture()
+      program: shaderManager.get('simpleDiffuseShader1')
     }
     this.mesh = {
       vertexBuffer: this.gl.createBuffer(),
       indexBuffer: this.gl.createBuffer(),
-      vertexCount: 36,
+      texCoordBuffer: this.gl.createBuffer(),
+      texBuffer: this.gl.createTexture(),
       primitiveType: this.gl.TRIANGLES,
       vertices: [
-        // X, Y, Z           U, V
-        // Top
-        -1.0, 1.0, -1.0,   0, 0,
-        -1.0, 1.0, 1.0,    0, 1,
-        1.0, 1.0, 1.0,     1, 1,
-        1.0, 1.0, -1.0,    1, 0,
-        // Left
-        -1.0, 1.0, 1.0,    0, 0,
-        -1.0, -1.0, 1.0,   1, 0,
-        -1.0, -1.0, -1.0,  1, 1,
-        -1.0, 1.0, -1.0,   0, 1,
-        // Right
-        1.0, 1.0, 1.0,    1, 1,
-        1.0, -1.0, 1.0,   0, 1,
-        1.0, -1.0, -1.0,  0, 0,
-        1.0, 1.0, -1.0,   1, 0,
-        // Front
-        1.0, 1.0, 1.0,    1, 1,
-        1.0, -1.0, 1.0,    1, 0,
-        -1.0, -1.0, 1.0,    0, 0,
-        -1.0, 1.0, 1.0,    0, 1,
-        // Back
-        1.0, 1.0, -1.0,    0, 0,
-        1.0, -1.0, -1.0,    0, 1,
-        -1.0, -1.0, -1.0,    1, 1,
-        -1.0, 1.0, -1.0,    1, 0,
-        // Bottom
-        -1.0, -1.0, -1.0,   1, 1,
-        -1.0, -1.0, 1.0,    1, 0,
-        1.0, -1.0, 1.0,     0, 0,
-        1.0, -1.0, -1.0,    0, 1,
+        -1.0, 1.0, -1.0,
+        -1.0, 1.0, 1.0,
+        1.0, 1.0, 1.0,
+        1.0, 1.0, -1.0,
+        -1.0, 1.0, 1.0,
+        -1.0, -1.0, 1.0,
+        -1.0, -1.0, -1.0,
+        -1.0, 1.0, -1.0,
+        1.0, 1.0, 1.0,
+        1.0, -1.0, 1.0,
+        1.0, -1.0, -1.0,
+        1.0, 1.0, -1.0,
+        1.0, 1.0, 1.0,
+        1.0, -1.0, 1.0,
+        -1.0, -1.0, 1.0,
+        -1.0, 1.0, 1.0,
+        1.0, 1.0, -1.0,
+        1.0, -1.0, -1.0,
+        -1.0, -1.0, -1.0,
+        -1.0, 1.0, -1.0,
+        -1.0, -1.0, -1.0,
+        -1.0, -1.0, 1.0,
+        1.0, -1.0, 1.0,
+        1.0, -1.0, -1.0,
       ],
       indices: [
         // Top
@@ -69,11 +62,50 @@ class Cube extends GameObject {
         // Bottom
         21, 20, 22,
         22, 20, 23
+      ],
+      texCoords: [
+        0, 0,
+        0, 1,
+        1, 1,
+        1, 0,
+        0, 0,
+        1, 0,
+        1, 1,
+        0, 1,
+        1, 1,
+        0, 1,
+        0, 0,
+        1, 0,
+        1, 1,
+        1, 0,
+        0, 0,
+        0, 1,
+        0, 0,
+        0, 1,
+        1, 1,
+        1, 0,
+        1, 1,
+        1, 0,
+        0, 0,
+        0, 1,
       ]
     }
 
-    this.loadResource()
     this.addComponent(new MeshRenderer(this))
+  }
+
+  init() {
+    this.preload().then(() => {
+      super.init()
+    })
+  }
+
+  preload() {
+    this.isReady = false
+    const promises = [
+      resourceManager.loadAndApplyTexture('/textures/cube/wood_crate.png', this)
+    ]
+    return Promise.all(promises)
   }
 
   update() {
@@ -83,12 +115,6 @@ class Cube extends GameObject {
     super.update()
   }
 
-  loadResource() {
-    this.isReady = false
-    utils.loadTexture('/textures/wood_crate.png', this.material, () => {
-      this.isReady = true
-    })
-  }
 }
 
 export default Cube

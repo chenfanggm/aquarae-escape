@@ -1,6 +1,7 @@
 import Scene from '../../commons/Scene'
 import Square from '../objects/Square'
 import Cube from '../objects/Cube'
+import Susan from '../objects/Susan'
 
 
 class MainScene extends Scene {
@@ -27,6 +28,7 @@ class MainScene extends Scene {
     //   target: objectManager.get('maze')
     // }))
     //this.add(new Square())
+    this.add(new Susan())
     this.add(new Cube())
     super.init()
   }
