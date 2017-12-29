@@ -19,14 +19,9 @@ class Plane extends GameObject {
 
     this.geometry = this.generatePlane(this.width, this.height, this.widthSegments, this.heightSegments)
     this.mesh = {
-      vertexBuffer: this.gl.createBuffer(),
-      indexBuffer: this.gl.createBuffer(),
-      uvBuffer: this.gl.createBuffer(),
-      texBuffer: this.gl.createTexture(),
-      primitiveType: this.gl.TRIANGLES,
+      ...this.mesh,
       ...this.geometry
     }
-
     this.addComponent(new MeshRenderer(this))
   }
 

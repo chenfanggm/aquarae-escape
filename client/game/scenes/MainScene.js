@@ -2,6 +2,7 @@ import Scene from '../../commons/Scene'
 import Plane from '../objects/Plane'
 import Cube from '../objects/Cube'
 import Susan from '../objects/Susan'
+import stateManager from "../../commons/managers/stateManager";
 
 
 class MainScene extends Scene {
@@ -29,18 +30,19 @@ class MainScene extends Scene {
     // }))
 
     const susan = new Susan()
+    susan.transform.translate([0, 1, 0])
     this.addChild(susan)
 
-    // const cube1 = new Cube()
-    // cube1.transform.translate([-5, 0.5, -5])
-    // this.addChild(cube1)
-    //
-    // const cube2 = new Cube()
-    // cube2.transform.translate([-1, 0.5, -1])
-    // this.addChild(cube2)
-    //
-    // const plane = new Plane(20, 20)
-    // this.addChild(plane)
+    const cube1 = new Cube()
+    cube1.transform.translate([-5, 0.5, -5])
+    this.addChild(cube1)
+
+    const player = new Cube()
+    player.transform.translate([-2, 0.5, 2])
+    this.addChild(player)
+
+    const plane = new Plane(20, 20)
+    this.addChild(plane)
 
     super.init()
   }

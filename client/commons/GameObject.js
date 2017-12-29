@@ -1,6 +1,7 @@
 import uuid from 'uuid/v4'
 import objectManager from './managers/objectManager'
 import Transform from './Transform'
+import shaderManager from "./managers/shaderManager";
 
 
 class GameObject {
@@ -13,6 +14,19 @@ class GameObject {
     this.mesh = null
     this.material = null
     this.isReady = true
+
+    this.mesh = {
+      vertexBuffer: this.gl.createBuffer(),
+      indexBuffer: this.gl.createBuffer(),
+      uvBuffer: this.gl.createBuffer(),
+      texBuffer: this.gl.createTexture(),
+      normalBuffer: this.gl.createBuffer(),
+      primitiveType: this.gl.TRIANGLES,
+      vertices: null,
+      indices: null,
+      uvs: null,
+      normals: null,
+    }
 
     this.addComponent(this.transform)
     objectManager.add(this.name, this)

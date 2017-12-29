@@ -8,20 +8,9 @@ import MeshRenderer from '../../commons/MeshRenderer'
 class Susan extends GameObject {
   constructor() {
     super()
+
     this.material = {
       program: shaderManager.get('simpleDiffuseShader')
-    }
-    this.mesh = {
-      vertexBuffer: this.gl.createBuffer(),
-      indexBuffer: this.gl.createBuffer(),
-      uvBuffer: this.gl.createBuffer(),
-      texBuffer: this.gl.createTexture(),
-      normalBuffer: this.gl.createBuffer(),
-      primitiveType: this.gl.TRIANGLES,
-      vertices: null,
-      indices: null,
-      uvs: null,
-      normals: null,
     }
 
     this.addComponent(new MeshRenderer(this))
@@ -40,8 +29,8 @@ class Susan extends GameObject {
           const mesh = model.meshes[0]
           this.mesh.vertices = mesh.vertices
           this.mesh.indices = [].concat.apply([], mesh.faces)
-          this.mesh.uvs = mesh.texturecoords[0]
           this.mesh.normals = mesh.normals
+          this.mesh.uvs = mesh.texturecoords[0]
         }),
       resourceManager.loadAndApplyTexture('/models/susan/susan.png', this, true)
     ]

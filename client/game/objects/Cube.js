@@ -12,11 +12,7 @@ class Cube extends GameObject {
       program: shaderManager.get('simpleDiffuseShader')
     }
     this.mesh = {
-      vertexBuffer: this.gl.createBuffer(),
-      indexBuffer: this.gl.createBuffer(),
-      uvBuffer: this.gl.createBuffer(),
-      texBuffer: this.gl.createTexture(),
-      primitiveType: this.gl.TRIANGLES,
+      ...this.mesh,
       vertices: [
         -0.5, 0.5, -0.5,
         -0.5, 0.5, 0.5,
@@ -88,6 +84,38 @@ class Cube extends GameObject {
         1, 0,
         0, 0,
         0, 1,
+      ],
+      normals: [
+        // Top
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0,
+        // Left
+        -1, 0, 0,
+        -1, 0, 0,
+        -1, 0, 0,
+        -1, 0, 0,
+        // Right
+        1, 0, 0,
+        1, 0, 0,
+        1, 0, 0,
+        1, 0, 0,
+        // Forward
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1,
+        // Back
+        0, 0, -1,
+        0, 0, -1,
+        0, 0, -1,
+        0, 0, -1,
+        // Bottom
+        0, -1, 0,
+        0, -1, 0,
+        0, -1, 0,
+        0, -1, 0
       ]
     }
 
@@ -104,13 +132,6 @@ class Cube extends GameObject {
       resourceManager.loadAndApplyTexture('/textures/cube/wood_crate.png', this)
     ]
     return Promise.all(promises)
-  }
-
-  update() {
-    const delta = stateManager.getDelta()
-    const eulerAngleDiffY = delta / 1000 / 6 * 360
-    this.transform.rotate([0, eulerAngleDiffY, 0])
-    super.update()
   }
 
 }
