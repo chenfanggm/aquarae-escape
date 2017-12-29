@@ -5,16 +5,12 @@ import shaderManager from "./managers/shaderManager";
 
 
 class GameObject {
-  constructor(id) {
+  constructor(opts = {}) {
     this.gl = aquarae.gl
-    this.name = id || uuid()
+    this.name = opts.id || uuid()
     this.children = []
     this.components = []
     this.transform = new Transform(this)
-    this.mesh = null
-    this.material = null
-    this.isReady = true
-
     this.mesh = {
       vertexBuffer: this.gl.createBuffer(),
       indexBuffer: this.gl.createBuffer(),
@@ -26,6 +22,12 @@ class GameObject {
       indices: null,
       uvs: null,
       normals: null,
+    }
+    this.material = null
+    this.isReady = true
+
+    if (opts.position) {
+      this.transform.setPosition(opts.position)
     }
 
     this.addComponent(this.transform)

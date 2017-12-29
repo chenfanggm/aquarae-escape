@@ -37,8 +37,9 @@ class MainScene extends Scene {
     cube1.transform.translate([-5, 0.5, -5])
     this.addChild(cube1)
 
-    const player = new Cube()
-    player.transform.translate([-2, 0.5, 2])
+    const player = new Cube({
+      position: [-2, 0.5, 2]
+    })
     this.addChild(player)
 
     const plane = new Plane(20, 20)

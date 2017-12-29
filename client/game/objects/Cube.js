@@ -6,8 +6,8 @@ import MeshRenderer from '../../commons/MeshRenderer'
 
 
 class Cube extends GameObject {
-  constructor() {
-    super()
+  constructor(opts) {
+    super(opts)
     this.material = {
       program: shaderManager.get('simpleDiffuseShader')
     }

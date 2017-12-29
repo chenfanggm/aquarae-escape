@@ -23,6 +23,10 @@ class Transform extends GameComponent {
     return this.owner.parent && this.owner.parent.transform && this.owner.parent.transform.getTransformMatrix() || glm.mat4.create()
   }
 
+  setPosition(pos) {
+    this.position = glm.vec3.fromValues(pos[0], pos[1], pos[2])
+  }
+
   translate(translates) {
     glm.vec3.add(this.position, this.position, translates)
   }
