@@ -6,8 +6,9 @@ import MeshRenderer from '../../commons/MeshRenderer'
 
 
 class Plane extends GameObject {
-  constructor(width, height, widthSegments, heightSegments) {
-    super()
+  constructor(opts) {
+    super(opts)
+    const { width, height, widthSegments, heightSegments } = opts
     this.width = width || 1
     this.height = height || 1
     this.widthSegments = Math.floor(widthSegments) || 1

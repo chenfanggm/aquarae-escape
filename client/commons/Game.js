@@ -3,6 +3,7 @@ import stateManager from './managers/stateManager'
 import objectManager from './managers/objectManager'
 import shaderManager from './managers/shaderManager'
 import resourceManager from './managers/resourceManager'
+import inputManager from './managers/inputManager'
 import utils from './utils'
 
 
@@ -50,12 +51,13 @@ class Game {
     this.gl.enable(this.gl.CULL_FACE)
     this.setSize(this.width, this.height)
     this.setClearColor(this.bgColor, 1)
-    sceneManager.getCurScene().init()
+    inputManager.init()
+    sceneManager.init()
   }
 
   loop(timestamp) {
     stateManager.setNowTime(timestamp)
-    if (stateManager.getDelta() > this.frameTime) {
+    if (stateManager.getDeltaTime() > this.frameTime) {
       this.input()
       this.update()
       this.render()

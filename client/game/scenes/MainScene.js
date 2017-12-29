@@ -2,7 +2,7 @@ import Scene from '../../commons/Scene'
 import Plane from '../objects/Plane'
 import Cube from '../objects/Cube'
 import Susan from '../objects/Susan'
-import stateManager from "../../commons/managers/stateManager";
+import PlayerController from '../scripts/PlayerController'
 
 
 class MainScene extends Scene {
@@ -29,20 +29,26 @@ class MainScene extends Scene {
     //   target: objectManager.get('maze')
     // }))
 
-    const susan = new Susan()
-    susan.transform.translate([0, 1, 0])
+    const susan = new Susan({
+      position: [0, 1, 0]
+    })
     this.addChild(susan)
 
-    const cube1 = new Cube()
-    cube1.transform.translate([-5, 0.5, -5])
-    this.addChild(cube1)
+    // const cube1 = new Cube({
+    //   position: [-5, 0.5, -5]
+    // })
+    // this.addChild(cube1)
 
     const player = new Cube({
       position: [-2, 0.5, 2]
     })
+    player.addComponent(new PlayerController(player))
     this.addChild(player)
 
-    const plane = new Plane(20, 20)
+    const plane = new Plane({
+      width: 20,
+      height: 20
+    })
     this.addChild(plane)
 
     super.init()

@@ -19,7 +19,7 @@ class StateManager {
     this.nowTime = timestamp
   }
 
-  getDelta() {
+  getDeltaTime() {
     return this.nowTime - this.prevTime
   }
 

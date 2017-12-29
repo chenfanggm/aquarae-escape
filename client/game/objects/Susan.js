@@ -6,8 +6,8 @@ import MeshRenderer from '../../commons/MeshRenderer'
 
 
 class Susan extends GameObject {
-  constructor() {
-    super()
+  constructor(opts) {
+    super(opts)
 
     this.material = {
       program: shaderManager.get('simpleDiffuseShader')
@@ -38,7 +38,7 @@ class Susan extends GameObject {
   }
 
   update() {
-    const delta = stateManager.getDelta()
+    const delta = stateManager.getDeltaTime()
     const eulerAngleDiffY = delta / 1000 / 6 * 360
     this.transform.rotate([0, 0, eulerAngleDiffY])
     super.update()

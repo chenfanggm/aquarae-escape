@@ -4,6 +4,10 @@ class SceneManager {
     this.curScene = null
   }
 
+  init() {
+    this.curScene.init()
+  }
+
   add(id, scene) {
     this.scenes[id] = scene
   }
