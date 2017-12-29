@@ -28,7 +28,7 @@ class PlayerController extends GameComponent {
   }
 
   doRotate(deltaTime) {
-    this.owner.transform.rotate([0, this.directInput.x * this.rotationSpeed * deltaTime / 1000, 0])
+    this.owner.transform.rotate([0, -this.directInput.x * this.rotationSpeed * deltaTime / 1000, 0])
   }
 
   doMove(deltaTime) {
@@ -39,13 +39,9 @@ class PlayerController extends GameComponent {
     //   Debug.Log(Vector3.Distance(targetPos, forwardRay.point));
     //   if (Vector3.Distance(targetPos, forwardRay.point) < width) return;
     // }
-    glm.vec3.cross(this.owner.transform.forward, this.owner.transform.right, glm.vec3.fromValues(0, -1, 0))
     const targetPos = glm.vec3.create()
     glm.vec3.scale(targetPos, this.owner.transform.forward, this.directInput.y * this.moveSpeed * deltaTime / 1000)
     glm.vec3.add(targetPos, this.owner.transform.position, targetPos)
-    //console.log(this.directInput.y )
-    //console.log(this.directInput.y * this.moveSpeed * deltaTime)
-    console.log(targetPos)
     this.owner.transform.setPosition(targetPos)
   }
 

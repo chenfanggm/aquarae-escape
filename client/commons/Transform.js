@@ -14,6 +14,7 @@ class Transform extends GameComponent {
     this.right = glm.vec3.fromValues(1, 0, 0)
     this.forward = glm.vec3.fromValues(0, 0, -1)
     this.tranformMatrix = glm.mat4.create()
+    this.rotationMatrix = glm.mat4.create()
   }
 
   getTransformMatrix() {
@@ -38,11 +39,8 @@ class Transform extends GameComponent {
     const rotateQuat = glm.quat.create()
     glm.quat.fromEuler(rotateQuat, eulerAngles[0], eulerAngles[1], eulerAngles[2])
     glm.quat.mul(this.rotation, this.rotation, rotateQuat)
-    // update forward
-    console.log(this.forward)
-    const rotationMatrix = glm.mat4.create()
-    //glm.mat4.fromQuat(rotationMatrix, this.rotation)
-    //glm.vec3.mul(this.forward, this.forward, rotationMatrix)
+    glm.mat4.fromQuat(this.rotationMatrix, rotateQuat)
+    glm.vec3.transformMat4(this.forward, this.forward, this.rotationMatrix)
   }
 }
 
