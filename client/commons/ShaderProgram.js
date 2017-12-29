@@ -34,9 +34,9 @@ class ShaderProgram {
     this.gl.useProgram(null)
   }
 
-  enableAttr(attrName, attrType, index, stride, offset) {
+  enableAttr(attrName, attrType, index, stride, offset, isNormalized = this.gl.FALSE) {
     const attr = this.gl.getAttribLocation(this.program, attrName)
-    this.gl.vertexAttribPointer(attr, index, attrType, this.gl.FALSE, stride, offset)
+    this.gl.vertexAttribPointer(attr, index, attrType, isNormalized, stride, offset)
     this.gl.enableVertexAttribArray(attr)
   }
 
@@ -53,6 +53,11 @@ class ShaderProgram {
   setFloatUniform(uniName, value) {
     const uniform = this.gl.getUniformLocation(this.program, uniName)
     this.gl.uniform1f(uniform, value)
+  }
+
+  setVec3Uniform(uniName, value) {
+    const uniform = this.gl.getUniformLocation(this.program, uniName)
+    this.gl.uniform3fv(uniform, value)
   }
 }
 

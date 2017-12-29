@@ -45,7 +45,7 @@ class Scene {
     this.children = []
   }
 
-  add(obj) {
+  addChild(obj) {
     this.children.push(obj)
   }
 

@@ -2,7 +2,7 @@
 const vSource = `
   precision mediump float;
   
-  attribute vec3 aVertCoord;
+  attribute vec3 vertPosition;
   attribute vec3 aColorCoord;
 
   varying vec3 vColorCoord;
@@ -10,7 +10,7 @@ const vSource = `
   
   void main() {
     vColorCoord = aColorCoord;
-    gl_Position = mvpMatrix * vec4(aVertCoord, 1.0);
+    gl_Position = mvpMatrix * vec4(vertPosition, 1.0);
   }
 `
 

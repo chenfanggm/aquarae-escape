@@ -14,22 +14,22 @@ class Susan extends GameObject {
     this.mesh = {
       vertexBuffer: this.gl.createBuffer(),
       indexBuffer: this.gl.createBuffer(),
-      texCoordBuffer: this.gl.createBuffer(),
+      uvBuffer: this.gl.createBuffer(),
       texBuffer: this.gl.createTexture(),
+      normalBuffer: this.gl.createBuffer(),
       primitiveType: this.gl.TRIANGLES,
       vertices: null,
       indices: null,
-      texCoords: null
+      uvs: null,
+      normals: null,
     }
 
     this.addComponent(new MeshRenderer(this))
   }
 
   init() {
-    this.preload().then(() => {
-      this.transform.translate([2, 0, 1])
-      super.init()
-    })
+    this.transform.rotate([-90, 0, 0])
+    this.preload().then(() => {super.init()})
   }
 
   preload() {
@@ -40,9 +40,10 @@ class Susan extends GameObject {
           const mesh = model.meshes[0]
           this.mesh.vertices = mesh.vertices
           this.mesh.indices = [].concat.apply([], mesh.faces)
-          this.mesh.texCoords = mesh.texturecoords[0]
+          this.mesh.uvs = mesh.texturecoords[0]
+          this.mesh.normals = mesh.normals
         }),
-      resourceManager.loadAndApplyTexture('/models/susan/susan.png', this)
+      resourceManager.loadAndApplyTexture('/models/susan/susan.png', this, true)
     ]
     return Promise.all(promises)
   }
@@ -50,7 +51,7 @@ class Susan extends GameObject {
   update() {
     const delta = stateManager.getDelta()
     const eulerAngleDiffY = delta / 1000 / 6 * 360
-    this.transform.rotate([0, eulerAngleDiffY, 0])
+    this.transform.rotate([0, 0, eulerAngleDiffY])
     super.update()
   }
 

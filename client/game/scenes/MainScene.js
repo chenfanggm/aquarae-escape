@@ -1,5 +1,5 @@
 import Scene from '../../commons/Scene'
-import Square from '../objects/Square'
+import Plane from '../objects/Plane'
 import Cube from '../objects/Cube'
 import Susan from '../objects/Susan'
 
@@ -27,9 +27,21 @@ class MainScene extends Scene {
     //   position: new THREE.Vector3(100, 100, 100),
     //   target: objectManager.get('maze')
     // }))
-    //this.add(new Square())
-    this.add(new Susan())
-    this.add(new Cube())
+
+    const susan = new Susan()
+    this.addChild(susan)
+
+    // const cube1 = new Cube()
+    // cube1.transform.translate([-5, 0.5, -5])
+    // this.addChild(cube1)
+    //
+    // const cube2 = new Cube()
+    // cube2.transform.translate([-1, 0.5, -1])
+    // this.addChild(cube2)
+    //
+    // const plane = new Plane(20, 20)
+    // this.addChild(plane)
+
     super.init()
   }
 }

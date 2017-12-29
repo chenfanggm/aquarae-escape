@@ -4,7 +4,6 @@ import Game from '../commons/Game'
 import MainScene from './scenes/MainScene'
 import ShaderProgram from '../commons/ShaderProgram'
 import simpleDiffuseShader from './shaders/simpleDiffuseShader'
-import simpleDiffuseShader1 from './shaders/simpleDiffuseShader1'
 import simpleStandardShader from './shaders/simpleStandardShader'
 
 
@@ -16,8 +15,7 @@ class Escape extends Game {
     sceneManager.setCurScene(new MainScene('mainScene'))
     shaderManager.register([
       new ShaderProgram(simpleStandardShader),
-      new ShaderProgram(simpleDiffuseShader),
-      new ShaderProgram(simpleDiffuseShader1)
+      new ShaderProgram(simpleDiffuseShader)
     ])
     super.init()
   }

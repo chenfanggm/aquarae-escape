@@ -110,13 +110,13 @@ THREE.BeveledBlockGeometry = function ( width, height, depth, bevel, widthSegmen
 
 		normal[ w ] = depth > 0 ? 1 : - 1;
 
-		for ( iy = 0; iy < gridY1; iy ++ ) {
+		for (iz = 0; iz < gridY1; iz ++ ) {
 
 			for ( ix = 0; ix < gridX1; ix ++ ) {
 
 				var vector = new THREE.Vector3();
 				vector[ u ] = ( ix * segment_width - width_half ) * udir;
-				vector[ v ] = ( iy * segment_height - height_half ) * vdir;
+				vector[ v ] = ( iz * segment_height - height_half ) * vdir;
 				vector[ w ] = depth;
 
 				scope.vertices.push( vector );
@@ -125,14 +125,14 @@ THREE.BeveledBlockGeometry = function ( width, height, depth, bevel, widthSegmen
 
 		}
 
-		for ( iy = 0; iy < gridY; iy++ ) {
+		for (iz = 0; iz < gridY; iz++ ) {
 
 			for ( ix = 0; ix < gridX; ix++ ) {
 
-				var a = ix + gridX1 * iy;
-				var b = ix + gridX1 * ( iy + 1 );
-				var c = ( ix + 1 ) + gridX1 * ( iy + 1 );
-				var d = ( ix + 1 ) + gridX1 * iy;
+				var a = ix + gridX1 * iz;
+				var b = ix + gridX1 * ( iz + 1 );
+				var c = ( ix + 1 ) + gridX1 * ( iz + 1 );
+				var d = ( ix + 1 ) + gridX1 * iz;
 
 				var face = new THREE.Face4( a + offset, b + offset, c + offset, d + offset );
 				// not needed? We don't compute others: face.normal.copy( normal );
@@ -141,10 +141,10 @@ THREE.BeveledBlockGeometry = function ( width, height, depth, bevel, widthSegmen
 
 				scope.faces.push( face );
 				scope.faceVertexUvs[ 0 ].push( [
-							new THREE.Vector2( ix / gridX, 1 - iy / gridY ),
-							new THREE.Vector2( ix / gridX, 1 - ( iy + 1 ) / gridY ),
-							new THREE.Vector2( ( ix + 1 ) / gridX, 1- ( iy + 1 ) / gridY ),
-							new THREE.Vector2( ( ix + 1 ) / gridX, 1 - iy / gridY )
+							new THREE.Vector2( ix / gridX, 1 - iz / gridY ),
+							new THREE.Vector2( ix / gridX, 1 - ( iz + 1 ) / gridY ),
+							new THREE.Vector2( ( ix + 1 ) / gridX, 1- ( iz + 1 ) / gridY ),
+							new THREE.Vector2( ( ix + 1 ) / gridX, 1 - iz / gridY )
 						] );
 			}
 		}

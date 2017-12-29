@@ -17,7 +17,7 @@ if (Detector.webgl) {
   canvas.height = window.innerHeight
   const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
   // start game
-  const gameConfig = { gl, canvas, frameRate: 60 }
+  const gameConfig = { gl, canvas, frameRate: 60, UNIT_LENGTH: 1 }
   window.aquarae = gameConfig
   const game = new Escape(gameConfig)
   game.start()

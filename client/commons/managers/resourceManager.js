@@ -61,7 +61,7 @@ class ResourceManager {
       })
   }
 
-  loadAndApplyTexture(path, obj) {
+  loadAndApplyTexture(path, obj, isFlipY = false) {
     return new Promise((resolve, reject) => {
       const image = new Image()
       image.onload = () => {
@@ -72,7 +72,7 @@ class ResourceManager {
     })
       .then((image) => {
         obj.gl.bindTexture(obj.gl.TEXTURE_2D, obj.mesh.texBuffer)
-        obj.gl.pixelStorei(obj.gl.UNPACK_FLIP_Y_WEBGL, false)
+        obj.gl.pixelStorei(obj.gl.UNPACK_FLIP_Y_WEBGL, isFlipY)
         obj.gl.texImage2D(obj.gl.TEXTURE_2D, 0, obj.gl.RGBA, obj.gl.RGBA, obj.gl.UNSIGNED_BYTE, image)
         obj.gl.texParameteri(obj.gl.TEXTURE_2D, obj.gl.TEXTURE_MAG_FILTER, obj.gl.LINEAR)
         obj.gl.texParameteri(obj.gl.TEXTURE_2D, obj.gl.TEXTURE_MIN_FILTER, obj.gl.LINEAR)

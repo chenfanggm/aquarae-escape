@@ -9,39 +9,39 @@ class Cube extends GameObject {
   constructor() {
     super()
     this.material = {
-      program: shaderManager.get('simpleDiffuseShader1')
+      program: shaderManager.get('simpleDiffuseShader')
     }
     this.mesh = {
       vertexBuffer: this.gl.createBuffer(),
       indexBuffer: this.gl.createBuffer(),
-      texCoordBuffer: this.gl.createBuffer(),
+      uvBuffer: this.gl.createBuffer(),
       texBuffer: this.gl.createTexture(),
       primitiveType: this.gl.TRIANGLES,
       vertices: [
-        -1.0, 1.0, -1.0,
-        -1.0, 1.0, 1.0,
-        1.0, 1.0, 1.0,
-        1.0, 1.0, -1.0,
-        -1.0, 1.0, 1.0,
-        -1.0, -1.0, 1.0,
-        -1.0, -1.0, -1.0,
-        -1.0, 1.0, -1.0,
-        1.0, 1.0, 1.0,
-        1.0, -1.0, 1.0,
-        1.0, -1.0, -1.0,
-        1.0, 1.0, -1.0,
-        1.0, 1.0, 1.0,
-        1.0, -1.0, 1.0,
-        -1.0, -1.0, 1.0,
-        -1.0, 1.0, 1.0,
-        1.0, 1.0, -1.0,
-        1.0, -1.0, -1.0,
-        -1.0, -1.0, -1.0,
-        -1.0, 1.0, -1.0,
-        -1.0, -1.0, -1.0,
-        -1.0, -1.0, 1.0,
-        1.0, -1.0, 1.0,
-        1.0, -1.0, -1.0,
+        -0.5, 0.5, -0.5,
+        -0.5, 0.5, 0.5,
+        0.5, 0.5, 0.5,
+        0.5, 0.5, -0.5,
+        -0.5, 0.5, 0.5,
+        -0.5, -0.5, 0.5,
+        -0.5, -0.5, -0.5,
+        -0.5, 0.5, -0.5,
+        0.5, 0.5, 0.5,
+        0.5, -0.5, 0.5,
+        0.5, -0.5, -0.5,
+        0.5, 0.5, -0.5,
+        0.5, 0.5, 0.5,
+        0.5, -0.5, 0.5,
+        -0.5, -0.5, 0.5,
+        -0.5, 0.5, 0.5,
+        0.5, 0.5, -0.5,
+        0.5, -0.5, -0.5,
+        -0.5, -0.5, -0.5,
+        -0.5, 0.5, -0.5,
+        -0.5, -0.5, -0.5,
+        -0.5, -0.5, 0.5,
+        0.5, -0.5, 0.5,
+        0.5, -0.5, -0.5,
       ],
       indices: [
         // Top
@@ -63,7 +63,7 @@ class Cube extends GameObject {
         21, 20, 22,
         22, 20, 23
       ],
-      texCoords: [
+      uvs: [
         0, 0,
         0, 1,
         1, 1,
@@ -95,9 +95,7 @@ class Cube extends GameObject {
   }
 
   init() {
-    this.preload().then(() => {
-      super.init()
-    })
+    this.preload().then(() => {super.init()})
   }
 
   preload() {
