@@ -1,8 +1,8 @@
-import stateManager from '../../commons/managers/stateManager'
-import shaderManager from '../../commons/managers/shaderManager'
-import resourceManager from '../../commons/managers/resourceManager'
-import GameObject from '../../commons/GameObject'
-import MeshRenderer from '../../commons/MeshRenderer'
+import timeManager from '../commons/managers/timeManager'
+import shaderManager from '../commons/managers/shaderManager'
+import resourceManager from '../commons/managers/resourceManager'
+import GameObject from '../commons/GameObject'
+import MeshRenderer from '../commons/MeshRenderer'
 
 
 class Cube extends GameObject {

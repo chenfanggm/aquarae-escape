@@ -1,10 +1,10 @@
 import './main.scss'
 import './normalize'
-import './commons/libs/gl-matrix'
+import './game/commons/libs/gl-matrix'
 import config from '../config'
-import Detector from './commons/libs/Detector'
-import Escape from './game/index'
-import utils from './commons/utils'
+import Detector from './game/commons/libs/Detector'
+import Escape from './game'
+import utils from './game/commons/utils'
 
 
 // global debug flag
@@ -17,8 +17,8 @@ if (Detector.webgl) {
   canvas.height = window.innerHeight
   const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
   // start game
-  const gameConfig = { gl, canvas, frameRate: 30 }
-  window.aquarae = gameConfig
+  const gameConfig = { gl, canvas }
+  window.aquarae = window.aquarae && {...window.aquarae, ...gameConfig} || gameConfig
   const game = new Escape(gameConfig)
   game.start()
 
@@ -38,4 +38,3 @@ if (Detector.webgl) {
   const warning = Detector.getWebGLErrorMessage()
   document.getElementById('mainCanvas').appendChild(warning)
 }
-

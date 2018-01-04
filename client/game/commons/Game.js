@@ -1,5 +1,5 @@
 import sceneManager from './managers/sceneManager'
-import stateManager from './managers/stateManager'
+import timeManager from './managers/timeManager'
 import objectManager from './managers/objectManager'
 import shaderManager from './managers/shaderManager'
 import resourceManager from './managers/resourceManager'
@@ -8,10 +8,11 @@ import utils from './utils'
 
 
 class Game {
-  constructor({gl, canvas, frameRate}) {
+  constructor({gl, canvas}) {
     this.gl = gl
     this.canvas = canvas
-    this.frameTime = 1000 / frameRate
+    this.fps = 40
+    this.frameTimePerUpdate = 1000 / this.fps
     this.prevTime = this.nowTime = 0
     this.runningLoop = null
     // default meta
@@ -25,7 +26,6 @@ class Game {
   preloadResource() {
     const resourcesToLoad = [
       //resourceManager.loadText()
-      Promise.resolve()
     ]
     return Promise.all(resourcesToLoad)
   }
@@ -56,12 +56,12 @@ class Game {
   }
 
   loop(timestamp) {
-    stateManager.setNowTime(timestamp)
-    if (stateManager.getDeltaTime() > this.frameTime) {
+    timeManager.setNowTime(timestamp)
+    if (timeManager.getDeltaTime() > this.frameTimePerUpdate) {
       this.input()
       this.update()
       this.render()
-      stateManager.updateTime(timestamp)
+      timeManager.updateTimer(timestamp)
     }
     this.runningLoop = window.requestAnimationFrame(this.loop)
   }
@@ -87,7 +87,7 @@ class Game {
     // reset manager
     objectManager.reset()
     sceneManager.reset()
-    stateManager.reset()
+    timeManager.reset()
     shaderManager.reset()
   }
 

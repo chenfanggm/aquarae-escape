@@ -1,4 +1,4 @@
-import Scene from '../../commons/Scene'
+import Scene from '../commons/Scene'
 import Plane from '../objects/Plane'
 import Cube from '../objects/Cube'
 import Susan from '../objects/Susan'
@@ -44,7 +44,6 @@ class MainScene extends Scene {
     })
     player.addComponent(new PlayerController(player))
     this.addChild(player)
-
     const plane = new Plane({
       width: 20,
       height: 20

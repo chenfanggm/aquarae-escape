@@ -1,7 +1,7 @@
-import * as glm from '../../commons/libs/gl-matrix'
-import stateManager from '../../commons/managers/stateManager'
-import inputManager from '../../commons/managers/inputManager'
-import GameComponent from '../../commons/GameComponent'
+import * as glm from '../commons/libs/gl-matrix'
+import timeManager from '../commons/managers/timeManager'
+import inputManager from '../commons/managers/inputManager'
+import GameComponent from '../commons/GameComponent'
 
 
 class PlayerController extends GameComponent {
@@ -22,7 +22,7 @@ class PlayerController extends GameComponent {
   }
 
   update() {
-    const deltaTime = stateManager.getDeltaTime()
+    const deltaTime = timeManager.getDeltaTime()
     this.doRotate(deltaTime)
     this.doMove(deltaTime)
   }

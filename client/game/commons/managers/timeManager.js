@@ -1,5 +1,5 @@
 
-class StateManager {
+class TimeManager {
   constructor() {
     this.prevTime = 0
     this.nowTime = 0
@@ -14,10 +14,11 @@ class StateManager {
     this.nowTime = timestamp
   }
 
-  updateTime(timestamp) {
+  updateTimer(timestamp) {
     this.prevTime = this.nowTime
     this.nowTime = timestamp
   }
+
 
   getDeltaTime() {
     return this.nowTime - this.prevTime
@@ -28,5 +29,5 @@ class StateManager {
   }
 }
 
-const stateManager = new StateManager()
-export default stateManager
+const timeManager = new TimeManager()
+export default timeManager

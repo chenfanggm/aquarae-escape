@@ -1,10 +1,12 @@
-import sceneManager from '../commons/managers/sceneManager'
-import shaderManager from '../commons/managers/shaderManager'
-import Game from '../commons/Game'
+import uuid from 'uuid/v4'
+import sceneManager from './commons/managers/sceneManager'
+import shaderManager from './commons/managers/shaderManager'
+import Game from './commons/Game'
 import MainScene from './scenes/MainScene'
-import ShaderProgram from '../commons/ShaderProgram'
+import ShaderProgram from './commons/ShaderProgram'
 import simpleDiffuseShader from './shaders/simpleDiffuseShader'
 import simpleStandardShader from './shaders/simpleStandardShader'
+import arenaService from './services/arenaService'
 
 
 class Escape extends Game {

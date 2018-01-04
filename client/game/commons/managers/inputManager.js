@@ -1,5 +1,5 @@
 import KeyCode from 'keycode-js'
-
+import gameService from '../../services/gameService'
 
 class InputManager {
   constructor() {
@@ -24,6 +24,10 @@ class InputManager {
 
   onChange() {
     this.updateAxis()
+  }
+
+  sendKeyMap() {
+    gameService.sendKeyMap(this.keyMap)
   }
 
   setKeyDown(keyCode) {

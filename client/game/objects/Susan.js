@@ -1,8 +1,8 @@
-import stateManager from '../../commons/managers/stateManager'
-import shaderManager from '../../commons/managers/shaderManager'
-import resourceManager from '../../commons/managers/resourceManager'
-import GameObject from '../../commons/GameObject'
-import MeshRenderer from '../../commons/MeshRenderer'
+import timeManager from '../commons/managers/timeManager'
+import shaderManager from '../commons/managers/shaderManager'
+import resourceManager from '../commons/managers/resourceManager'
+import GameObject from '../commons/GameObject'
+import MeshRenderer from '../commons/MeshRenderer'
 
 
 class Susan extends GameObject {
@@ -38,7 +38,7 @@ class Susan extends GameObject {
   }
 
   update() {
-    const delta = stateManager.getDeltaTime()
+    const delta = timeManager.getDeltaTime()
     const eulerAngleDiffY = delta / 1000 / 6 * 360
     this.transform.rotate([0, 0, eulerAngleDiffY])
     super.update()
