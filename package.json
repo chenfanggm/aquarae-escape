@@ -18,7 +18,7 @@
   },
   "betterScripts": {
     "dev": {
-      "command": "nodemon --exec babel-node bin/start",
+      "command": "nodemon --watch /Users/chen/project/aquarae-escape-client/server/server.js --exec babel-node bin/start",
       "env": {
         "NODE_ENV": "development",
         "DEBUG": "app:*"
@@ -52,7 +52,8 @@
     "normalize.css": "^7.0.0",
     "npm-check-updates": "^2.13.0",
     "three": "^0.88.0",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "socket": "^4.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.6",

@@ -2,11 +2,13 @@
 class TimeManager {
   constructor() {
     this.prevTime = 0
+    this.prevLogicTime = 0
     this.nowTime = 0
   }
 
   reset() {
     this.prevTime = 0
+    this.prevLogicTime = 0
     this.nowTime = 0
   }
 
@@ -19,9 +21,17 @@ class TimeManager {
     this.nowTime = timestamp
   }
 
+  updateLogicTimer(timestamp) {
+    this.prevLogicTime = this.nowTime
+    this.nowTime = timestamp
+  }
 
   getDeltaTime() {
     return this.nowTime - this.prevTime
+  }
+
+  getLogicDeltaTime() {
+    return this.nowTime - this.prevLogicTime
   }
 
   getTimeElapsed() {

@@ -2,13 +2,19 @@ import path from 'path'
 import config from '../config'
 import webpack from 'webpack'
 import webpackConfig from '../config/webpack.config'
+import http from 'http'
+import url from 'url'
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
+import WebSocket from 'ws'
 import httpStatus from 'http-status'
+import APIHandler from './controllers/APIHandler'
 import errorHandler from './express-middleware/errorHandler'
 import APIError from './APIError'
 import _debug from 'debug'
+import arenaService from './services/arenaService'
+
 
 const debug = _debug('app:server')
 
@@ -77,4 +83,48 @@ app.use(function (err, req, res, next) {
 // error handler
 app.use(errorHandler())
 
-module.exports = app
+// WSS
+const server = http.createServer(app)
+const wss = new WebSocket.Server({ server })
+const apiHandler = new APIHandler()
+wss.on('connection', (ws, req) => {
+  const location = url.parse(req.url, true)
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+  debug(`a client is connected from: ${ip}`)
+
+  ws.isAlive = true
+  ws.on('message', (message) => {
+    let msgMeta = null
+    try {
+      msgMeta = JSON.parse(message)
+    } catch (err) {
+      console.log(message)
+    }
+
+    switch (msgMeta.type) {
+      case 'cmd':
+        arenaService.enqueueCmd(msgMeta.data)
+        break
+      case 'api':
+        apiHandler.handle(ws, msgMeta)
+        break
+      default:
+        break
+    }
+  })
+
+  ws.on('error', (err) => {
+    debug('received error: ', err)
+  })
+
+  // socket health check
+  const interval = setInterval(() => {
+    wss.clients.forEach((ws) => {
+      if (ws.isAlive === false) return ws.terminate()
+      ws.isAlive = false
+      ws.ping('', false, true)
+    })
+  }, 30000)
+})
+
+module.exports = server

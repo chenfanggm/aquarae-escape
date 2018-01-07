@@ -5,22 +5,27 @@ import shaderManager from './managers/shaderManager'
 import resourceManager from './managers/resourceManager'
 import inputManager from './managers/inputManager'
 import utils from './utils'
+import socketService from "../services/socketService";
 
 
 class Game {
   constructor({gl, canvas}) {
     this.gl = gl
     this.canvas = canvas
-    this.fps = 40
+    this.fps = 60
     this.frameTimePerUpdate = 1000 / this.fps
+    this.logicFPS = 40
+    this.logicTimePerUpdate = 1000 / this.logicFPS
     this.prevTime = this.nowTime = 0
     this.runningLoop = null
+    this.runningLogicLoop = null
     // default meta
     this.width = this.canvas.width
     this.height = this.canvas.height
     this.devicePixelRatio = window.devicePixelRatio || 1
     this.bgColor = 0xFFFFFF
-    this.loop = this.loop.bind(this)
+    this.renderLoop = this.renderLoop.bind(this)
+    this.logicLoop = this.logicLoop.bind(this)
   }
 
   preloadResource() {
@@ -34,7 +39,8 @@ class Game {
     this.preloadResource()
       .then(() => {
         this.init()
-        window.requestAnimationFrame(this.loop)
+        window.requestAnimationFrame(this.logicLoop)
+        window.requestAnimationFrame(this.renderLoop)
         console.info('Game started...')
       })
   }
@@ -55,19 +61,38 @@ class Game {
     sceneManager.init()
   }
 
-  loop(timestamp) {
+  logicLoop(timestamp) {
+    timeManager.setNowTime(timestamp)
+    if (timeManager.getLogicDeltaTime() > this.logicTimePerUpdate) {
+      const elapsedTime = timeManager.getTimeElapsed()
+      this.sendCmd()
+      timeManager.updateLogicTimer(timestamp)
+    }
+    this.runningLogicLoop = window.requestAnimationFrame(this.logicLoop)
+  }
+
+  renderLoop(timestamp) {
     timeManager.setNowTime(timestamp)
     if (timeManager.getDeltaTime() > this.frameTimePerUpdate) {
       this.input()
+      this.enqueue()
       this.update()
       this.render()
       timeManager.updateTimer(timestamp)
     }
-    this.runningLoop = window.requestAnimationFrame(this.loop)
+    this.runningLoop = window.requestAnimationFrame(this.renderLoop)
+  }
+
+  sendCmd() {
+    socketService.flushCmd()
   }
 
   input() {
     sceneManager.getCurScene().input()
+  }
+
+  enqueue() {
+    sceneManager.getCurScene().enqueue()
   }
 
   update() {
@@ -82,6 +107,9 @@ class Game {
   reset() {
     // reset animation
     if (this.runningLoop) {
+      cancelAnimationFrame(this.runningLoop)
+    }
+    if (this.runningLogicLoop) {
       cancelAnimationFrame(this.runningLoop)
     }
     // reset manager

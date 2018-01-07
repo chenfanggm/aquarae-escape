@@ -1,5 +1,4 @@
 import KeyCode from 'keycode-js'
-import gameService from '../../services/gameService'
 
 class InputManager {
   constructor() {

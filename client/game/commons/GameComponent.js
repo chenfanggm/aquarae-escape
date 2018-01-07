@@ -15,6 +15,10 @@ class GameComponent {
 
   }
 
+  enqueue() {
+
+  }
+
   update() {
 
   }

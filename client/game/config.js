@@ -2,7 +2,7 @@ export default {
   server: {
     protocol: 'ws',
     host: 'localhost',
-    port: 4000,
+    port: 3000,
     path: 'escape'
   }
 }

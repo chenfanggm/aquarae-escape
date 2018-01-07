@@ -22,6 +22,12 @@ class Scene {
     })
   }
 
+  enqueue() {
+    this.children.forEach((obj) => {
+      obj.enqueue()
+    })
+  }
+
   update() {
     this.children.forEach((obj) => {
       if (obj.isReady) {

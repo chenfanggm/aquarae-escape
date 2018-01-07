@@ -2,6 +2,7 @@ import * as glm from '../commons/libs/gl-matrix'
 import timeManager from '../commons/managers/timeManager'
 import inputManager from '../commons/managers/inputManager'
 import GameComponent from '../commons/GameComponent'
+import socketService from '../services/socketService'
 
 
 class PlayerController extends GameComponent {
@@ -11,14 +12,56 @@ class PlayerController extends GameComponent {
       x: 0,
       y: 0
     }
+
+    this.targetPos = this.owner.transform.position
+    this.originalPos = this.owner.transform.position
+    this.targetAnimationStart = timeManager.getTimeElapsed();
+
+    this.tentativePos = this.owner.transform.position;
+
+
     this.isGround = false
     this.moveSpeed = 3
     this.rotationSpeed = 120
+    this.cmdHandler = this.cmdHandler.bind(this)
+  }
+
+  init() {
+    socketService.register(this.owner.id, this.cmdHandler)
+    this.joinGame()
+  }
+
+  joinGame() {
+    socketService.post('/login', this.owner.id)
+  }
+
+  cmdHandler(cmd) {
+    console.log("PlayerController.cmdHandler receives ", cmd, " action=" + cmd.action + " value=" + cmd.value + " ownerId=" + cmd.ownerId);
+    if (cmd.ownerId && (cmd.ownerId == -999 || cmd.ownerId == this.owner.id)) {
+      this.originalPos = this.owner.transform.position = this.targetPos;
+      this.targetPos = this.tentativePos = cmd.data
+      this.targetAnimationStart = timeManager.getTimeElapsed()
+    }
   }
 
   input() {
     this.directInput.x = inputManager.getAxis('Horizontal')
     this.directInput.y = inputManager.getAxis('Vertical')
+  }
+
+  enqueue() {
+    if (this.directInput.x !== 0 || this.directInput.y !== 0) {
+      const newPos = glm.vec3.create()
+      const UPDATE_INTERVAL = 1000 / 20;
+      glm.vec3.scale(newPos, this.owner.transform.forward, this.directInput.y * this.moveSpeed * UPDATE_INTERVAL / 1000)
+      glm.vec3.add(newPos, this.tentativePos, newPos)
+      this.tentativePos = newPos;
+      socketService.enqueueCmd({
+        ownerId: this.owner.id,
+        type: 'move',
+        data: newPos
+      })
+    }
   }
 
   update() {
@@ -39,12 +82,24 @@ class PlayerController extends GameComponent {
     //   Debug.Log(Vector3.Distance(targetPos, forwardRay.point));
     //   if (Vector3.Distance(targetPos, forwardRay.point) < width) return;
     // }
-    const targetPos = glm.vec3.create()
-    glm.vec3.scale(targetPos, this.owner.transform.forward, this.directInput.y * this.moveSpeed * deltaTime / 1000)
-    glm.vec3.add(targetPos, this.owner.transform.position, targetPos)
+    const diff = glm.vec3.create()
+    glm.vec3.subtract(diff, this.targetPos, this.owner.transform.position)
+    glm.vec3.normalize(diff, diff)
+
+    const UPDATE_INTERVAL = 1000 / 20;
+    const timeNow = timeManager.getTimeElapsed()
+    let completion = (timeNow - this.targetAnimationStart) / UPDATE_INTERVAL;
+    if (completion < 0) completion = 0;
+    else if (completion > 1) completion = 1;
+
+    const targetPos = glm.vec3.create();
+    const p0 = glm.vec3.create()
+    const p1 = glm.vec3.create()
+    glm.vec3.mul(p0, glm.vec3.fromValues(1.0-completion, 1.0-completion, 1.0-completion), this.originalPos);
+    glm.vec3.mul(p1, glm.vec3.fromValues(completion, completion, completion), this.targetPos);
+    glm.vec3.add(targetPos, p0, p1);
     this.owner.transform.setPosition(targetPos)
   }
-
 
   // calForward() {
   //   if (!this.isGrounded) {

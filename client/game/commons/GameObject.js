@@ -7,7 +7,7 @@ import shaderManager from "./managers/shaderManager";
 class GameObject {
   constructor(opts = {}) {
     this.gl = aquarae.gl
-    this.name = opts.id || uuid()
+    this.id = opts.id || uuid()
     this.children = []
     this.components = []
     this.transform = new Transform(this)
@@ -31,7 +31,7 @@ class GameObject {
     }
 
     this.addComponent(this.transform)
-    objectManager.add(this.name, this)
+    objectManager.add(this.id, this)
   }
 
   init() {
@@ -50,6 +50,15 @@ class GameObject {
     })
     this.children.forEach((obj) => {
       obj.input()
+    })
+  }
+
+  enqueue() {
+    this.components.forEach((component) => {
+      component.enqueue()
+    })
+    this.children.forEach((obj) => {
+      obj.enqueue()
     })
   }
 
