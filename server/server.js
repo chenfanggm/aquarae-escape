@@ -10,10 +10,11 @@ import bodyParser from 'body-parser'
 import WebSocket from 'ws'
 import httpStatus from 'http-status'
 import APIHandler from './controllers/APIHandler'
+import CMDHandler from './cmds/CMDHandler'
 import errorHandler from './middleware/errorHandler'
 import APIError from './APIError'
 import _debug from 'debug'
-import arenaService from './services/arenaService'
+import arenaService from './services/Room'
 
 
 const debug = _debug('app:server')
@@ -87,6 +88,7 @@ app.use(errorHandler())
 const server = http.createServer(app)
 const wss = new WebSocket.Server({ server })
 const apiHandler = new APIHandler()
+const cmdHandler = new CMDHandler()
 wss.on('connection', (ws, req) => {
   const location = url.parse(req.url, true)
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
@@ -97,19 +99,18 @@ wss.on('connection', (ws, req) => {
     let msgMeta = null
     try {
       msgMeta = JSON.parse(message)
-    } catch (err) {
-      console.log(message)
-    }
-
-    switch (msgMeta.type) {
+      switch (msgMeta.type) {
       case 'cmd':
-        arenaService.enqueueCmd(msgMeta.data)
+        cmdHandler.handle(msgMeta) // TODO changed msgMega.data to msgMeta --- need 2 check !
         break
       case 'api':
         apiHandler.handle(ws, msgMeta)
         break
       default:
         break
+      }
+    } catch (err) {
+      console.log(message)
     }
   })
 

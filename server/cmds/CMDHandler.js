@@ -1,5 +1,5 @@
 import playerHandler from './playerHandler'
-import arenaService from '../services/arenaService'
+import hallService from '../services/hallService'
 
 
 class CMDHandler {
@@ -16,12 +16,11 @@ class CMDHandler {
     })
   }
 
-  handle(commands) {
-    commands.forEach((cmd) => {
-      if (this.handlers[cmd.type]) {
-        this.handlers[cmd.type](cmd.data)
-      }
-    })
+  handle(msgMeta) {
+    const room = hallService.getRoomById(msgMeta.roomId)
+    if (room) {
+      room.enqueueCmd(msgMeta.data)
+    }
   }
 }
 

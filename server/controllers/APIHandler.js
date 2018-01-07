@@ -1,4 +1,4 @@
-const arenaController = require('./arenaController')
+const arenaController = require('./hallController')
 
 class ApiHandler {
   constructor() {
@@ -17,7 +17,7 @@ class ApiHandler {
   handle(ws, api) {
     const hash = `${api.method}${api.path}`
     if (this.handlers[hash]) {
-      this.handlers[hash](ws, api.data)
+      this.handlers[hash](ws, api)
     }
   }
 }

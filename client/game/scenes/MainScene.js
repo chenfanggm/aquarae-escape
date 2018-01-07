@@ -1,8 +1,7 @@
+import playerManager from '../commons/managers/playerManager'
 import Scene from '../commons/Scene'
 import Plane from '../objects/Plane'
-import Cube from '../objects/Cube'
 import Susan from '../objects/Susan'
-import PlayerController from '../scripts/PlayerController'
 
 
 class MainScene extends Scene {
@@ -39,10 +38,7 @@ class MainScene extends Scene {
     // })
     // this.addChild(cube1)
 
-    const player = new Cube({
-      position: [-2, 0.5, 2]
-    })
-    player.addComponent(new PlayerController(player))
+    const player = playerManager.getCurPlayer()
     this.addChild(player)
     const plane = new Plane({
       width: 20,

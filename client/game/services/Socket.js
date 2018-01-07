@@ -5,6 +5,8 @@ class Socket {
   constructor() {
     this.isAlive = false
     this.listeners = {}
+    this.generalListeners = []
+    this.callbacks = {}
   }
 
   init() {
@@ -27,6 +29,9 @@ class Socket {
         if (payload.type === 'cmd') {
           const commands = payload.data;
           commands.forEach((cmd) => {
+            this.generalListeners.forEach((listener) => {
+              listener(cmd)
+            })
             const ownerId = cmd.ownerId;
             if (ownerId)  {
               if (this.listeners[ownerId]) {
@@ -36,6 +41,9 @@ class Socket {
               }
             }
           })
+        } else if (payload.type === 'api' && this.callbacks[payload.id]) {
+          this.callbacks[payload.id](payload.data)
+          delete this.callbacks[payload.id]
         }
       }
 
@@ -51,11 +59,30 @@ class Socket {
 
   }
 
-  send(message) {
+  registerCallback(id, cb) {
+    this.callbacks[id] = cb
+    setTimeout(() => {
+      delete this.callbacks[id]
+    }, 1000)
+  }
+
+
+  sendCMD(message) {
+    console.log('sending cmd: ', message)
     this.checkConnection()
       .then(() => {
         this.ws.send(message)
       })
+  }
+
+  sendAPI(id, message, cb) {
+    this.checkConnection()
+      .then(() => {
+        this.ws.send(message)
+      })
+    if (cb) {
+      this.registerCallback(id, cb)
+    }
   }
 
   checkConnection() {

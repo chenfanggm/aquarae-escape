@@ -1,3 +1,4 @@
+import uuid from 'uuid/v4'
 import Socket from './Socket'
 
 
@@ -10,10 +11,17 @@ class SocketService {
       this.socket = window.aquarae.socket = new Socket()
     }
     this.outCommandBuffer = []
-    this.socket.init()
   }
 
-  register(userId, callback) {
+  init() {
+    return this.socket.init()
+  }
+
+  registerGeneralHandler(callback) {
+    this.socket.generalListeners.push(callback)
+  }
+
+  registerUserHandler(userId, callback) {
     if (this.socket.listeners[userId]) {
       this.socket.listeners[userId].push(callback)
     } else {
@@ -25,37 +33,39 @@ class SocketService {
     this.outCommandBuffer.push(cmd)
   }
 
-  flushCmd() {
+  flushCmd(roomId) {
     // If there are multiple moves take only the last one
-    const numCmds = this.outCommandBuffer.length;
-    const commands = {}
-    for (let i=numCmds-1; i>=0; i--) {
+    const uniqueCmds = {}
+    for (let i = this.outCommandBuffer.length - 1; i >= 0; i--) {
       const cmd = this.outCommandBuffer[i]
-      if (!commands.hasOwnProperty(cmd.type)) {
-        commands[cmd.type] = cmd
+      if (!uniqueCmds[cmd.type]) {
+        uniqueCmds[cmd.type] = cmd
       }
     }
-    this.sendCmd(Object.values(commands))
-    this.outCommandBuffer = [];
+    this.sendCmd(roomId, Object.values(uniqueCmds))
+    this.outCommandBuffer = []
   }
 
-  sendCmd(data) {
-    if (this.socket.isAlive) {
-      this.socket.send(JSON.stringify({
-        type: 'cmd',
-        data
-      }))
-    }
+  sendCmd(roomId, data) {
+    const message = JSON.stringify({
+      type: 'cmd',
+      roomId,
+      data
+    })
+    this.socket.sendCMD(message)
   }
 
-  post(path, data) {
+  post(path, data, cb) {
     if (this.socket.isAlive) {
-      this.socket.send(JSON.stringify({
+      const apiId = uuid()
+      const message = JSON.stringify({
+        id: apiId,
         type: 'api',
         path,
         method: 'POST',
         data
-      }))
+      })
+      this.socket.sendAPI(apiId, message, cb)
     }
   }
 }

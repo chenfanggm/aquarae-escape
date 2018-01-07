@@ -1,4 +1,5 @@
 import sceneManager from './managers/sceneManager'
+import roomManager from './managers/roomManager'
 import timeManager from './managers/timeManager'
 import objectManager from './managers/objectManager'
 import shaderManager from './managers/shaderManager'
@@ -63,7 +64,10 @@ class Game {
   logicLoop(timestamp) {
     timeManager.setNowTime(timestamp)
     if (timeManager.getLogicDeltaTime() > this.logicTimePerUpdate) {
-      this.sendCmd()
+      const roomId = roomManager.getCurRoomId()
+      if (roomId) {
+        this.sendCmd(roomId)
+      }
       timeManager.updateLogicTimer(timestamp)
     }
     this.runningLogicLoop = window.requestAnimationFrame(this.logicLoop)
@@ -81,8 +85,8 @@ class Game {
     this.runningLoop = window.requestAnimationFrame(this.renderLoop)
   }
 
-  sendCmd() {
-    socketService.flushCmd()
+  sendCmd(roomId) {
+    socketService.flushCmd(roomId)
   }
 
   input() {
