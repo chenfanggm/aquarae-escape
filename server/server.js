@@ -10,7 +10,7 @@ import bodyParser from 'body-parser'
 import WebSocket from 'ws'
 import httpStatus from 'http-status'
 import APIHandler from './controllers/APIHandler'
-import errorHandler from './express-middleware/errorHandler'
+import errorHandler from './middleware/errorHandler'
 import APIError from './APIError'
 import _debug from 'debug'
 import arenaService from './services/arenaService'
@@ -117,14 +117,9 @@ wss.on('connection', (ws, req) => {
     debug('received error: ', err)
   })
 
-  // socket health check
-  const interval = setInterval(() => {
-    wss.clients.forEach((ws) => {
-      if (ws.isAlive === false) return ws.terminate()
-      ws.isAlive = false
-      ws.ping('', false, true)
-    })
-  }, 30000)
+  ws.on('close', () => {
+    debug('a ws is closed')
+  })
 })
 
 module.exports = server

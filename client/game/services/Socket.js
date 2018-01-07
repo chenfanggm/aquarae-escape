@@ -17,15 +17,15 @@ class Socket {
       }
 
       this.ws.onmessage = (message) => {
-        let data = null
+        let payload = null
         try {
-          data = JSON.parse(message.data)
+          payload = JSON.parse(message.data)
         } catch (err) {
-          data = message.data
+          payload = message.data
         }
 
-        if (data.data) {
-          const commands = data.data;
+        if (payload.type === 'cmd') {
+          const commands = payload.data;
           commands.forEach((cmd) => {
             const ownerId = cmd.ownerId;
             if (ownerId)  {

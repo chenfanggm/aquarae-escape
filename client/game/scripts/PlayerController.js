@@ -3,31 +3,27 @@ import timeManager from '../commons/managers/timeManager'
 import inputManager from '../commons/managers/inputManager'
 import GameComponent from '../commons/GameComponent'
 import socketService from '../services/socketService'
+import serverConfig from '../../../server/config'
 
 
 class PlayerController extends GameComponent {
   constructor(owner) {
     super(owner)
-    this.directInput = {
-      x: 0,
-      y: 0
-    }
-
-    this.targetPos = this.owner.transform.position
+    this.broadcastInterval = serverConfig.broadcastInterval
+    this.directInput = { x: 0, y: 0 }
     this.originalPos = this.owner.transform.position
-    this.targetAnimationStart = timeManager.getTimeElapsed();
-
-    this.tentativePos = this.owner.transform.position;
-
-
+    this.tentativePos = this.owner.transform.position
+    this.targetPos = this.owner.transform.position
+    this.targetAnimationStart = timeManager.getTimeElapsed()
     this.isGround = false
     this.moveSpeed = 3
     this.rotationSpeed = 120
-    this.cmdHandler = this.cmdHandler.bind(this)
+
+    this.serverEventHandler = this.serverEventHandler.bind(this)
   }
 
   init() {
-    socketService.register(this.owner.id, this.cmdHandler)
+    socketService.register(this.owner.id, this.serverEventHandler)
     this.joinGame()
   }
 
@@ -35,10 +31,10 @@ class PlayerController extends GameComponent {
     socketService.post('/login', this.owner.id)
   }
 
-  cmdHandler(cmd) {
-    console.log("PlayerController.cmdHandler receives ", cmd, " action=" + cmd.action + " value=" + cmd.value + " ownerId=" + cmd.ownerId);
-    if (cmd.ownerId && (cmd.ownerId == -999 || cmd.ownerId == this.owner.id)) {
-      this.originalPos = this.owner.transform.position = this.targetPos;
+  serverEventHandler(cmd) {
+    console.log('receives CMD: ', cmd);
+    if (cmd.ownerId === this.owner.id) {
+      this.originalPos = this.owner.transform.position;
       this.targetPos = this.tentativePos = cmd.data
       this.targetAnimationStart = timeManager.getTimeElapsed()
     }
@@ -52,10 +48,9 @@ class PlayerController extends GameComponent {
   enqueue() {
     if (this.directInput.x !== 0 || this.directInput.y !== 0) {
       const newPos = glm.vec3.create()
-      const UPDATE_INTERVAL = 1000 / 20;
-      glm.vec3.scale(newPos, this.owner.transform.forward, this.directInput.y * this.moveSpeed * UPDATE_INTERVAL / 1000)
+      glm.vec3.scale(newPos, this.owner.transform.forward, this.directInput.y * this.moveSpeed * this.broadcastInterval / 1000)
       glm.vec3.add(newPos, this.tentativePos, newPos)
-      this.tentativePos = newPos;
+      this.tentativePos = newPos
       socketService.enqueueCmd({
         ownerId: this.owner.id,
         type: 'move',
@@ -100,51 +95,6 @@ class PlayerController extends GameComponent {
     glm.vec3.add(targetPos, p0, p1);
     this.owner.transform.setPosition(targetPos)
   }
-
-  // calForward() {
-  //   if (!this.isGrounded) {
-  //     forward = transform.forward;
-  //     return;
-  //   }
-  //   forward = Vector3.Cross(transform.right, downRay.normal);
-  // }
-  //
-  // calGroundAngle() {
-  //   if (!isGrounded) {
-  //     groundAngle = 0;
-  //     return;
-  //   }
-  //   groundAngle = Vector3.Angle(downRay.normal, transform.forward) - 90;
-  // }
-  //
-  // calTargetPos() {
-  //   targetPos = transform.position + directionInput.y * forward * moveSpeed * Time.deltaTime;
-  // }
-  //
-  // checkGround() {
-  //   if (Physics.Raycast(transform.position, -Vector3.up, out downRay, height + heightPadding, groundLayer)) {
-  //     if (Vector3.Distance(targetPos, downRay.point) < height) {
-  //       transform.position = Vector3.Lerp(transform.position, transform.position + Vector3.up * height, heightCorrectionRate * Time.deltaTime);
-  //     }
-  //     isGrounded = true;
-  //   } else {
-  //     isGrounded = false;
-  //   }
-  // }
-  //
-  // applyGravity() {
-  //   if (!isGrounded) {
-  //     transform.position += Physics.gravity * Time.deltaTime;
-  //   }
-  // }
-  //
-
-  //
-  // drawDebugLines() {
-  //   if (!isDebug) return;
-  //   Debug.DrawLine(transform.position, transform.position + forward * height * 2, Color.blue);
-  //   Debug.DrawLine(transform.position, transform.position - Vector3.up * height, Color.green);
-  // }
 }
 
 export default PlayerController

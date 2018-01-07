@@ -4,18 +4,17 @@ import objectManager from './managers/objectManager'
 import shaderManager from './managers/shaderManager'
 import resourceManager from './managers/resourceManager'
 import inputManager from './managers/inputManager'
+import socketService from '../services/socketService'
 import utils from './utils'
-import socketService from "../services/socketService";
+import config from '../config'
 
 
 class Game {
   constructor({gl, canvas}) {
     this.gl = gl
     this.canvas = canvas
-    this.fps = 60
-    this.frameTimePerUpdate = 1000 / this.fps
-    this.logicFPS = 40
-    this.logicTimePerUpdate = 1000 / this.logicFPS
+    this.frameTimePerUpdate = 1000 / config.game.renderFPS
+    this.logicTimePerUpdate = 1000 / config.game.logicFPS
     this.prevTime = this.nowTime = 0
     this.runningLoop = null
     this.runningLogicLoop = null
@@ -64,7 +63,6 @@ class Game {
   logicLoop(timestamp) {
     timeManager.setNowTime(timestamp)
     if (timeManager.getLogicDeltaTime() > this.logicTimePerUpdate) {
-      const elapsedTime = timeManager.getTimeElapsed()
       this.sendCmd()
       timeManager.updateLogicTimer(timestamp)
     }
