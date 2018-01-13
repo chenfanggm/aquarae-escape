@@ -33,14 +33,18 @@ class PlayerController extends GameComponent {
   serverGeneralCMDHandler(cmd) {
     switch (cmd.type) {
       case 'spawn': {// TODO SPAWN = need Scene object
-        console.log('PlayerController receives CMD type=spawn ownerId=' + cmd.ownerId);
-        var spawned = new Cube([0, 0.5, 0])
-        spawned.id = cmd.ownerId
-        spawned.addComponent(new AgentController(spawned))
-        sceneManager.getCurScene().addChild(spawned)
-        console.log(sceneManager.children)
+        if (cmd.ownerId == this.owner.id) {}
+        else {
+          console.log('PlayerController receives CMD type=spawn ownerId=' + cmd.ownerId);
+          var spawned = new Cube([0, 0.5, 0])
+          spawned.id = cmd.ownerId
+          var ac = new AgentController(spawned);
+          ac.registerUserHandler(spawned.id, ac.serverCMDHandler);
+          spawned.addComponent(ac);
+          sceneManager.getCurScene().addChild(spawned)
+        }
       }
-        break
+        break;
       default:
         break
     }
@@ -55,7 +59,19 @@ class PlayerController extends GameComponent {
           this.targetPos = this.tentativePos = cmd.data;
           this.targetAnimationStart = timeManager.getTimeElapsed()
         }
-        break
+        break;
+      case 'loginResponse':
+        var x = cmd.existingUserIds;
+        x.forEach((sid) => { // Y U has no tekschures!
+          var e = new Cube([0, 0.5, 0]);
+          e.id = cmd.ownerId;
+          var ac = new AgentController(e);
+          e.addComponent(ac);
+          ac.registerUserHandler(spawned.id, ac.serverCMDHandler);
+          sceneManager.getCurScene().addChild(e);
+        });
+        console.log("Login response: " + x.length + " existing players");
+        break;
       default:
         break
     }

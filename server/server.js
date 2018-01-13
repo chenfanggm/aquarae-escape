@@ -5,16 +5,10 @@ import webpackConfig from '../config/webpack.config'
 import http from 'http'
 import url from 'url'
 import express from 'express'
-import cookieParser from 'cookie-parser'
-import bodyParser from 'body-parser'
 import WebSocket from 'ws'
-import httpStatus from 'http-status'
 import APIHandler from './controllers/APIHandler'
 import CMDHandler from './cmds/CMDHandler'
-import errorHandler from './middleware/errorHandler'
-import APIError from './APIError'
 import _debug from 'debug'
-import arenaService from './services/Room'
 
 
 const debug = _debug('app:server')
@@ -27,7 +21,6 @@ const app = express()
 
 if (config.env === 'development') {
   const compiler = webpack(webpackConfig)
-
   debug('Enabling webpack development and HMR middleware')
   app.use(require('webpack-dev-middleware')(compiler, {
     publicPath  : webpackConfig.output.publicPath,
@@ -48,9 +41,7 @@ if (config.env === 'development') {
   app.use('/', function (req, res, next) {
     const filename = path.join(compiler.outputPath, 'index.html')
     compiler.outputFileSystem.readFile(filename, (err, result) => {
-      if (err) {
-        return next(err)
-      }
+      if (err) { return next(err) }
       res.set('content-type', 'text/html')
       res.send(result)
       res.end()
@@ -65,34 +56,16 @@ if (config.env === 'development') {
   debug('Server is running on PRODUCTION mode.')
 }
 
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-// error transform
-app.use(function (err, req, res, next) {
-  if (Array.isArray(err)) {
-    const unifiedErrorMessage = err.map(function (error) { return error.msg }).join(' and ')
-    const error = new APIError(unifiedErrorMessage, httpStatus.BAD_REQUEST, true)
-    return next(error)
-  } else if (!(err instanceof APIError)) {
-    return next(new APIError(err.message, err.status, err.isPublic))
-  }
-  return next(err)
-})
-
-// error handler
-app.use(errorHandler())
-
 // WSS
 const server = http.createServer(app)
 const wss = new WebSocket.Server({ server })
 const apiHandler = new APIHandler()
 const cmdHandler = new CMDHandler()
+
 wss.on('connection', (ws, req) => {
   const location = url.parse(req.url, true)
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-  debug(`a client is connected from: ${ip}`)
+  debug(`a client is connected from: `, location, ip)
 
   ws.isAlive = true
   ws.on('message', (message) => {
@@ -101,7 +74,7 @@ wss.on('connection', (ws, req) => {
       msgMeta = JSON.parse(message)
       switch (msgMeta.type) {
       case 'cmd':
-        cmdHandler.handle(msgMeta) // TODO changed msgMega.data to msgMeta --- need 2 check !
+        cmdHandler.handle(msgMeta)
         break
       case 'api':
         apiHandler.handle(ws, msgMeta)
@@ -110,7 +83,7 @@ wss.on('connection', (ws, req) => {
         break
       }
     } catch (err) {
-      console.log(message)
+      debug('caught error in message handling:', message, err)
     }
   })
 
