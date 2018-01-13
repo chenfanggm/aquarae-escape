@@ -63,9 +63,8 @@ const apiHandler = new APIHandler()
 const cmdHandler = new CMDHandler()
 
 wss.on('connection', (ws, req) => {
-  const location = url.parse(req.url, true)
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-  debug(`a client is connected from: `, location, ip)
+  debug(`a client is connected from: `, ip)
 
   ws.isAlive = true
   ws.on('message', (message) => {
