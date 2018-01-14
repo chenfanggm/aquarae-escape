@@ -1,4 +1,4 @@
 export default {
-  userNumPerRoom: 5,
-  cmdBroadcastInterval: 1000 / 25,
+  userPerRoom: 5,
+  SERVER_BROADCAST_INTERVAL: 1000 / 25,
 }

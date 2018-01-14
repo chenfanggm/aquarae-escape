@@ -1,16 +1,17 @@
 import uuid from 'uuid/v4'
-import objectManager from './managers/objectManager'
+import objectManager from '../managers/objectManager'
 import Transform from './Transform'
-import shaderManager from "./managers/shaderManager";
+import shaderManager from "../managers/shaderManager";
 
 
 class GameObject {
   constructor(opts = {}) {
     this.gl = aquarae.gl
     this.id = opts.id || uuid()
+    this.name = opts.name || this.id
     this.children = []
     this.components = []
-    this.transform = new Transform(this)
+    this.transform = new Transform(this, opts.transform)
     this.mesh = {
       vertexBuffer: this.gl.createBuffer(),
       indexBuffer: this.gl.createBuffer(),
@@ -26,12 +27,8 @@ class GameObject {
     this.material = null
     this.isReady = true
 
-    if (opts.position) {
-      this.transform.setPosition(opts.position)
-    }
-
     this.addComponent(this.transform)
-    objectManager.add(this.id, this)
+    objectManager.add(this)
   }
 
   init() {

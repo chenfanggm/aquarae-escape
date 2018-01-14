@@ -1,6 +1,9 @@
 import playerHandler from './playerHandler'
-import hallService from '../services/hallService'
+import hallService from '../services/arenaService'
+import _debug from 'debug'
 
+
+const debug = _debug('app:cmdHandler')
 
 class CMDHandler {
   constructor() {
@@ -16,14 +19,14 @@ class CMDHandler {
     })
   }
 
-  handle(msgMeta) {
-    const room = hallService.getRoomById(msgMeta.roomId)
+  handle(ws, msgMeta) {
+    const userId = msgMeta.userId
+    const room = hallService.getRoomByUserId(userId)
     if (room) {
-      room.enqueueCmd(msgMeta.data)
+      room.enqueueCMD(msgMeta.data)
     }
   }
 }
-
 
 
 module.exports = CMDHandler

@@ -3,7 +3,6 @@ import config from '../config'
 import webpack from 'webpack'
 import webpackConfig from '../config/webpack.config'
 import http from 'http'
-import url from 'url'
 import express from 'express'
 import WebSocket from 'ws'
 import APIHandler from './controllers/APIHandler'
@@ -73,7 +72,7 @@ wss.on('connection', (ws, req) => {
       msgMeta = JSON.parse(message)
       switch (msgMeta.type) {
       case 'cmd':
-        cmdHandler.handle(msgMeta)
+        cmdHandler.handle(ws, msgMeta)
         break
       case 'api':
         apiHandler.handle(ws, msgMeta)

@@ -1,65 +1,56 @@
 import * as glm from '../commons/libs/gl-matrix'
-import timeManager from '../commons/managers/timeManager'
-import inputManager from '../commons/managers/inputManager'
+import timeManager from '../managers/timeManager'
 import GameComponent from '../commons/GameComponent'
 import socketService from '../services/socketService'
-import serverConfig from '../../../server/config'
+import utils from '../commons/utils'
 
 
 class AgentController extends GameComponent {
   constructor(owner) {
     super(owner)
-    this.cmdBroadcastInterval = serverConfig.cmdBroadcastInterval;
+    this.originalPos = this.owner.transform.position
+    this.targetPos = this.originalPos
+    this.targetAnimationStart = timeManager.getTimeElapsed()
+    this.isGround = false
 
-    this.originalPos = this.owner.transform.position;
-    this.targetPos   = this.originalPos;
-    this.targetAnimationStart = timeManager.getTimeElapsed();
-    this.roomId = null;
-
-    this.serverCMDHandler = this.serverCMDHandler.bind(this); // what is this for?
+    this.receivedUserCMDHandler = this.receivedUserCMDHandler.bind(this)
   }
 
   init() {
-    socketService.registerUserHandler(this.owner.id, this.serverCMDHandler);
+    socketService.registerUserCMDHandler(this.owner.id, this.receivedUserCMDHandler)
   }
 
-  serverCMDHandler(cmd) {
-    console.log('AgentController receives CMD type=', cmd.type);
+  receivedUserCMDHandler(cmd) {
     switch (cmd.type) {
-      case "move":
-        if (cmd.ownerId === this.ownerId) {
-          this.originalPos = this.owner.transform.position;
-          this.targetPos = this.tentativePos = cmd.data;
-          this.targetAnimationStart = timeManager.getTimeElapsed();
-        }
-        break;
+      case 'move':
+        this.originalPos = this.owner.transform.position
+        this.targetPos = cmd.data
+        this.targetAnimationStart = timeManager.getTimeElapsed()
+        break
+      default:
+        break
     }
   }
 
   update() {
-    const deltaTime = timeManager.getDeltaTime();
-    this.doRotate(deltaTime); this.doMove(deltaTime);
+    const deltaTime = timeManager.getDeltaTime()
+    this.doRotate(deltaTime)
+    this.doMove()
   }
 
-  doRotate(deltaTime) {
-  }
+  doRotate(deltaTime) {}
 
-  doMove(deltaTime) {
+  doMove() {
     const diff = glm.vec3.create()
     glm.vec3.subtract(diff, this.targetPos, this.owner.transform.position)
     glm.vec3.normalize(diff, diff)
 
-    const UPDATE_INTERVAL = 1000 / 20;
-    const timeNow = timeManager.getTimeElapsed()
-    let completion = (timeNow - this.targetAnimationStart) / UPDATE_INTERVAL;
-    if (completion < 0) completion = 0;
-    else if (completion > 1) completion = 1;
-
-    const targetPos = glm.vec3.create();
+    const animationCompletion = utils.getAnimationCompletion(this.targetAnimationStart)
+    const targetPos = glm.vec3.create()
     const p0 = glm.vec3.create()
     const p1 = glm.vec3.create()
-    glm.vec3.mul(p0, glm.vec3.fromValues(1.0-completion, 1.0-completion, 1.0-completion), this.originalPos);
-    glm.vec3.mul(p1, glm.vec3.fromValues(completion, completion, completion), this.targetPos);
+    glm.vec3.mul(p0, glm.vec3.fromValues(1.0 - animationCompletion, 1.0 - animationCompletion, 1.0 - animationCompletion), this.originalPos)
+    glm.vec3.mul(p1, glm.vec3.fromValues(animationCompletion, animationCompletion, animationCompletion), this.targetPos)
     glm.vec3.add(targetPos, p0, p1);
     this.owner.transform.setPosition(targetPos)
   }

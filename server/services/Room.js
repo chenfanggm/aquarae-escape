@@ -10,13 +10,10 @@ class Room {
     this.users = {}
     this.receivedCmds = []
     this.broadcastLoop = null
-    this.USER_PER_ROOM = config.userNumPerRoom
+    this.USER_PER_ROOM = config.userPerRoom
+    this.BROADCAST_LOOP_INTERVAL = config.SERVER_BROADCAST_INTERVAL
 
-    this.flushRoomBuffer = this.flushRoomBuffer.bind(this)
-  }
-
-  getId() {
-    return this.id
+    this.flushCMDBuffer = this.flushCMDBuffer.bind(this)
   }
 
   isAvailableToJoin() {
@@ -24,58 +21,22 @@ class Room {
   }
 
   addUser(user) {
-    // 1. inform the newly-added user of the other users
-    //    Immediately respond.
-    // This code snippet does not work
-    var x = [];
-    try {
-      var u = Object.values(this.users).slice();
-
-      if (u.length > 0) { // THIS STMT CAN GIVE AN ERROR ?????
-        for (var i = 0; i < u.length; i++) x.push(u[i].userId);
-      }
-      console.log(">>>> existing player count = " + u.length);
-    } catch (err) {
-      // May happen 'x.append is not a function.' ????
-      //  should use 'push' rather than 'append'
-      console.log(">>>> " + err)
-      console.log(x);
+    // start room broadcast loop if it's a new room
+    if (Object.values(this.users).length === 0 && !this.broadcastLoop) {
+      this.broadcastLoop = setInterval(this.flushCMDBuffer, this.BROADCAST_LOOP_INTERVAL)
     }
-
-
-    const cmd1 = {
-      type: 'loginResponse',
-      ownerId: user.userId,
-      existingUserIds: x,
-    }
-
-    setTimeout(function() {
-      console.log(">>> ");
-      console.log(cmd1);
-      console.log(">>> " + user.userId);
-      var res = "";
-      if (user.ws && user.ws.readyState === user.ws.OPEN) {
-        user.ws.send(JSON.stringify({
-          type: 'cmd',
-          data: [cmd1],
-          ownerId: user.id
-        }));
-        res = "sent";
-      } else { res = "could not send"; }
-      console.log("Send Login Response (" + cmd1.existingUserIds.length + " result = "+res);
-    }, 1234);
-
-    // 2. inform the other users of the newly-added user
-    if (Object.values(this.users).length === 0) {
-      this.broadcastLoop = setInterval(this.flushRoomBuffer, config.cmdBroadcastInterval)
-    }
-    this.users[user.userId] = user
-    debug(`a new user joined, total user: ${Object.values(this.users).length}`)
+    // add user to room
+    this.users[user.id] = user
+    debug(`Added a new user to room, total user: ${Object.values(this.users).length}`)
+    // inform other user with the new spawn
     const cmd = {
       type: 'spawn',
-      ownerId: user.userId
+      userId: user.id,
+      data: {
+        pos: [0, 0, 0]
+      }
     }
-    this.enqueueCmd([cmd])
+    this.enqueueCMD([cmd])
   }
 
   getAllUser() {
@@ -89,25 +50,23 @@ class Room {
     }
   }
 
-  enqueueCmd(cmds) {
-    this.receivedCmds.push(cmds)
+  enqueueCMD(commands) {
+    this.receivedCmds.push(commands)
   }
 
-  flushRoomBuffer() {
-    this.broadcastCMD()
+  flushCMDBuffer() {
+    const cmdCopy = this.receivedCmds
     this.receivedCmds = []
+    this.broadcastCMD(cmdCopy)
   }
 
-  broadcastCMD() {
-    var x = this.receivedCmds;
-    if (!(x.length == 0) && !(x.length == 1 && x[0].length == 0)) {
-      //debug('receivedCmds:', this.receivedCmds);
-    }
+  broadcastCMD(receivedCmds) {
     const broadcastCmds = {}
-    x.forEach((commands) => {
+    // filter last command of the same time
+    receivedCmds.forEach((commands) => {
       for (let i = commands.length - 1; i >= 0; i--) {
         const cmd = commands[i]
-        const hash = `${cmd.ownerId}-${cmd.type}`
+        const hash = `${cmd.userId}-${cmd.type}`
         if (!broadcastCmds[hash]) {
           broadcastCmds[hash] = cmd
         }
@@ -116,8 +75,8 @@ class Room {
     const users = Object.values(this.users)
     const commands = Object.values(broadcastCmds)
     if (users.length > 0 && commands.length > 0) {
-      debug(`broadcast ${commands.length} commands to ${users.length} users`)
-      debug('commands:', commands)
+      debug(`Broadcast ${commands.length} commands to ${users.length} users`)
+      debug('Commands:', commands)
       users.forEach((user) => {
         if (user.ws && user.ws.readyState === user.ws.OPEN) {
           user.ws.send(JSON.stringify({
@@ -125,7 +84,7 @@ class Room {
             data: commands
           }))
         } else {
-          this.removeUser(user.userId)
+          this.removeUser(user.id)
         }
       })
     }

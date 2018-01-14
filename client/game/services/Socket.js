@@ -4,51 +4,56 @@ import config from '../config'
 class Socket {
   constructor() {
     this.isAlive = false
-    this.listeners = {}
-    this.generalListeners = []
-    this.callbacks = {}
+    this.cmdlisteners = []
+    this.userCmdListeners = {}
+    this.apiListeners = {}
+    this.lastSendTime = Date.now()
   }
 
   init() {
     return new Promise((resolve, reject) => {
       this.ws = new WebSocket(`${config.server.protocol}://${config.server.host}:${config.server.port}`)
       this.ws.onopen = () => {
-        console.log('ws is opened!')
+        console.log('Socket is opened!')
         this.isAlive = true
         resolve(this.ws)
       }
 
       this.ws.onmessage = (message) => {
-        let payload = null
+        let msgMeta = null
         try {
-          payload = JSON.parse(message.data)
+          msgMeta = JSON.parse(message.data)
         } catch (err) {
-          payload = message.data
+          msgMeta = message.data
+          console.log('WS got none JSON message:', msgMeta)
         }
 
-        if (payload.type === 'cmd') {
-          const commands = payload.data;
+        if (msgMeta.type === 'cmd') {
+          const commands = msgMeta.data;
           commands.forEach((cmd) => {
-            this.generalListeners.forEach((listener) => {
+            
+            this.cmdlisteners.forEach((listener) => {
               listener(cmd)
             })
-            const ownerId = cmd.ownerId;
-            if (ownerId)  {
-              if (this.listeners[ownerId]) {
-                this.listeners[ownerId].forEach((listener) => {
+
+            const userId = cmd.userId
+            if (userId)  {
+              if (this.userCmdListeners[userId]) {
+                this.userCmdListeners[userId].forEach((listener) => {
                   listener(cmd)
                 })
               }
             }
+            
           })
-        } else if (payload.type === 'api' && this.callbacks[payload.id]) {
-          this.callbacks[payload.id](payload.data)
-          delete this.callbacks[payload.id]
+        } else if (msgMeta.type === 'api' && this.apiListeners[msgMeta.id]) {
+          this.apiListeners[msgMeta.id](msgMeta.data)
+          delete this.apiListeners[msgMeta.id]
         }
       }
 
       this.ws.onerror = (err) => {
-        console.log(err)
+        console.log('ws got error: ', err)
         this.isAlive = false
       }
       this.ws.onclose = () => {
@@ -56,32 +61,33 @@ class Socket {
         this.isAlive = false
       }
     })
-
   }
 
   registerCallback(id, cb) {
-    this.callbacks[id] = cb
+    this.apiListeners[id] = cb
     setTimeout(() => {
-      delete this.callbacks[id]
-    }, 1000)
+      delete this.apiListeners[id]
+    }, 2000)
   }
 
 
   sendCMD(message) {
-    console.log('sending cmd: ', message)
+    const timeNow = Date.now()
+    //console.log('Sending cmd: ', message, `${timeNow - this.lastSendTime} ms`)
+    this.lastSendTime = timeNow
     this.checkConnection()
       .then(() => {
         this.ws.send(message)
       })
   }
 
-  sendAPI(id, message, cb) {
+  sendAPI(msgMeta, cb) {
     this.checkConnection()
       .then(() => {
-        this.ws.send(message)
+        this.ws.send(JSON.stringify(msgMeta))
       })
     if (cb) {
-      this.registerCallback(id, cb)
+      this.registerCallback(msgMeta.id, cb)
     }
   }
 

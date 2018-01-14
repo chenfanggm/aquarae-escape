@@ -7,6 +7,6 @@ export default {
   },
   game: {
     renderFPS: 60,
-    logicFPS: 30
+    logicFPS: 25
   }
 }

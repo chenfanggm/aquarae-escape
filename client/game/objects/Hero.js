@@ -5,9 +5,10 @@ import GameObject from '../commons/GameObject'
 import MeshRenderer from '../commons/MeshRenderer'
 
 
-class Cube extends GameObject {
+class Hero extends GameObject {
   constructor(opts) {
     super(opts)
+    this.isAuthenticated = false
     this.material = {
       program: shaderManager.get('simpleDiffuseShader')
     }
@@ -136,4 +137,4 @@ class Cube extends GameObject {
 
 }
 
-export default Cube
+export default Hero

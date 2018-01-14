@@ -1,9 +1,9 @@
-const arenaController = require('./hallController')
+const hallController = require('./arenaController')
 
 class ApiHandler {
   constructor() {
     this.handlers = {}
-    this.register(arenaController)
+    this.register(hallController)
   }
 
   register(controllers) {
@@ -14,13 +14,12 @@ class ApiHandler {
     })
   }
 
-  handle(ws, api) {
-    const hash = `${api.method}${api.path}`
+  handle(ws, apiMeta) {
+    const hash = `${apiMeta.method}${apiMeta.path}`
     if (this.handlers[hash]) {
-      this.handlers[hash](ws, api)
+      this.handlers[hash](ws, apiMeta)
     }
   }
 }
-
 
 module.exports = ApiHandler

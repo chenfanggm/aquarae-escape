@@ -28,12 +28,6 @@ if (Detector.webgl) {
       game && game.reload && game.reload()
     })
   }
-  // resize
-  window.addEventListener('resize', utils.debounce(() => {
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
-    game && game.reload && game.reload()
-  }, 100))
 } else {
   const warning = Detector.getWebGLErrorMessage()
   document.getElementById('mainCanvas').appendChild(warning)

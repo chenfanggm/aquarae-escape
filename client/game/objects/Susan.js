@@ -1,6 +1,6 @@
-import timeManager from '../commons/managers/timeManager'
-import shaderManager from '../commons/managers/shaderManager'
-import resourceManager from '../commons/managers/resourceManager'
+import timeManager from '../managers/timeManager'
+import shaderManager from '../managers/shaderManager'
+import resourceManager from '../managers/resourceManager'
 import GameObject from '../commons/GameObject'
 import MeshRenderer from '../commons/MeshRenderer'
 

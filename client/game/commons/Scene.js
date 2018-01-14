@@ -1,13 +1,14 @@
-import sceneManager from './managers/sceneManager'
+import uuid from 'uuid/v4'
+import sceneManager from '../managers/sceneManager'
 import GameObject from './GameObject'
 
 
 class Scene {
   constructor(id) {
-    this.name = id || ''
+    this.id = id || uuid()
     this.gl = aquarae.gl
     this.children = []
-    sceneManager.add(id || this.id, this)
+    sceneManager.add(id, this)
   }
 
   init() {

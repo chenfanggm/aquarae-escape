@@ -1,10 +1,10 @@
-import sceneManager from './managers/sceneManager'
-import roomManager from './managers/roomManager'
-import timeManager from './managers/timeManager'
-import objectManager from './managers/objectManager'
-import shaderManager from './managers/shaderManager'
-import resourceManager from './managers/resourceManager'
-import inputManager from './managers/inputManager'
+import gameManager from '../managers/gameManager'
+import sceneManager from '../managers/sceneManager'
+import timeManager from '../managers/timeManager'
+import objectManager from '../managers/objectManager'
+import shaderManager from '../managers/shaderManager'
+import resourceManager from '../managers/resourceManager'
+import inputManager from '../managers/inputManager'
 import socketService from '../services/socketService'
 import utils from './utils'
 import config from '../config'
@@ -14,8 +14,8 @@ class Game {
   constructor({gl, canvas}) {
     this.gl = gl
     this.canvas = canvas
-    this.frameTimePerUpdate = 1000 / config.game.renderFPS
     this.logicTimePerUpdate = 1000 / config.game.logicFPS
+    this.frameTimePerUpdate = 1000 / config.game.renderFPS
     this.prevTime = this.nowTime = 0
     this.runningLoop = null
     this.runningLogicLoop = null
@@ -24,24 +24,29 @@ class Game {
     this.height = this.canvas.height
     this.devicePixelRatio = window.devicePixelRatio || 1
     this.bgColor = 0xFFFFFF
+    // server related
     this.renderLoop = this.renderLoop.bind(this)
     this.logicLoop = this.logicLoop.bind(this)
+
+    gameManager.setGame(this)
   }
 
   preloadResource() {
+    console.info('Pre-loading resources...')
     const resourcesToLoad = [
       //resourceManager.loadText()
     ]
     return Promise.all(resourcesToLoad)
+      .then(() => {
+        console.info('Resources loaded!')
+      })
   }
 
   start() {
     this.preloadResource()
       .then(() => {
+        console.info('Initiating game...')
         this.init()
-        window.requestAnimationFrame(this.logicLoop)
-        window.requestAnimationFrame(this.renderLoop)
-        console.info('Game started...')
       })
   }
 
@@ -59,15 +64,19 @@ class Game {
     this.setClearColor(this.bgColor, 1)
     inputManager.init()
     sceneManager.init()
+    console.log('Game initiated!')
+  }
+
+  loop() {
+    window.requestAnimationFrame(this.logicLoop)
+    window.requestAnimationFrame(this.renderLoop)
+    console.log('Loop started!')
   }
 
   logicLoop(timestamp) {
     timeManager.setNowTime(timestamp)
     if (timeManager.getLogicDeltaTime() > this.logicTimePerUpdate) {
-      const roomId = roomManager.getCurRoomId()
-      if (roomId) {
-        this.sendCmd(roomId)
-      }
+      this.sync()
       timeManager.updateLogicTimer(timestamp)
     }
     this.runningLogicLoop = window.requestAnimationFrame(this.logicLoop)
@@ -85,8 +94,11 @@ class Game {
     this.runningLoop = window.requestAnimationFrame(this.renderLoop)
   }
 
-  sendCmd(roomId) {
-    socketService.flushCmd(roomId)
+  sync() {
+    const player = objectManager.get('player')
+    if (player.isAuthenticated) {
+      socketService.flushCmd()
+    }
   }
 
   input() {

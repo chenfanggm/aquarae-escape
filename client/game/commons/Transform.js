@@ -4,10 +4,10 @@ import utils from './utils'
 
 
 class Transform extends GameComponent {
-  constructor(owner) {
+  constructor(owner, opts = {}) {
     super(owner)
     this.origin = glm.vec3.fromValues(0, 0, 0)
-    this.position = glm.vec3.fromValues(0, 0, 0)
+    this.position = opts.position || glm.vec3.fromValues(0, 0, 0)
     this.rotation = glm.quat.create()
     this.scale = glm.vec3.fromValues(1, 1, 1)
     this.up = glm.vec3.fromValues(0, 1, 0)

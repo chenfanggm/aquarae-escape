@@ -1,15 +1,12 @@
 import uuid from 'uuid/v4'
 import Socket from './Socket'
+import gameManager from '../managers/gameManager'
+import objectManager from "../managers/objectManager";
 
 
 class SocketService {
   constructor() {
-    if (window.aquarae && window.aquarae.socket) {
-      this.socket = window.aquarae.socket
-    } else {
-      window.aquarae = {}
-      this.socket = window.aquarae.socket = new Socket()
-    }
+    this.socket = new Socket()
     this.outCommandBuffer = []
   }
 
@@ -17,15 +14,16 @@ class SocketService {
     return this.socket.init()
   }
 
-  registerGeneralHandler(callback) {
-    this.socket.generalListeners.push(callback)
+  registerCMDHandler(callback) {
+    this.socket.cmdlisteners.push(callback)
   }
 
-  registerUserHandler(userId, callback) {
-    if (this.socket.listeners[userId]) {
-      this.socket.listeners[userId].push(callback)
+  registerUserCMDHandler(userId, callback) {
+    console.log(userId, this.socket.userCmdListeners)
+    if (this.socket.userCmdListeners[userId]) {
+      this.socket.userCmdListeners[userId].push(callback)
     } else {
-      this.socket.listeners[userId] = [callback]
+      this.socket.userCmdListeners[userId] = [callback]
     }
   }
 
@@ -33,8 +31,8 @@ class SocketService {
     this.outCommandBuffer.push(cmd)
   }
 
-  flushCmd(roomId) {
-    // If there are multiple moves take only the last one
+  flushCmd() {
+    // the last command of the same type
     const uniqueCmds = {}
     for (let i = this.outCommandBuffer.length - 1; i >= 0; i--) {
       const cmd = this.outCommandBuffer[i]
@@ -42,14 +40,15 @@ class SocketService {
         uniqueCmds[cmd.type] = cmd
       }
     }
-    this.sendCmd(roomId, Object.values(uniqueCmds))
+    this.sendCMD(Object.values(uniqueCmds))
     this.outCommandBuffer = []
   }
 
-  sendCmd(roomId, data) {
+  sendCMD(data) {
+    const player = objectManager.get('player')
     const message = JSON.stringify({
       type: 'cmd',
-      roomId,
+      userId: player.id,
       data
     })
     this.socket.sendCMD(message)
@@ -57,15 +56,14 @@ class SocketService {
 
   post(path, data, cb) {
     if (this.socket.isAlive) {
-      const apiId = uuid()
-      const message = JSON.stringify({
-        id: apiId,
+      const message = {
         type: 'api',
+        id: uuid(),
         path,
         method: 'POST',
         data
-      })
-      this.socket.sendAPI(apiId, message, cb)
+      }
+      this.socket.sendAPI(message, cb)
     }
   }
 }

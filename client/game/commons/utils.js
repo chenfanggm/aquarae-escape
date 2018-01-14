@@ -1,4 +1,6 @@
 import * as glm from './libs/gl-matrix'
+import timeManager from '../managers/timeManager'
+import serverConfig from '../../../server/config'
 
 
 const identityMatrix = glm.mat4.create()
@@ -22,5 +24,13 @@ export default {
       clearTimeout(timeout)
       timeout = setTimeout(() => func.apply(context, args), wait)
     }
+  },
+
+  getAnimationCompletion(animationStartTime) {
+    const timeNow = timeManager.getTimeElapsed()
+    let targetAnimationCompletion = (timeNow - animationStartTime) / serverConfig.SERVER_BROADCAST_INTERVAL
+    if (targetAnimationCompletion < 0) targetAnimationCompletion = 0
+    else if (targetAnimationCompletion > 1.2) targetAnimationCompletion = 1
+    return targetAnimationCompletion
   }
 }
