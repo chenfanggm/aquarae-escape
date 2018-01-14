@@ -1,10 +1,10 @@
 import './main.scss'
 import './normalize'
-import './game/commons/libs/gl-matrix'
+import './game/libs/gl-matrix'
 import config from '../config'
-import Detector from './game/commons/libs/Detector'
+import Detector from './game/libs/Detector'
 import Escape from './game'
-import utils from './game/commons/utils'
+import utils from './game/entities/utils'
 
 
 // global debug flag

@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import GameObject from '../../commons/GameObject'
+import GameObject from '../../entities/GameObject'
 import Tile, { TILE_TYPE } from './Tile/Tile'
 import sceneManager from '../../managers/sceneManager'
 import loadingManager from '../../managers/loadingManager'

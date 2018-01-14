@@ -1,4 +1,4 @@
-import * as glm from './libs/gl-matrix'
+import * as glm from '../libs/gl-matrix'
 import timeManager from '../managers/timeManager'
 import serverConfig from '../../../server/config'
 

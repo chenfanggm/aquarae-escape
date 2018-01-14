@@ -44,7 +44,7 @@ class SocketService {
   }
 
   sendCMD(data) {
-    const player = objectManager.get('player')
+    const player = gameManager.getGame().getCurPlayer()
     const message = JSON.stringify({
       type: 'cmd',
       userId: player.id,

@@ -25,6 +25,7 @@ class Game {
     this.devicePixelRatio = window.devicePixelRatio || 1
     this.bgColor = 0xFFFFFF
     // server related
+    this.player = null
     this.renderLoop = this.renderLoop.bind(this)
     this.logicLoop = this.logicLoop.bind(this)
 
@@ -95,8 +96,7 @@ class Game {
   }
 
   sync() {
-    const player = objectManager.get('player')
-    if (player.isAuthenticated) {
+    if (this.player.isConnected) {
       socketService.flushCmd()
     }
   }
@@ -143,6 +143,10 @@ class Game {
     const rgb = utils.hexToRGB(colorHex)
     const rgba = [...rgb, alpha]
     this.gl.clearColor(rgba[0]/255, rgba[1]/255, rgba[2]/255, rgba[3])
+  }
+
+  getCurPlayer() {
+    return this.player
   }
 }
 

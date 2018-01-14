@@ -1,12 +1,13 @@
 import objectManager from '../managers/objectManager'
 import socketService from '../services/socketService'
-import Scene from '../commons/Scene'
+import Scene from '../entities/Scene'
 import Plane from '../objects/Plane'
 import Susan from '../objects/Susan'
 import Hero from '../objects/Hero'
 import Cube from '../objects/Cube'
 import PlayerController from '../scripts/PlayerController'
 import AgentController from '../scripts/AgentController'
+import gameManager from "../managers/gameManager";
 
 
 class MainScene extends Scene {
@@ -48,8 +49,6 @@ class MainScene extends Scene {
     })
     this.addChild(susan)
 
-    this.spawnPlayer()
-
     socketService.registerCMDHandler(this.receivedCMDHandler)
     super.init()
   }
@@ -57,7 +56,7 @@ class MainScene extends Scene {
   receivedCMDHandler(cmd) {
     switch (cmd.type) {
       case 'spawn': {
-        const player = objectManager.get('player')
+        const player = gameManager.getGame().getCurPlayer()
         if (cmd.userId !== player.id) {
           console.log('Received CMD spawn:', cmd)
           this.spawnOtherPlayer({id: cmd.userId, position: cmd.data.pos})
@@ -69,15 +68,16 @@ class MainScene extends Scene {
     }
   }
 
-  spawnPlayer() {
+  spawnPlayer({id, position}) {
     const player = new Hero({
+      id,
       name: 'player',
-      transform: {
-        position: [-2, 0.5, 2]
-      }
+      transform: { position }
     })
     player.addComponent(new PlayerController(player))
+    player.init()
     this.addChild(player)
+    console.log('Player spawned!')
   }
 
   spawnOtherPlayer({id, position}) {
@@ -85,8 +85,7 @@ class MainScene extends Scene {
       id,
       transform: { position }
     })
-    const agentController = new AgentController(spawned)
-    spawned.addComponent(agentController)
+    spawned.addComponent(new AgentController(spawned))
     spawned.init()
     this.addChild(spawned)
   }

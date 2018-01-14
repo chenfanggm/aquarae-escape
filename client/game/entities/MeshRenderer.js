@@ -1,4 +1,4 @@
-import * as glm from './libs/gl-matrix'
+import * as glm from '../libs/gl-matrix'
 import GameComponent from './GameComponent'
 
 

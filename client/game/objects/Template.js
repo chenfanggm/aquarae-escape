@@ -1,4 +1,4 @@
-import GameObject from '../commons/GameObject';
+import GameObject from '../entities/GameObject';
 import sceneManager from '../managers/sceneManager'
 
 

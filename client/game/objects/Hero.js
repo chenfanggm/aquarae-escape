@@ -1,14 +1,13 @@
 import timeManager from '../managers/timeManager'
 import shaderManager from '../managers/shaderManager'
 import resourceManager from '../managers/resourceManager'
-import GameObject from '../commons/GameObject'
-import MeshRenderer from '../commons/MeshRenderer'
+import GameObject from '../entities/GameObject'
+import MeshRenderer from '../entities/MeshRenderer'
 
 
 class Hero extends GameObject {
   constructor(opts) {
     super(opts)
-    this.isAuthenticated = false
     this.material = {
       program: shaderManager.get('simpleDiffuseShader')
     }

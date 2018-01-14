@@ -1,8 +1,8 @@
-import * as glm from '../commons/libs/gl-matrix'
+import * as glm from '../libs/gl-matrix'
 import timeManager from '../managers/timeManager'
-import GameComponent from '../commons/GameComponent'
+import GameComponent from '../entities/GameComponent'
 import socketService from '../services/socketService'
-import utils from '../commons/utils'
+import utils from '../entities/utils'
 
 
 class AgentController extends GameComponent {
