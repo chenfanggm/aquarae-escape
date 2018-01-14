@@ -39,7 +39,6 @@ class Escape extends Game {
     return new Promise((resolve, reject) => {
       const player = objectManager.get('player')
       socketService.post('/login', player.id, (data) => {
-        console.log(data)
         if (data.users) {
           console.log('Player is logged in!')
           player.isAuthenticated = true

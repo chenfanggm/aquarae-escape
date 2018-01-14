@@ -1,4 +1,3 @@
-import playerHandler from './playerHandler'
 import hallService from '../services/arenaService'
 import _debug from 'debug'
 
@@ -8,7 +7,6 @@ const debug = _debug('app:cmdHandler')
 class CMDHandler {
   constructor() {
     this.handlers = {}
-    this.register(playerHandler)
     this.handle = this.handle.bind(this)
   }
 

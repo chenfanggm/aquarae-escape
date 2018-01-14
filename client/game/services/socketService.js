@@ -19,7 +19,6 @@ class SocketService {
   }
 
   registerUserCMDHandler(userId, callback) {
-    console.log(userId, this.socket.userCmdListeners)
     if (this.socket.userCmdListeners[userId]) {
       this.socket.userCmdListeners[userId].push(callback)
     } else {

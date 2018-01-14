@@ -59,7 +59,7 @@ class MainScene extends Scene {
       case 'spawn': {
         const player = objectManager.get('player')
         if (cmd.userId !== player.id) {
-          console.log('received CMD spawn:', cmd)
+          console.log('Received CMD spawn:', cmd)
           this.spawnOtherPlayer({id: cmd.userId, position: cmd.data.pos})
         }
       }

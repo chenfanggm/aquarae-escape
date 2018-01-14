@@ -63,7 +63,7 @@ const cmdHandler = new CMDHandler()
 
 wss.on('connection', (ws, req) => {
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-  debug(`a client is connected from: `, ip)
+  debug(`A client is connected from: `, ip)
 
   ws.isAlive = true
   ws.on('message', (message) => {
@@ -81,16 +81,16 @@ wss.on('connection', (ws, req) => {
         break
       }
     } catch (err) {
-      debug('caught error in message handling:', message, err)
+      debug('Caught error in message handling:', message, err)
     }
   })
 
   ws.on('error', (err) => {
-    debug('received error: ', err)
+    debug('Received error: ', err)
   })
 
   ws.on('close', () => {
-    debug('a ws is closed')
+    debug('A ws is closed')
   })
 })
 

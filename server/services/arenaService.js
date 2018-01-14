@@ -18,7 +18,7 @@ class ArenaService {
     }
     const user = {id: userId, ws}
     this.users[userId] = user
-    debug(`a new user logged in, total user: ${Object.values(this.users).length}`)
+    debug(`A new user logged in, total user: ${Object.values(this.users).length}`)
     const room = this.findNextAvailableRoom()
     room.addUser(user)
     user.room = room

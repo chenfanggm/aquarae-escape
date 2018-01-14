@@ -53,11 +53,11 @@ class Socket {
       }
 
       this.ws.onerror = (err) => {
-        console.log('ws got error: ', err)
+        console.log('WS got error: ', err)
         this.isAlive = false
       }
       this.ws.onclose = () => {
-        console.log('ws is closed!')
+        console.log('WS is closed!')
         this.isAlive = false
       }
     })
