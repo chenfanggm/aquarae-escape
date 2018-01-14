@@ -26,8 +26,12 @@ class Escape extends Game {
         return this.loginServer()
       })
       .then((users) => {
+        const scene = sceneManager.getCurScene()
+        const player = objectManager.get('player')
         users.forEach((user) => {
-          sceneManager.getCurScene().spawnOtherPlayer(user)
+          if (user.id !== player.id) {
+            scene.spawnOtherPlayer(user)
+          }
         })
       })
       .then(() => {
