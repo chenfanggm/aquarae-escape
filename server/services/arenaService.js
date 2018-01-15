@@ -1,6 +1,6 @@
 import _debug from 'debug'
 import config from '../config'
-import Room from './Room'
+import Room from '../entities/Room'
 
 
 const debug = _debug('app:hall')
@@ -8,22 +8,28 @@ const debug = _debug('app:hall')
 class ArenaService {
   constructor() {
     this.users = {}
-    this.rooms = []
+    this.rooms = {}
+    this.wsToUser = new WeakMap()
     this.USER_PER_ROOM = config.userPerRoom
   }
 
-  addNewUserToRoom(ws, userId) {
-    if (this.users[userId]) {
-      return this.users[userId].room
-    }
-    const user = {id: userId, ws}
-    this.users[userId] = user
+  addUserToRoom(user) {
+    this.users[user.id] = user
+    this.wsToUser.set(user.ws, user)
     debug(`A new user logged in, total user: ${Object.values(this.users).length}`)
     const room = this.findNextAvailableRoom()
     room.addUser(user)
     user.room = room
-    this.rooms.push(room)
+    this.rooms[room.id] = room
     return room
+  }
+
+  getUser(userId) {
+    return this.users[userId]
+  }
+
+  getUserBySocket(ws) {
+    return this.wsToUser.get(ws)
   }
 
   getRoomByUserId(userId) {
@@ -33,13 +39,23 @@ class ArenaService {
 
   findNextAvailableRoom() {
     let availableRoom = null
-    for (let i = 0; i < this.rooms.length; i++) {
-      if (this.rooms[i].isAvailableToJoin()) {
-        availableRoom = this.rooms[i]
+    const rooms = Object.values(this.rooms)
+    for (let i = 0; i < rooms.length; i++) {
+      if (rooms[i].isAvailableToJoin()) {
+        availableRoom = rooms[i]
         return availableRoom
       }
     }
     return new Room()
+  }
+
+  removeUser(user) {
+    user.room.removeUser(user)
+    if (user.room.isEmpty()) {
+      delete this.rooms[user.room.id]
+    }
+    this.wsToUser.delete(user.ws)
+    delete this.users[user.id]
   }
 }
 

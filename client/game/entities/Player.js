@@ -6,10 +6,6 @@ class Player {
     this.id = opts.id || uuid()
     this.isConnected = false
   }
-
-
-
-
 }
 
 export default Player

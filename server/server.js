@@ -5,9 +5,10 @@ import webpackConfig from '../config/webpack.config'
 import http from 'http'
 import express from 'express'
 import WebSocket from 'ws'
-import APIHandler from './controllers/APIHandler'
+import APIHandler from './apis/APIHandler'
 import CMDHandler from './cmds/CMDHandler'
 import _debug from 'debug'
+import arenaService from "./services/arenaService";
 
 
 const debug = _debug('app:server')
@@ -90,6 +91,10 @@ wss.on('connection', (ws, req) => {
   })
 
   ws.on('close', () => {
+    const user = arenaService.getUserBySocket(ws)
+    if (user) {
+      arenaService.removeUser(user)
+    }
     debug('A ws is closed')
   })
 })

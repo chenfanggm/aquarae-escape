@@ -33,7 +33,7 @@ class Room {
       type: 'spawn',
       userId: user.id,
       data: {
-        pos: [0, 0, 0]
+        position: user.position
       }
     }
     this.enqueueCMD([cmd])
@@ -43,11 +43,15 @@ class Room {
     return this.users
   }
 
-  removeUser(userId) {
-    delete this.users[userId]
+  removeUser(user) {
+    delete this.users[user.id]
     if (Object.values(this.users).length === 0) {
       clearInterval(this.broadcastLoop)
     }
+  }
+
+  isEmpty() {
+    return Object.values(this.users).length === 0
   }
 
   enqueueCMD(commands) {
