@@ -12,7 +12,6 @@ class AgentController extends GameComponent {
     this.targetPos = this.originalPos
     this.targetAnimationStart = timeManager.getTimeElapsed()
     this.isGround = false
-
     this.receivedUserCMDHandler = this.receivedUserCMDHandler.bind(this)
   }
 
@@ -21,10 +20,14 @@ class AgentController extends GameComponent {
   }
 
   receivedUserCMDHandler(cmd) {
+    console.log(cmd);
     switch (cmd.type) {
       case 'move':
         this.originalPos = this.owner.transform.position
-        this.targetPos = cmd.data
+        this.targetPos = cmd.data.position
+        const q = cmd.data.orientation;
+        this.owner.transform.rotation = q // is a Quaternion
+        glm.mat4.fromQuat(this.owner.transform.rotationMatrix, q)
         this.targetAnimationStart = timeManager.getTimeElapsed()
         break
       default:
@@ -44,7 +47,6 @@ class AgentController extends GameComponent {
     const diff = glm.vec3.create()
     glm.vec3.subtract(diff, this.targetPos, this.owner.transform.position)
     glm.vec3.normalize(diff, diff)
-
     const animationCompletion = utils.getAnimationCompletion(this.targetAnimationStart)
     const targetPos = glm.vec3.create()
     const p0 = glm.vec3.create()
