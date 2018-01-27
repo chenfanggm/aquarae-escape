@@ -9,7 +9,7 @@ import ShaderProgram from './entities/ShaderProgram'
 import Player from './entities/Player'
 import simpleDiffuseShader from './shaders/simpleDiffuseShader'
 import simpleStandardShader from './shaders/simpleStandardShader'
-
+import bitmapFontShader from './shaders/bitmapFontShader'
 
 class Escape extends Game {
   constructor(opts) {
@@ -24,7 +24,8 @@ class Escape extends Game {
     sceneManager.setCurScene(new MainScene('mainScene'))
     shaderManager.register([
       new ShaderProgram(simpleStandardShader),
-      new ShaderProgram(simpleDiffuseShader)
+      new ShaderProgram(simpleDiffuseShader),
+      new ShaderProgram(bitmapFontShader)
     ])
     this.createPlayer()
     super.init()

@@ -9,6 +9,7 @@ import socketService from '../services/socketService'
 import utils from './utils'
 import config from '../config'
 
+import GuiRenderer from './GuiRenderer'
 
 class Game {
   constructor({gl, canvas}) {
@@ -30,6 +31,8 @@ class Game {
     this.logicLoop = this.logicLoop.bind(this)
 
     gameManager.setGame(this)
+
+    this.guiRenderer = new GuiRenderer();
   }
 
   preloadResource() {
@@ -65,6 +68,7 @@ class Game {
     this.setClearColor(this.bgColor, 1)
     inputManager.init()
     sceneManager.init()
+    this.guiRenderer.init()
     console.log('Game initiated!')
   }
 
@@ -116,6 +120,10 @@ class Game {
   render() {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
     sceneManager.getCurScene().render()
+  }
+
+  renderUI() {
+    this.guiRenderer.render();
   }
 
   reset() {
