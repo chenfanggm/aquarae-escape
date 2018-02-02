@@ -55,6 +55,11 @@ class ShaderProgram {
     this.gl.uniform1f(uniform, value)
   }
 
+  setVec2Uniform(uniName, value) {
+    const uniform = this.gl.getUniformLocation(this.program, uniName);
+    this.gl.uniform2fv(uniform, value);
+  }
+
   setVec3Uniform(uniName, value) {
     const uniform = this.gl.getUniformLocation(this.program, uniName)
     this.gl.uniform3fv(uniform, value)

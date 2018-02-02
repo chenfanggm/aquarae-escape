@@ -4,7 +4,7 @@ import Transform from './Transform'
 import shaderManager from "../managers/shaderManager";
 
 
-class GameObject {
+class GuiObject {
   constructor(opts = {}) {
     this.gl = aquarae.gl;
     this.id = opts.id || uuid();
@@ -95,4 +95,4 @@ class GameObject {
   }
 }
 
-export default GameObject
+export default GuiObject
