@@ -38,10 +38,9 @@ class InputManager {
     canvas.addEventListener('click',(event) => {
       const mouseX = event.offsetX;
       const mouseY = event.offsetY;
-      console.log(mouseX, mouseY);
       this.mouseClickListeners.forEach((listener) => {
-        if (mouseX > listener.obj.position.x && mouseX < listener.obj.position.x + listener.obj.width
-        && mouseY > listener.obj.position.y && mouseY < listener.obj.position.y + listener.obj.height) {
+        if (mouseX > listener.owner.position[0] && mouseX < listener.owner.position[0] + listener.owner.width
+        && mouseY > listener.owner.position[1] && mouseY < listener.owner.position[1] + listener.owner.height) {
           listener.callback && listener.callback(event);
         }
       });
@@ -51,7 +50,7 @@ class InputManager {
   on(obj, eventName, callback) {
     switch (eventName) {
       case 'click':
-        this.mouseClickListeners.push({ obj, callback });
+        this.mouseClickListeners.push({ owner: obj, callback });
         break;
     }
   }

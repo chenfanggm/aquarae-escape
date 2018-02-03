@@ -15,16 +15,10 @@ class MeshRenderer extends GameComponent {
     this.sunIntensity = [0.9, 0.9, 0.9];
   }
 
-  init() {
-    this.bindBufferData();
-    this.clear();
-  }
-
   render() {
+    this.material.program.enable();
     this.bindBufferData();
-    // setup matrix
     this.computeMatrix();
-    // draw
     this.gl.drawElements(this.mesh.primitiveType, this.mesh.indices.length, this.gl.UNSIGNED_SHORT, 0);
     this.clear();
   }
@@ -61,7 +55,6 @@ class MeshRenderer extends GameComponent {
   }
 
   computeMatrix() {
-    this.material.program.enable();
     glm.mat4.identity(this.modelMatrix);
     glm.mat4.mul(this.modelMatrix, this.modelMatrix, this.owner.transform.getTransformMatrix());
     glm.mat4.lookAt(this.viewMatrix, new Float32Array([0, 15, 15]), [0, 0, 0], [0, 1, 0]);

@@ -36,8 +36,12 @@ class MainScene extends Scene {
     //   position: new THREE.Vector3(100, 100, 100),
     //   target: objectManager.get('maze')
     // }))
-    meta.objects.forEach((obj) => {
-      this.addChild(new obj.clazz(obj.options));
+    meta.objects && meta.objects.forEach((obj) => {
+      this.addChild(new obj.clazz(obj.opts));
+    });
+
+    meta.guis && meta.guis.forEach((gui) => {
+      this.addChild(new gui.clazz(gui.opts));
     });
 
     socketService.registerCMDHandler(this.receivedCMDHandler);
