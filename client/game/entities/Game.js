@@ -1,7 +1,6 @@
 import timeManager from '../managers/timeManager'
 import gameManager from '../managers/gameManager'
 import inputManager from '../managers/inputManager'
-import guiManager from '../managers/guiManager'
 import sceneManager from '../managers/sceneManager'
 import objectManager from '../managers/objectManager'
 import shaderManager from '../managers/shaderManager'
@@ -10,7 +9,6 @@ import socketService from '../services/socketService'
 import utils from './utils'
 import config from '../config'
 
-import GuiRenderer from './GuiRenderer'
 
 class Game {
   constructor({gl, canvas}) {
@@ -66,9 +64,11 @@ class Game {
     this.setClearColor(this.bgColor, 1);
     inputManager.init();
     sceneManager.init();
-    this.guiRenderer = new GuiRenderer();
-    this.guiRenderer.init();
-    console.log('Game initiated!')
+
+    return socketService.init()
+      .then(() => {
+        console.log('Game initiated!')
+      });
   }
 
   loop() {
@@ -93,7 +93,6 @@ class Game {
       this.enqueue();
       this.update();
       this.render();
-      this.renderGUI();
       timeManager.updateTimer(timestamp);
     }
     this.runningLoop = window.requestAnimationFrame(this.renderLoop)
@@ -122,10 +121,6 @@ class Game {
     sceneManager.getCurScene().render()
   }
 
-  renderGUI() {
-    this.guiRenderer.render();
-  }
-
   reset() {
     // reset animation
     if (this.runningLoop) {
@@ -138,7 +133,7 @@ class Game {
     objectManager.reset();
     sceneManager.reset();
     timeManager.reset();
-    shaderManager.reset()
+    shaderManager.reset();
   }
 
   setSize(width, height) {

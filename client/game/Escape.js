@@ -1,8 +1,6 @@
 import uuid from 'uuid/v4'
 import sceneManager from './managers/sceneManager'
 import shaderManager from './managers/shaderManager'
-import objectManager from './managers/objectManager'
-import socketService from './services/socketService'
 import Game from './entities/Game'
 import MainScene from './scenes/MainScene'
 import ShaderProgram from './entities/ShaderProgram'
@@ -10,32 +8,34 @@ import Player from './entities/Player'
 import simpleDiffuseShader from './shaders/simpleDiffuseShader'
 import simpleStandardShader from './shaders/simpleStandardShader'
 import bitmapFontShader from './shaders/bitmapFontShader'
+import { loginUser } from './services/authService'
+
 
 class Escape extends Game {
-  constructor(opts) {
-    super(opts)
-    this.loginServer = this.loginServer.bind(this)
-  }
 
   init() {
-    this.width = this.canvas.width
-    this.height = this.canvas.height
-    this.bgColor = 0xC2C3C4
-    sceneManager.setCurScene(new MainScene('mainScene'))
+    this.width = this.canvas.width;
+    this.height = this.canvas.height;
+    this.bgColor = 0xC2C3C4;
+    // scene
+    sceneManager.setCurScene(new MainScene('mainScene'));
+    // shader
     shaderManager.register([
       new ShaderProgram(simpleStandardShader),
       new ShaderProgram(simpleDiffuseShader),
       new ShaderProgram(bitmapFontShader)
-    ])
-    this.createPlayer()
-    super.init()
+    ]);
+    // player
+    this.player = new Player({
+      id: uuid()
+    });
 
-    socketService.init()
+    super.init()
       .then(() => {
-        return this.loginServer(this.player)
+        return loginUser(this.player)
       })
       .then((users) => {
-        const scene = sceneManager.getCurScene()
+        const scene = sceneManager.getCurScene();
         users.forEach((user) => {
           if (user.id === this.player.id) {
             scene.spawnPlayer(user)
@@ -46,27 +46,7 @@ class Escape extends Game {
       })
       .then(() => {
         this.loop()
-      })
-  }
-
-  createPlayer() {
-    this.player = new Player({
-      id: uuid()
-    })
-  }
-
-  loginServer(player) {
-    return new Promise((resolve, reject) => {
-      socketService.post('/login', player.id, (data) => {
-        if (data.users) {
-          console.log('Player logged in!')
-          player.isConnected = true
-          resolve(data.users)
-        } else {
-          reject('Failed to login user.')
-        }
-      })
-    })
+      });
   }
 }
 

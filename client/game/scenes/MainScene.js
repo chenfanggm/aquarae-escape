@@ -5,14 +5,15 @@ import Plane from '../objects/Plane'
 import Susan from '../objects/Susan'
 import Hero from '../objects/Hero'
 import Cube from '../objects/Cube'
+import Tree from '../objects/Tree'
 import PlayerController from '../scripts/PlayerController'
 import AgentController from '../scripts/AgentController'
-import gameManager from "../managers/gameManager";
+import gameManager from '../managers/gameManager';
 
 
 class MainScene extends Scene {
   constructor(id) {
-    super(id)
+    super(id);
     this.receivedCMDHandler = this.receivedCMDHandler.bind(this)
   }
 
@@ -41,28 +42,28 @@ class MainScene extends Scene {
     const plane = new Plane({
       width: 20,
       height: 20
-    })
-    this.addChild(plane)
+    });
+    this.addChild(plane);
 
     const susan = new Susan({
       transform: { position: [0, 1, 0] }
-    })
-    this.addChild(susan)
+    });
+    this.addChild(susan);
 
-    socketService.registerCMDHandler(this.receivedCMDHandler)
+    socketService.registerCMDHandler(this.receivedCMDHandler);
     super.init()
   }
 
   receivedCMDHandler(cmd) {
     switch (cmd.type) {
       case 'spawn': {
-        const player = gameManager.getGame().getCurPlayer()
+        const player = gameManager.getGame().getCurPlayer();
         if (cmd.userId !== player.id) {
-          console.log('Received CMD spawn:', cmd)
+          console.log('Received CMD spawn:', cmd);
           this.spawnOtherPlayer({id: cmd.userId, position: cmd.data.position})
         }
       }
-        break
+        break;
       default:
         break
     }
@@ -73,10 +74,10 @@ class MainScene extends Scene {
       id,
       name: 'player',
       transform: { position }
-    })
-    player.addComponent(new PlayerController(player))
-    player.init()
-    this.addChild(player)
+    });
+    player.addComponent(new PlayerController(player));
+    player.init();
+    this.addChild(player);
     console.log('Player spawned!', player.id)
   }
 
@@ -84,10 +85,10 @@ class MainScene extends Scene {
     const spawned = new Cube({
       id,
       transform: { position }
-    })
-    spawned.addComponent(new AgentController(spawned))
-    spawned.init()
-    this.addChild(spawned)
+    });
+    spawned.addComponent(new AgentController(spawned));
+    spawned.init();
+    this.addChild(spawned);
     console.log('One another player spawned!', spawned.id)
   }
 }

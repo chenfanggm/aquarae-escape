@@ -8,19 +8,19 @@ import utils from './game/entities/utils'
 
 
 // global debug flag
-window.__DEBUG__ = true
+window.__DEBUG__ = true;
 
 if (Detector.webgl) {
   // setup env
-  const canvas = document.getElementById('mainCanvas')
-  canvas.width = window.innerWidth
-  canvas.height = window.innerHeight
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
+  const canvas = document.getElementById('mainCanvas');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
   // start game
-  const gameConfig = { gl, canvas }
-  window.aquarae = window.aquarae && {...window.aquarae, ...gameConfig} || gameConfig
-  const game = new Escape(gameConfig)
-  game.start()
+  const gameConfig = { gl, canvas };
+  window.aquarae = window.aquarae && {...window.aquarae, ...gameConfig} || gameConfig;
+  const game = new Escape(gameConfig);
+  game.start();
 
   // HMR
   if (config.env === 'development' && module.hot) {
@@ -29,6 +29,6 @@ if (Detector.webgl) {
     })
   }
 } else {
-  const warning = Detector.getWebGLErrorMessage()
+  const warning = Detector.getWebGLErrorMessage();
   document.getElementById('mainCanvas').appendChild(warning)
 }
