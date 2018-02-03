@@ -2,32 +2,29 @@
 const vSource = `
   precision mediump float;
 
-  attribute vec2 vertex;
-  attribute vec2 texcoords;
-
-  varying vec2 TexCoords;
+  attribute vec2 aVertPosition;
+  attribute vec2 aVertTexCoord;
+  varying vec2 vTexCoords;
   
-  uniform mat4 projection;
+  uniform mat4 projMatrix;
   uniform vec2 startXY;  // pos. of the first character
 
   void main() {
-    vec4 projected = projection * vec4(vertex + startXY, 0.0, 1.0);
-    gl_Position = projected;
-    TexCoords = texcoords;
+    vTexCoords = aVertTexCoord;
+    gl_Position = projMatrix * vec4(aVertPosition + startXY, 0.0, 1.0);
   }
 `;
 
 const fSource = `
   precision mediump float;
 
-  varying vec2 TexCoords;
-  //varying vec4 color;
+  varying vec2 vTexCoords;
 
   uniform sampler2D font;
   uniform vec3 fontColor;
 
   void main() {
-    vec4 sampled = texture2D(font, TexCoords);
+    vec4 sampled = texture2D(font, vTexCoords);
     gl_FragColor = vec4(fontColor, sampled.r);
   }
 `;

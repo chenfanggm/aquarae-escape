@@ -34,7 +34,7 @@ class MeshRenderer extends GameComponent {
     // vertex
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.mesh.vertexBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.mesh.vertices), this.gl.STATIC_DRAW);
-    this.material.program.enableAttr('vertPosition', this.gl.FLOAT, 3, Float32Array.BYTES_PER_ELEMENT * 3, 0);
+    this.material.program.enableAttr('aVertPosition', this.gl.FLOAT, 3, Float32Array.BYTES_PER_ELEMENT * 3, 0);
     // indices
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.mesh.indexBuffer);
     this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.mesh.indices), this.gl.STATIC_DRAW);
@@ -42,7 +42,7 @@ class MeshRenderer extends GameComponent {
     if (this.mesh.uvs) {
       this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.mesh.uvBuffer);
       this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.mesh.uvs), this.gl.STATIC_DRAW);
-      this.material.program.enableAttr('vertTexCoord', this.gl.FLOAT, 2, Float32Array.BYTES_PER_ELEMENT * 2, 0);
+      this.material.program.enableAttr('aVertTexCoord', this.gl.FLOAT, 2, Float32Array.BYTES_PER_ELEMENT * 2, 0);
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.mesh.texBuffer);
       this.gl.activeTexture(this.gl.TEXTURE0);
     }
@@ -50,7 +50,7 @@ class MeshRenderer extends GameComponent {
     if (this.mesh.normals) {
       this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.mesh.normalBuffer);
       this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.mesh.normals), this.gl.STATIC_DRAW);
-      this.material.program.enableAttr('vertNormal', this.gl.FLOAT, 3, Float32Array.BYTES_PER_ELEMENT * 3, 0, this.gl.TRUE);
+      this.material.program.enableAttr('aVertNormal', this.gl.FLOAT, 3, Float32Array.BYTES_PER_ELEMENT * 3, 0, this.gl.TRUE);
     }
   }
 

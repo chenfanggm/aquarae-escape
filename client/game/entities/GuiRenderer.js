@@ -9,8 +9,11 @@ class GuiRenderer extends GameComponent {
     this.material = owner.material;
     this.message = owner.message;
     this.position = owner.position;
-    this.width = this.message.length * 12;
-    this.height = 16;
+    this.CHAR_WIDTH = 12;
+    this.CHAR_HEIGHT = 16;
+    this.width = this.message.length * this.CHAR_WIDTH;
+    this.height = this.CHAR_HEIGHT;
+    this.color = owner.color || [0.4, 0.8, 0.2];
 
     this.vertexBuffer = this.gl.createBuffer();
     this.uvBuffer = this.gl.createBuffer();
@@ -32,6 +35,31 @@ class GuiRenderer extends GameComponent {
     inputManager.on(this, 'click', (event) => {
       console.log('clicked hello world');
     });
+  }
+
+  init() {
+    this.vertices = [];
+    this.uvs = [];
+
+    let curr_x = 0;
+    for (let i = 0; i < this.message.length; i++) {
+      const idx = this.message.charCodeAt(i);
+      // vertex
+      const x0 = 0, x1 = x0 + this.CHAR_HEIGHT, y0 = 0, y1 = y0 - this.CHAR_HEIGHT;
+      const v = [x0,y0, x1,y1, x1,y0, x0,y0, x0,y1, x1,y1];
+      // uvs
+      const row = Math.floor(idx / this.CHAR_HEIGHT), col = idx - row * this.CHAR_HEIGHT;
+      const tx0 = col / this.CHAR_HEIGHT, dt = 1.0 / this.CHAR_HEIGHT, tx1 = tx0 + dt;
+      const ty0 = row / this.CHAR_HEIGHT, ty1 = ty0 + dt;
+      const uv = [tx0,ty0, tx1,ty1, tx1,ty0, tx0,ty0, tx0,ty1, tx1,ty1];
+
+      for (let j = 0; j < 6; j++) {
+        this.vertices.push(v[j * 2] + curr_x); this.vertices.push(v[j * 2 + 1]); // X, Y
+        this.uvs.push(uv[j * 2]); this.uvs.push(uv[j * 2 + 1]); // TX, TY
+      }
+      curr_x += this.CHAR_WIDTH;
+    }
+    super.init()
   }
 
   render() {
@@ -56,38 +84,13 @@ class GuiRenderer extends GameComponent {
   }
 
   bindBufferData() {
-    // vertex
-    const all_v = [], all_t = [];
-    const DELTA_X = 12;
-
-    let curr_x = 0;
-    for (let i = 0; i < this.message.length; i++) {
-      const idx = this.message.charCodeAt(i);
-
-      const x0 = 0, x1 = x0 + 16, y0 = 0, y1 = y0 - 16;
-      const v = [x0,y0, x1,y1, x1,y0, x0,y0, x0,y1, x1,y1];
-
-      // uvs
-      const row = Math.floor(idx / 16), col = idx - row * 16;
-      const tx0 = col / 16, dt = 1.0 / 16, tx1 = tx0 + dt;
-      const ty0 = row / 16, ty1 = ty0 + dt;
-      const uvs = [tx0,ty0, tx1,ty1, tx1,ty0, tx0,ty0, tx0,ty1, tx1,ty1];
-
-      for (let j = 0; j < 6; j++) {
-        all_v.push(v[j * 2] + curr_x); all_v.push(v[j * 2 + 1]); // X, Y
-        all_t.push(uvs[j * 2]);        all_t.push(uvs[j * 2 + 1]); // TX, TY
-      }
-      curr_x += DELTA_X;
-    }
-
-
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexBuffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(all_v), this.gl.STATIC_DRAW);
-    this.material.program.enableAttr('vertex', this.gl.FLOAT, 2, 0, 0);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.vertices), this.gl.STATIC_DRAW);
+    this.material.program.enableAttr('aVertPosition', this.gl.FLOAT, 2, 0, 0);
 
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.uvBuffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(all_t), this.gl.STATIC_DRAW);
-    this.material.program.enableAttr('texcoords', this.gl.FLOAT, 2, 0, 0);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.uvs), this.gl.STATIC_DRAW);
+    this.material.program.enableAttr('aVertTexCoord', this.gl.FLOAT, 2, 0, 0);
 
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.textureBuffer);
     this.gl.activeTexture(this.gl.TEXTURE0);
@@ -95,11 +98,11 @@ class GuiRenderer extends GameComponent {
 
   computeMatrix() {
     glm.mat4.identity(this.projMatrix);
-    glm.mat4.ortho(this.projMatrix, 0, this.game.width, 0, this.game.height, -1, 500);
-    const xy = glm.vec2.fromValues(320, this.game.height - 160);
-    this.material.program.setMatrixUniform('projection', this.projMatrix);
+    glm.mat4.ortho(this.projMatrix, 0, this.game.width, 0, this.game.height, -1, 1);
+    this.material.program.setMatrixUniform('projMatrix', this.projMatrix);
+    const xy = glm.vec2.fromValues(this.position[0], this.game.height - this.position[1]);
     this.material.program.setVec2Uniform('startXY', xy);
-    const fontColor = glm.vec3.fromValues(1,0,0);
+    const fontColor = glm.vec3.fromValues(this.color[0], this.color[1], this.color[2]);
     this.material.program.setVec3Uniform('fontColor', fontColor);
   }
 }

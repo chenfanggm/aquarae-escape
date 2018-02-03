@@ -1,7 +1,5 @@
 import uuid from 'uuid/v4';
 import objectManager from '../managers/objectManager';
-import Transform from './Transform';
-import shaderManager from '../managers/shaderManager';
 
 
 class GuiObject {
@@ -11,23 +9,8 @@ class GuiObject {
     this.name = opts.name || this.id;
     this.children = [];
     this.components = [];
-    this.transform = new Transform(this, opts.transform);
-    this.mesh = {
-      vertexBuffer: this.gl.createBuffer(),
-      indexBuffer: this.gl.createBuffer(),
-      uvBuffer: this.gl.createBuffer(),
-      texBuffer: this.gl.createTexture(),
-      normalBuffer: this.gl.createBuffer(),
-      primitiveType: this.gl.TRIANGLES,
-      vertices: null,
-      indices: null,
-      uvs: null,
-      normals: null,
-    };
     this.material = null;
     this.isReady = true;
-
-    this.addComponent(this.transform);
     objectManager.add(this);
   }
 

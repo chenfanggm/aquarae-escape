@@ -46,7 +46,7 @@ class PlayerController extends GameComponent {
       const newPos = glm.vec3.create();
       glm.vec3.scale(newPos, this.owner.transform.forward, this.directInput.y * this.moveSpeed * this.SERVER_BROADCAST_INTERVAL / 1000);
       glm.vec3.add(newPos, this.tentativePos, newPos);
-      var newOrient = glm.quat.create(); newOrient = this.owner.transform.rotation;
+      const newOrient = this.owner.transform.rotation;
       this.tentativePos = newPos;
       socketService.enqueueCmd({
         type: 'move',
