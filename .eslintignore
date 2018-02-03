@@ -1,0 +1,7 @@
+
+node_modules/
+client/statics/
+client/game/libs/
+client/index.html
+
+*.spec.js

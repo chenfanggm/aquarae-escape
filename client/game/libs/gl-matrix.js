@@ -26,13 +26,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE. */
 
 (function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
+	if (typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
+	else if (typeof define === 'function' && define.amd)
 		define([], factory);
 	else {
 		var a = factory();
-		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
+		for (var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
@@ -43,7 +43,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
+/******/ 		if (installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
@@ -72,7 +72,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 		if (!__webpack_require__.o(exports, name)) {
 /******/ 			Object.defineProperty(exports, name, {
 /******/ 				configurable: false,
 /******/ 				enumerable: true,
@@ -94,7 +94,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = '';
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 4);
@@ -104,10 +104,10 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
+
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 exports.setMatrixArrayType = setMatrixArrayType;
@@ -180,10 +180,10 @@ function equals(a, b) {
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
+
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 exports.sub = exports.mul = undefined;
@@ -1055,10 +1055,10 @@ var sub = exports.sub = subtract;
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
+
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 exports.forEach = exports.sqrLen = exports.len = exports.sqrDist = exports.dist = exports.div = exports.mul = exports.sub = undefined;
@@ -1905,10 +1905,10 @@ var forEach = exports.forEach = function () {
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
+
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 exports.forEach = exports.sqrLen = exports.len = exports.sqrDist = exports.dist = exports.div = exports.mul = exports.sub = undefined;
@@ -2571,10 +2571,10 @@ var forEach = exports.forEach = function () {
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
+
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 exports.vec4 = exports.vec3 = exports.vec2 = exports.quat = exports.mat4 = exports.mat3 = exports.mat2d = exports.mat2 = exports.glMatrix = undefined;
@@ -2657,10 +2657,10 @@ THE SOFTWARE. */
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
+
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 exports.sub = exports.mul = undefined;
@@ -3150,10 +3150,10 @@ var sub = exports.sub = subtract;
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
+
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 exports.sub = exports.mul = undefined;
@@ -3692,10 +3692,10 @@ var sub = exports.sub = subtract;
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
+
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 exports.sub = exports.mul = undefined;
@@ -5553,10 +5553,10 @@ var sub = exports.sub = subtract;
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
+
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 exports.setAxes = exports.sqlerp = exports.rotationTo = exports.equals = exports.exactEquals = exports.normalize = exports.sqrLen = exports.squaredLength = exports.len = exports.length = exports.lerp = exports.dot = exports.scale = exports.mul = exports.add = exports.set = exports.copy = exports.fromValues = exports.clone = undefined;
@@ -6250,10 +6250,10 @@ var setAxes = exports.setAxes = function () {
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
+
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 exports.forEach = exports.sqrLen = exports.sqrDist = exports.dist = exports.div = exports.mul = exports.sub = exports.len = undefined;

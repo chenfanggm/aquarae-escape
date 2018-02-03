@@ -1,7 +1,7 @@
-import uuid from 'uuid/v4'
-import objectManager from '../managers/objectManager'
-import Transform from './Transform'
-import shaderManager from "../managers/shaderManager";
+import uuid from 'uuid/v4';
+import objectManager from '../managers/objectManager';
+import Transform from './Transform';
+import shaderManager from '../managers/shaderManager';
 
 
 class GuiObject {
@@ -28,71 +28,71 @@ class GuiObject {
     this.isReady = true;
 
     this.addComponent(this.transform);
-    objectManager.add(this)
+    objectManager.add(this);
   }
 
   init() {
     this.components.forEach((component) => {
-      component.init()
+      component.init();
     });
     this.children.forEach((obj) => {
-      obj.init()
+      obj.init();
     });
-    this.isReady = true
+    this.isReady = true;
   }
 
   input() {
     this.components.forEach((component) => {
-      component.input()
+      component.input();
     });
     this.children.forEach((obj) => {
-      obj.input()
-    })
+      obj.input();
+    });
   }
 
   enqueue() {
     this.components.forEach((component) => {
-      component.enqueue()
+      component.enqueue();
     });
     this.children.forEach((obj) => {
-      obj.enqueue()
-    })
+      obj.enqueue();
+    });
   }
 
   update() {
     this.components.forEach((component) => {
-      component.update()
+      component.update();
     });
     this.children.forEach((obj) => {
-      obj.update()
-    })
+      obj.update();
+    });
   }
 
   render() {
     this.components.forEach((component) => {
-      component.render()
+      component.render();
     });
     this.children.forEach((obj) => {
-      obj.render()
-    })
+      obj.render();
+    });
   }
 
   reset() {
     this.components.forEach((component) => {
-      component.reset()
+      component.reset();
     });
     this.children.forEach((obj) => {
-      obj.reset()
-    })
+      obj.reset();
+    });
   }
 
   addChild(obj) {
-    this.children.push(obj)
+    this.children.push(obj);
   }
 
   addComponent(component) {
-    this.components.push(component)
+    this.components.push(component);
   }
 }
 
-export default GuiObject
+export default GuiObject;

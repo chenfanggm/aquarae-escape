@@ -1,28 +1,24 @@
 import GameObject from '../entities/GameObject';
-import sceneManager from '../managers/sceneManager'
+import sceneManager from '../managers/sceneManager';
 
 
 class Template extends GameObject {
-  constructor() {
-    super()
-  }
-
   init() {
-    super.init()
+    super.init();
   }
 
   update() {
-    super.update()
+    super.update();
   }
 
   render() {
-    super.render()
+    super.render();
   }
 
   reset() {
-    sceneManager.getCurScene().remove(this.mesh)
-    super.reset()
+    sceneManager.getCurScene().remove(this.mesh);
+    super.reset();
   }
 }
 
-export default Template
+export default Template;

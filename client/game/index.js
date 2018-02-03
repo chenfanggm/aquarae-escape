@@ -1,2 +1,2 @@
-import Escape from './Escape'
-export default Escape
+import Escape from './Escape';
+export default Escape;

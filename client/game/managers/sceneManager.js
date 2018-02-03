@@ -1,42 +1,42 @@
 class SceneManager {
   constructor() {
-    this.scenes = {}
-    this.curScene = null
+    this.scenes = {};
+    this.curScene = null;
   }
 
   init() {
-    this.curScene.init()
+    this.curScene.init();
   }
 
   add(id, scene) {
-    this.scenes[id] = scene
+    this.scenes[id] = scene;
   }
 
   get(id) {
-    if (this.scenes[id]) return this.scenes[id]
-    throw new Error(`not existing scene with id: ${id}`)
+    if (this.scenes[id]) return this.scenes[id];
+    throw new Error(`not existing scene with id: ${id}`);
   }
 
   setCurScene(scene) {
-    return this.curScene = scene
+    return this.curScene = scene;
   }
 
   getCurScene() {
-    return this.curScene
+    return this.curScene;
   }
 
   getAll() {
-    return Object.values(this.scenes)
+    return Object.values(this.scenes);
   }
 
   reset() {
     Object.values(this.scenes).forEach((scene) => {
-      scene.reset()
-    })
-    this.scenes = {}
+      scene.reset();
+    });
+    this.scenes = {};
   }
 
 }
 
-const sceneManager = new SceneManager()
-export default sceneManager
+const sceneManager = new SceneManager();
+export default sceneManager;

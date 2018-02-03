@@ -1,31 +1,31 @@
-import config from '../config'
+import config from '../config';
 
 
 class Socket {
   constructor() {
-    this.isAlive = false
-    this.cmdlisteners = []
-    this.userCmdListeners = {}
-    this.apiListeners = {}
-    this.lastSendTime = Date.now()
+    this.isAlive = false;
+    this.cmdlisteners = [];
+    this.userCmdListeners = {};
+    this.apiListeners = {};
+    this.lastSendTime = Date.now();
   }
 
   init() {
     return new Promise((resolve, reject) => {
-      this.ws = new WebSocket(`${config.server.protocol}://${config.server.host}:${config.server.port}`)
+      this.ws = new WebSocket(`${config.server.protocol}://${config.server.host}:${config.server.port}`);
       this.ws.onopen = () => {
-        console.log('Socket is opened!')
-        this.isAlive = true
-        resolve(this.ws)
-      }
+        console.log('Socket is opened!');
+        this.isAlive = true;
+        resolve(this.ws);
+      };
 
       this.ws.onmessage = (message) => {
-        let msgMeta = null
+        let msgMeta = null;
         try {
-          msgMeta = JSON.parse(message.data)
+          msgMeta = JSON.parse(message.data);
         } catch (err) {
-          msgMeta = message.data
-          console.log('WS got none JSON message:', msgMeta)
+          msgMeta = message.data;
+          console.log('WS got none JSON message:', msgMeta);
         }
 
         if (msgMeta.type === 'cmd') {
@@ -33,61 +33,61 @@ class Socket {
           commands.forEach((cmd) => {
             
             this.cmdlisteners.forEach((listener) => {
-              listener(cmd)
-            })
+              listener(cmd);
+            });
 
-            const userId = cmd.userId
+            const userId = cmd.userId;
             if (userId)  {
               if (this.userCmdListeners[userId]) {
                 this.userCmdListeners[userId].forEach((listener) => {
-                  listener(cmd)
-                })
+                  listener(cmd);
+                });
               }
             }
             
-          })
+          });
         } else if (msgMeta.type === 'api' && this.apiListeners[msgMeta.id]) {
-          this.apiListeners[msgMeta.id](msgMeta.data)
-          delete this.apiListeners[msgMeta.id]
+          this.apiListeners[msgMeta.id](msgMeta.data);
+          delete this.apiListeners[msgMeta.id];
         }
-      }
+      };
 
       this.ws.onerror = (err) => {
-        console.log('WS got error: ', err)
-        this.isAlive = false
-      }
+        console.log('WS got error: ', err);
+        this.isAlive = false;
+      };
       this.ws.onclose = () => {
-        console.log('WS is closed!')
-        this.isAlive = false
-      }
-    })
+        console.log('WS is closed!');
+        this.isAlive = false;
+      };
+    });
   }
 
   registerCallback(id, cb) {
-    this.apiListeners[id] = cb
+    this.apiListeners[id] = cb;
     setTimeout(() => {
-      delete this.apiListeners[id]
-    }, 2000)
+      delete this.apiListeners[id];
+    }, 2000);
   }
 
 
   sendCMD(message) {
-    const timeNow = Date.now()
+    const timeNow = Date.now();
     //console.log('Sending cmd: ', message, `${timeNow - this.lastSendTime} ms`)
-    this.lastSendTime = timeNow
+    this.lastSendTime = timeNow;
     this.checkConnection()
       .then(() => {
-        this.ws.send(message)
-      })
+        this.ws.send(message);
+      });
   }
 
   sendAPI(msgMeta, cb) {
     this.checkConnection()
       .then(() => {
-        this.ws.send(JSON.stringify(msgMeta))
-      })
+        this.ws.send(JSON.stringify(msgMeta));
+      });
     if (cb) {
-      this.registerCallback(msgMeta.id, cb)
+      this.registerCallback(msgMeta.id, cb);
     }
   }
 
@@ -95,10 +95,10 @@ class Socket {
     return Promise.resolve()
       .then(() => {
         if (!this.isAlive) {
-          return this.init()
+          return this.init();
         }
-      })
+      });
   }
 }
 
-export default Socket
+export default Socket;

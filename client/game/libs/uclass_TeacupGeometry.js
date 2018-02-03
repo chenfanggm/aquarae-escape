@@ -1,4 +1,4 @@
-"use strict"; // good practice - see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
+ // good practice - see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
 /**
  * @author Eric Haines / http://erichaines.com/
  *
@@ -37,7 +37,7 @@
 /*global THREE */
 
 THREE.TeacupGeometry = function ( size, segments ) {
-	"use strict";
+	
 
 	// 26 * 4 * 4 Bezier spline patches, note +1 start
 	// Data from ftp://ftp.funet.fi/pub/sci/graphics/packages/objects/teaset.tar.Z
@@ -337,7 +337,7 @@ THREE.TeacupGeometry = function ( size, segments ) {
 	// scale the size to be the real scaling factor
 	var maxHeight = 0.857954740524292;
 
-	var maxHeight2 = maxHeight/2;
+	var maxHeight2 = maxHeight / 2;
 	var trueSize = this.size / maxHeight2;
 
 	var normals = [], uvs = [];
@@ -396,7 +396,7 @@ THREE.TeacupGeometry = function ( size, segments ) {
 		mgm[i] = new THREE.Matrix4();
 	}
 
-	vertPerRow = (this.segments+1);
+	vertPerRow = (this.segments + 1);
 
 	var surfCount = 0;
 	//var faceCount = 0;
@@ -408,7 +408,7 @@ THREE.TeacupGeometry = function ( size, segments ) {
 			for ( r = 0 ; r < 4 ; r++ ) {
 				for ( c = 0 ; c < 4 ; c++ ) {
 					// transposed; note subtraction of 1 for index
-					g[c*4+r] = TeacupVertices[(TeacupPatches[surf*16 + r*4 + c]-1)*3 + i] ;
+					g[c * 4 + r] = TeacupVertices[(TeacupPatches[surf * 16 + r * 4 + c] - 1) * 3 + i] ;
 				}
 			}
 
@@ -444,8 +444,8 @@ THREE.TeacupGeometry = function ( size, segments ) {
 						dsp[p] = dtp[p] = 0.0 ;
 						dsval = dtval = 1.0 ;
 					} else {
-						dsp[p] = dsval * (3-p) ;
-						dtp[p] = dtval * (3-p) ;
+						dsp[p] = dsval * (3 - p) ;
+						dtp[p] = dtval * (3 - p) ;
 						dsval *= s ;
 						dtval *= t ;
 					}
@@ -485,11 +485,11 @@ THREE.TeacupGeometry = function ( size, segments ) {
 				normals.push( new THREE.Vector3( -norm.x, -norm.y, -norm.z ) );
 
 				// TODO: check texturing
-				uvs.push( new THREE.Vector2( 1-t, 1-s ) );
+				uvs.push( new THREE.Vector2( 1 - t, 1 - s ) );
 
 				// three.js uses Y up, the code makes Y up, all is fine.
 				// Move teacup to be centered around origin, three.js style.
-				vertOut = new THREE.Vector3( trueSize*vert[0], trueSize*(vert[1]-maxHeight2), trueSize*vert[2] );
+				vertOut = new THREE.Vector3( trueSize * vert[0], trueSize * (vert[1] - maxHeight2), trueSize * vert[2] );
 
 				this.vertices.push( vertOut );
 
@@ -504,11 +504,11 @@ THREE.TeacupGeometry = function ( size, segments ) {
 				v3 = v2 + vertPerRow;
 				v4 = v1 + vertPerRow;
 
-				if ( notDegenerate ( this.vertices[v1], this.vertices[v2], this.vertices[v3] ) ) {
+				if ( notDegenerate( this.vertices[v1], this.vertices[v2], this.vertices[v3] ) ) {
 					this.faces.push( new THREE.Face3( v1, v2, v3, [ normals[v1], normals[v2], normals[v3] ] ) );
 					this.faceVertexUvs[ 0 ].push( [ uvs[v1], uvs[v2], uvs[v3] ] );
 				}
-				if ( notDegenerate ( this.vertices[v1], this.vertices[v3], this.vertices[v4] ) ) {
+				if ( notDegenerate( this.vertices[v1], this.vertices[v3], this.vertices[v4] ) ) {
 					this.faces.push( new THREE.Face3( v1, v3, v4, [ normals[v1], normals[v3], normals[v4] ] ) );
 					this.faceVertexUvs[ 0 ].push( [ uvs[v1], uvs[v3], uvs[v4] ] );
 				}

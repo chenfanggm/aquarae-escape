@@ -17,7 +17,7 @@ const vSource = `
     fragNormal = (modelMatrix * vec4(vertNormal, 0.0)).xyz;
     gl_Position = projMatrix * viewMatrix * modelMatrix * vec4(vertPosition, 1.0);
   }
-`
+`;
 
 const fSource = `
   precision mediump float;
@@ -43,10 +43,10 @@ const fSource = `
   
     gl_FragColor = vec4(texel.rgb * lightIntensity, texel.a);
   }
-`
+`;
 
 export default {
   id: 'simpleDiffuseShader',
   vSource,
   fSource
-}
+};

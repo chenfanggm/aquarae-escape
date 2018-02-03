@@ -1,78 +1,78 @@
-import * as THREE from 'three'
-import GameObject from '../../entities/GameObject'
-import Tile, { TILE_TYPE } from './Tile/Tile'
-import sceneManager from '../../managers/sceneManager'
-import loadingManager from '../../managers/loadingManager'
+import * as THREE from 'three';
+import GameObject from '../../entities/GameObject';
+import Tile, { TILE_TYPE } from './Tile/Tile';
+import sceneManager from '../../managers/sceneManager';
+import loadingManager from '../../managers/loadingManager';
 
 
 class Maze extends GameObject {
-  constructor(id, {width, height}) {
-    super(id)
-    this.tileMap = null
-    this.tiles = null
-    this.ground = null
-    this.width = width
-    this.height = height
-    this.origin = { x: -width / 2, y: 0, z: -height / 2 }
+  constructor(id, { width, height }) {
+    super(id);
+    this.tileMap = null;
+    this.tiles = null;
+    this.ground = null;
+    this.width = width;
+    this.height = height;
+    this.origin = { x: -width / 2, y: 0, z: -height / 2 };
   }
 
   init() {
     // maze ground
-    const tileGroundTexture = loadingManager.load('/textures/tile/tile_stone.jpg')
-    tileGroundTexture.wrapS = tileGroundTexture.wrapT = THREE.RepeatWrapping
-    tileGroundTexture.repeat.set(this.width / 4, this.height / 4)
-    const mazeGeometry = new THREE.PlaneBufferGeometry(this.width, this.height).rotateX(-Math.PI / 2)
-    const mazeMaterial = new THREE.MeshBasicMaterial({map: tileGroundTexture, side: THREE.DoubleSide})
-    this.ground = new THREE.Mesh(mazeGeometry, mazeMaterial)
-    this.ground.position.setY(-0.01)
+    const tileGroundTexture = loadingManager.load('/textures/tile/tile_stone.jpg');
+    tileGroundTexture.wrapS = tileGroundTexture.wrapT = THREE.RepeatWrapping;
+    tileGroundTexture.repeat.set(this.width / 4, this.height / 4);
+    const mazeGeometry = new THREE.PlaneBufferGeometry(this.width, this.height).rotateX(-Math.PI / 2);
+    const mazeMaterial = new THREE.MeshBasicMaterial({ map: tileGroundTexture, side: THREE.DoubleSide });
+    this.ground = new THREE.Mesh(mazeGeometry, mazeMaterial);
+    this.ground.position.setY(-0.01);
 
     // tiles
-    const tileMap = this.generateTileMap(this.width, this.height)
-    this.tileMap = tileMap.map
-    this.tiles = tileMap.tiles
+    const tileMap = this.generateTileMap(this.width, this.height);
+    this.tileMap = tileMap.map;
+    this.tiles = tileMap.tiles;
     this.tiles.forEach((tile) => {
-      this.addChild(tile)
-    })
-    super.init()
+      this.addChild(tile);
+    });
+    super.init();
   }
 
   update() {
-    super.update()
+    super.update();
   }
 
   render() {
-    if (this.hidden) return this.reset()
-    sceneManager.getCurScene().add(this.ground)
-    super.render()
+    if (this.hidden) return this.reset();
+    sceneManager.getCurScene().add(this.ground);
+    super.render();
   }
 
   reset() {
-    sceneManager.getCurScene().remove(this.ground)
-    super.reset()
+    sceneManager.getCurScene().remove(this.ground);
+    super.reset();
   }
 
   generateTileMap(width, height) {
-    const twoDArray = []
-    const tiles = []
+    const twoDArray = [];
+    const tiles = [];
     for (let row = 0; row < height; row++) {
-      const rowArray = []
+      const rowArray = [];
       for (let col = 0; col < width; col++) {
-        let tile = null
+        let tile = null;
         if (col % 5 === 0) {
-          tile = new Tile(this.origin, row, col, TILE_TYPE.WALL)
+          tile = new Tile(this.origin, row, col, TILE_TYPE.WALL);
         } else {
-          tile = new Tile(this.origin, row, col)
+          tile = new Tile(this.origin, row, col);
         }
-        rowArray.push(tile)
-        tiles.push(tile)
+        rowArray.push(tile);
+        tiles.push(tile);
       }
-      twoDArray.push(rowArray)
+      twoDArray.push(rowArray);
     }
     return {
       map: twoDArray,
       tiles
-    }
+    };
   }
 }
 
-export default Maze
+export default Maze;

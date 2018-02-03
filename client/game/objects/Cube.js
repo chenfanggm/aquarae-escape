@@ -1,16 +1,16 @@
-import timeManager from '../managers/timeManager'
-import shaderManager from '../managers/shaderManager'
-import resourceManager from '../managers/resourceManager'
-import GameObject from '../entities/GameObject'
-import MeshRenderer from '../entities/MeshRenderer'
+import timeManager from '../managers/timeManager';
+import shaderManager from '../managers/shaderManager';
+import resourceManager from '../managers/resourceManager';
+import GameObject from '../entities/GameObject';
+import MeshRenderer from '../entities/MeshRenderer';
 
 
 class Cube extends GameObject {
   constructor(opts) {
-    super(opts)
+    super(opts);
     this.material = {
       program: shaderManager.get('simpleDiffuseShader')
-    }
+    };
     this.mesh = {
       ...this.mesh,
       vertices: [
@@ -117,23 +117,23 @@ class Cube extends GameObject {
         0, -1, 0,
         0, -1, 0
       ]
-    }
+    };
 
-    this.addComponent(new MeshRenderer(this))
+    this.addComponent(new MeshRenderer(this));
   }
 
   init() {
-    this.preload().then(() => {super.init()})
+    this.preload().then(() => { super.init(); });
   }
 
   preload() {
-    this.isReady = false
+    this.isReady = false;
     const promises = [
       resourceManager.loadAndApplyTexture('/textures/cube/wood_crate.png', this)
-    ]
-    return Promise.all(promises)
+    ];
+    return Promise.all(promises);
   }
 
 }
 
-export default Cube
+export default Cube;

@@ -1,4 +1,4 @@
-"use strict"; // good practice - see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
+ // good practice - see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
 /**
  * @author Eric Haines / http://erichaines.com/
  *
@@ -9,7 +9,7 @@
 /*global THREE */
 
 THREE.BeveledBlockGeometry = function ( width, height, depth, bevel, widthSegments, heightSegments, depthSegments ) {
-	"use strict";
+	
 
 	THREE.Geometry.call( this );
 
@@ -29,9 +29,9 @@ THREE.BeveledBlockGeometry = function ( width, height, depth, bevel, widthSegmen
 	var height_half = this.height / 2;
 	var depth_half = this.depth / 2;
 	
-	var adjWidth = this.width - this.bevel*2;
-	var adjHeight = this.height - this.bevel*2;
-	var adjDepth = this.depth - this.bevel*2;
+	var adjWidth = this.width - this.bevel * 2;
+	var adjHeight = this.height - this.bevel * 2;
+	var adjDepth = this.depth - this.bevel * 2;
 
 	if ( adjDepth > 0 && adjHeight > 0 ) {
 		buildPlane( 'z', 'y', - 1, - 1, adjDepth, adjHeight, width_half, 0 ); // px
@@ -143,7 +143,7 @@ THREE.BeveledBlockGeometry = function ( width, height, depth, bevel, widthSegmen
 				scope.faceVertexUvs[ 0 ].push( [
 							new THREE.Vector2( ix / gridX, 1 - iz / gridY ),
 							new THREE.Vector2( ix / gridX, 1 - ( iz + 1 ) / gridY ),
-							new THREE.Vector2( ( ix + 1 ) / gridX, 1- ( iz + 1 ) / gridY ),
+							new THREE.Vector2( ( ix + 1 ) / gridX, 1 - ( iz + 1 ) / gridY ),
 							new THREE.Vector2( ( ix + 1 ) / gridX, 1 - iz / gridY )
 						] );
 			}
@@ -182,7 +182,7 @@ THREE.BeveledBlockGeometry = function ( width, height, depth, bevel, widthSegmen
 			scope.vertices.push( vector );
 		}
 
-		var face = new THREE.Face4( offset, offset+1, offset+2, offset+3 );
+		var face = new THREE.Face4( offset, offset + 1, offset + 2, offset + 3 );
 		var vnorm1 = new THREE.Vector3( xn1, yn1, zn1 );
 		var vnorm2 = new THREE.Vector3( xn2, yn2, zn2 );
 		face.vertexNormals.push( vnorm1.clone(), vnorm2.clone(), vnorm2.clone(), vnorm1.clone() );
@@ -212,29 +212,29 @@ THREE.BeveledBlockGeometry = function ( width, height, depth, bevel, widthSegmen
 					var zsign = k ? 1 : -1;
 					
 					// first vertex
-					vector = new THREE.Vector3(xsign*xh,ysign*yah,zsign*zah);
+					vector = new THREE.Vector3(xsign * xh,ysign * yah,zsign * zah);
 					scope.vertices.push( vector );
 					var vnorm1 = new THREE.Vector3(xsign,0,0);
 					
-					vector = new THREE.Vector3(xsign*xah,ysign*yh,zsign*zah);
+					vector = new THREE.Vector3(xsign * xah,ysign * yh,zsign * zah);
 					scope.vertices.push( vector );
 					var vnorm2 = new THREE.Vector3(0,ysign,0);
 					
-					vector = new THREE.Vector3(xsign*xah,ysign*yah,zsign*zh);
+					vector = new THREE.Vector3(xsign * xah,ysign * yah,zsign * zh);
 					scope.vertices.push( vector );
 					var vnorm3 = new THREE.Vector3(0,0,zsign);
 					
 					var face;
-					face = new THREE.Face3( offset, offset+1, offset+2 );
+					face = new THREE.Face3( offset, offset + 1, offset + 2 );
 
 					if ( xsign * ysign * zsign === 1 )
 					{
-						face = new THREE.Face3( offset, offset+1, offset+2 );
+						face = new THREE.Face3( offset, offset + 1, offset + 2 );
 						face.vertexNormals.push( vnorm1, vnorm2, vnorm3 );
 					}
 					else
 					{
-						face = new THREE.Face3( offset+2, offset+1, offset );
+						face = new THREE.Face3( offset + 2, offset + 1, offset );
 						face.vertexNormals.push( vnorm3, vnorm2, vnorm1 );
 					}
 					face.materialIndex = 0;

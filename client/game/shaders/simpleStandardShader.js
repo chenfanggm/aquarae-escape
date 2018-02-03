@@ -12,7 +12,7 @@ const vSource = `
     vColorCoord = aColorCoord;
     gl_Position = mvpMatrix * vec4(vertPosition, 1.0);
   }
-`
+`;
 
 const fSource = `
   precision mediump float;
@@ -22,10 +22,10 @@ const fSource = `
   void main() {
     gl_FragColor = vec4(vColorCoord, 1);
   }
-`
+`;
 
 export default {
   id: 'simpleStandardShader',
   vSource,
   fSource
-}
+};

@@ -9,4 +9,4 @@ export default {
     renderFPS: 60,
     logicFPS: 25
   }
-}
+};

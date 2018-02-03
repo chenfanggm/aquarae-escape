@@ -1,12 +1,12 @@
-import serverConfig from '../../../server/config'
+import serverConfig from '../../../server/config';
 
 
 class GameComponent {
 
   constructor(owner) {
-    this.gl = aquarae.gl
-    this.owner = owner
-    this.SERVER_BROADCAST_INTERVAL = serverConfig.SERVER_BROADCAST_INTERVAL
+    this.gl = aquarae.gl;
+    this.owner = owner;
+    this.SERVER_BROADCAST_INTERVAL = serverConfig.SERVER_BROADCAST_INTERVAL;
   }
 
   init() {
@@ -36,4 +36,4 @@ class GameComponent {
 }
 
 
-export default GameComponent
+export default GameComponent;

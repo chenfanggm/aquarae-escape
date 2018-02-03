@@ -21,7 +21,7 @@
 					arg = argv[cursor];
 					for (k = 0; k < match[2].length; k++) {
 						if (!arg.hasOwnProperty(match[2][k])) {
-							throw(sprintf('[sprintf] property "%s" does not exist', match[2][k]));
+							throw (sprintf('[sprintf] property "%s" does not exist', match[2][k]));
 						}
 						arg = arg[match[2][k]];
 					}
@@ -34,7 +34,7 @@
 				}
 
 				if (/[^s]/.test(match[8]) && (get_type(arg) != 'number')) {
-					throw(sprintf('[sprintf] expecting number but found %s', get_type(arg)));
+					throw (sprintf('[sprintf] expecting number but found %s', get_type(arg)));
 				}
 				switch (match[8]) {
 					case 'b': arg = arg.toString(2); break;
@@ -48,7 +48,7 @@
 					case 'x': arg = arg.toString(16); break;
 					case 'X': arg = arg.toString(16).toUpperCase(); break;
 				}
-				arg = (/[def]/.test(match[8]) && match[3] && arg >= 0 ? '+'+ arg : arg);
+				arg = (/[def]/.test(match[8]) && match[3] && arg >= 0 ? '+' + arg : arg);
 				pad_character = match[4] ? match[4] == '0' ? '0' : match[4].charAt(1) : ' ';
 				pad_length = match[6] - String(arg).length;
 				pad = match[6] ? str_repeat(pad_character, pad_length) : '';
@@ -83,12 +83,12 @@
 								field_list.push(field_match[1]);
 							}
 							else {
-								throw('[sprintf] huh?');
+								throw ('[sprintf] huh?');
 							}
 						}
 					}
 					else {
-						throw('[sprintf] huh?');
+						throw ('[sprintf] huh?');
 					}
 					match[2] = field_list;
 				}
@@ -96,12 +96,12 @@
 					arg_names |= 2;
 				}
 				if (arg_names === 3) {
-					throw('[sprintf] mixing positional and named placeholders is not (yet) supported');
+					throw ('[sprintf] mixing positional and named placeholders is not (yet) supported');
 				}
 				parse_tree.push(match);
 			}
 			else {
-				throw('[sprintf] huh?');
+				throw ('[sprintf] huh?');
 			}
 			_fmt = _fmt.substring(match[0].length);
 		}
@@ -122,7 +122,7 @@
 	}
 
 	function str_repeat(input, multiplier) {
-		for (var output = []; multiplier > 0; output[--multiplier] = input) {/* do nothing */}
+		for (var output = []; multiplier > 0; output[--multiplier] = input) { /* do nothing */ }
 		return output.join('');
 	}
 
@@ -131,4 +131,4 @@
 	 */
 	ctx.sprintf = sprintf;
 	ctx.vsprintf = vsprintf;
-})(typeof exports != "undefined" ? exports : window);
+})(typeof exports != 'undefined' ? exports : window);

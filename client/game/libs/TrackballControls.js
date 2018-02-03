@@ -314,7 +314,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		if ( _state !== STATE.NONE ) {
 
-			return;
+			
 
 		} else if ( event.keyCode === _this.keys[ STATE.ROTATE ] && !_this.noRotate ) {
 
@@ -480,7 +480,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 			case 2:
 				var dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
 				var dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
-				_touchZoomDistanceEnd = Math.sqrt( dx * dx + dy * dy )
+				_touchZoomDistanceEnd = Math.sqrt( dx * dx + dy * dy );
 				break;
 
 			case 3:

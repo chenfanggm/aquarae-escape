@@ -1,4 +1,4 @@
-"use strict"; // good practice - see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
+ // good practice - see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
 /**
  * @author qiao / https://github.com/qiao
  * @author mrdoob / http://mrdoob.com
@@ -8,7 +8,7 @@
  */
 /*global THREE, console */
 
-import * as THREE from 'three'
+import * as THREE from 'three';
 
 THREE.OrbitAndPanControls = function ( object, domElement ) {
 
@@ -138,7 +138,7 @@ THREE.OrbitAndPanControls = function ( object, domElement ) {
       var targetDistance = offset.length();
 
       // half of the fov is center to top of screen
-      targetDistance *= Math.tan( (scope.object.fov/2) * Math.PI / 180.0 );
+      targetDistance *= Math.tan( (scope.object.fov / 2) * Math.PI / 180.0 );
       // we actually don't use screenWidth, since perspective camera is fixed to screen height
       scope.panLeft( 2 * delta.x * targetDistance / scope.domElement.height );
       scope.panUp( 2 * delta.y * targetDistance / scope.domElement.height );

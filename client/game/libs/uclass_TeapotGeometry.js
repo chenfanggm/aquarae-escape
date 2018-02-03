@@ -54,7 +54,7 @@
 
 THREE.TeapotGeometry = function ( size, segments, bottom, lid, body, fitLid, blinn ) {
 
-	"use strict";
+	
 
 	// 32 * 4 * 4 Bezier spline patches
 	var teapotPatches = [
@@ -686,13 +686,13 @@ THREE.TeapotGeometry = function ( size, segments, bottom, lid, body, fitLid, bli
 
 					// Normals and UVs cannot be shared. Without clone(), you can see the consequences
 					// of sharing if you call geometry.applyMatrix( matrix ).
-					if ( notDegenerate ( this.vertices[v1], this.vertices[v2], this.vertices[v3] ) ) {
+					if ( notDegenerate( this.vertices[v1], this.vertices[v2], this.vertices[v3] ) ) {
 
 						this.faces.push( new THREE.Face3( v1, v2, v3, [ normals[v1], normals[v2], normals[v3] ] ) );
 						this.faceVertexUvs[ 0 ].push( [ uvs[v1], uvs[v2], uvs[v3] ] );
 
 					}
-					if ( notDegenerate ( this.vertices[v1], this.vertices[v3], this.vertices[v4] ) ) {
+					if ( notDegenerate( this.vertices[v1], this.vertices[v3], this.vertices[v4] ) ) {
 
 						this.faces.push( new THREE.Face3( v1, v3, v4, [ normals[v1], normals[v3], normals[v4] ] ) );
 						this.faceVertexUvs[ 0 ].push( [ uvs[v1], uvs[v3], uvs[v4] ] );

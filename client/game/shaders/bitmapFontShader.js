@@ -15,7 +15,7 @@ const vSource = `
     gl_Position = projected;
     TexCoords = texcoords;
   }
-`
+`;
 
 const fSource = `
   precision mediump float;
@@ -30,10 +30,10 @@ const fSource = `
     vec4 sampled = texture2D(font, TexCoords);
     gl_FragColor = vec4(fontColor, sampled.r);
   }
-`
+`;
 
 export default {
   id: 'bitmapFontShader',
   vSource,
   fSource
-}
+};
