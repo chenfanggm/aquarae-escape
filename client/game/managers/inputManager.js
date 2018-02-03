@@ -59,10 +59,6 @@ class InputManager {
     this.updateAxis();
   }
 
-  sendKeyMap() {
-    gameService.sendKeyMap(this.keyMap);
-  }
-
   setKeyDown(keyCode) {
     this.keyMap[keyCode] = true;
     this.onChange();

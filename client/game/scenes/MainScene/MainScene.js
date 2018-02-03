@@ -10,7 +10,7 @@ import meta from './meta';
 
 class MainScene extends Scene {
   constructor(id) {
-    super(id);
+    super(id, meta);
     this.receivedCMDHandler = this.receivedCMDHandler.bind(this);
   }
 
@@ -27,22 +27,6 @@ class MainScene extends Scene {
     // mainCamera.lookAt(0, 0, 0)
     // this.cameraControls = new THREE.OrbitAndPanControls(mainCamera, aquarae.canvas.domElement)
     // this.cameraControls.target.set(0, 0, 5)
-    // // resources
-    // const mazeWidth = 50
-    // const mazeHeight = 50
-    // this.add(new Maze('maze', { width: mazeWidth, height: mazeHeight }))
-    // this.add(new AmbientLight('ambientLight', { position: new THREE.Vector3(100, 100, 100) }))
-    // this.add(new DirectionalLight('directionalLight', {
-    //   position: new THREE.Vector3(100, 100, 100),
-    //   target: objectManager.get('maze')
-    // }))
-    meta.objects && meta.objects.forEach((obj) => {
-      this.addChild(new obj.clazz(obj.opts));
-    });
-
-    meta.guis && meta.guis.forEach((gui) => {
-      this.addChild(new gui.clazz(gui.opts));
-    });
 
     socketService.registerCMDHandler(this.receivedCMDHandler);
     super.init();

@@ -1,17 +1,27 @@
 import uuid from 'uuid/v4';
 import sceneManager from '../managers/sceneManager';
-import GameObject from './GameObject';
 
 
 class Scene {
-  constructor(id) {
-    this.id = id || uuid();
+  constructor(id, meta) {
     this.gl = aquarae.gl;
+    this.id = id || uuid();
+    if (meta) {
+      this.meta = meta;
+    }
     this.children = [];
     sceneManager.add(id, this);
   }
 
   init() {
+    this.meta && this.meta.objects && this.meta.objects.forEach((obj) => {
+      this.addChild(new obj.clazz(obj.opts));
+    });
+
+    this.meta && this.meta.guis && this.meta.guis.forEach((gui) => {
+      this.addChild(new gui.clazz(gui.opts));
+    });
+
     this.children.forEach((obj) => {
       obj.init();
     });
