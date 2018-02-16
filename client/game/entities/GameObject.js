@@ -1,7 +1,6 @@
 import uuid from 'uuid/v4';
 import objectManager from '../managers/objectManager';
 import Transform from './Transform';
-import shaderManager from '../managers/shaderManager';
 
 
 class GameObject {

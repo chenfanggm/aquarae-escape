@@ -4,7 +4,6 @@ import './game/libs/gl-matrix';
 import config from '../config';
 import Detector from './game/libs/Detector';
 import Escape from './game';
-import utils from './game/entities/utils';
 
 
 // global debug flag
@@ -15,7 +14,7 @@ if (Detector.webgl) {
   const canvas = document.getElementById('mainCanvas');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  const gl = canvas.getContext('webgl2');
   // start game
   const gameConfig = { gl, canvas };
   window.aquarae = window.aquarae && { ...window.aquarae, ...gameConfig } || gameConfig;

@@ -1,7 +1,7 @@
 export default {
   server: {
     protocol: 'ws',
-    host: '192.168.1.7',
+    host: 'localhost',
     port: 3000,
     path: 'escape'
   },

@@ -1,11 +1,10 @@
 
-const vSource = `
+const vSource = `#version 300 es
   precision mediump float;
 
-  attribute vec2 aVertPosition;
-  attribute vec2 aVertTexCoord;
-  varying vec2 vTexCoords;
-  
+  in vec2 aVertPosition;
+  in vec2 aVertTexCoord;
+  out vec2 vTexCoords;
   uniform mat4 projMatrix;
   uniform vec2 startXY;  // pos. of the first character
 
@@ -15,17 +14,17 @@ const vSource = `
   }
 `;
 
-const fSource = `
+const fSource = `#version 300 es
   precision mediump float;
 
-  varying vec2 vTexCoords;
-
+  in vec2 vTexCoords;
+  out vec4 outColor;
   uniform sampler2D font;
   uniform vec3 fontColor;
 
   void main() {
-    vec4 sampled = texture2D(font, vTexCoords);
-    gl_FragColor = vec4(fontColor, sampled.r);
+    vec4 sampled = texture(font, vTexCoords);
+    outColor = vec4(fontColor, sampled.r);
   }
 `;
 

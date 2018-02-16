@@ -1,12 +1,11 @@
-
-const vSource = `
+const vSource = `#version 300 es
   precision mediump float;
   
-  attribute vec3 aVertPosition;
-  attribute vec2 aVertTexCoord;
-  attribute vec3 aVertNormal;
-  varying vec2 vFragTexCoord;
-  varying vec3 vFragNormal;
+  in vec3 aVertPosition;
+  in vec2 aVertTexCoord;
+  in vec3 aVertNormal;
+  out vec2 vFragTexCoord;
+  out vec3 vFragNormal;
   
   uniform mat4 modelMatrix;
   uniform mat4 viewMatrix;
@@ -19,7 +18,7 @@ const vSource = `
   }
 `;
 
-const fSource = `
+const fSource = `#version 300 es
   precision mediump float;
   
   struct DirectionalLight {
@@ -27,9 +26,9 @@ const fSource = `
     vec3 intensity;
   };
   
-  varying vec2 vFragTexCoord;
-  varying vec3 vFragNormal;
-  
+  in vec2 vFragTexCoord;
+  in vec3 vFragNormal;
+  out vec4 outColor;
   uniform vec3 ambientIntensity;
   uniform DirectionalLight sunLight;
   uniform sampler2D sampler;
@@ -37,11 +36,11 @@ const fSource = `
   void main() {
     vec3 surfaceNormal = normalize(vFragNormal);
     vec3 normalizedSunDirection = normalize(sunLight.direction);
-    vec4 texel = texture2D(sampler, vFragTexCoord);
+    vec4 texel = texture(sampler, vFragTexCoord);
   
     vec3 lightIntensity = ambientIntensity + sunLight.intensity * max(dot(surfaceNormal, normalizedSunDirection), 0.0);
   
-    gl_FragColor = vec4(texel.rgb * lightIntensity, texel.a);
+    outColor = vec4(texel.rgb * lightIntensity, texel.a);
   }
 `;
 

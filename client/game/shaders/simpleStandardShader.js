@@ -1,11 +1,10 @@
 
-const vSource = `
+const vSource = `#version 300 es
   precision mediump float;
   
-  attribute vec3 aVertPosition;
-  attribute vec3 aColorCoord;
-
-  varying vec3 vColorCoord;
+  in vec3 aVertPosition;
+  in vec3 aColorCoord;
+  out vec3 vColorCoord;
   uniform mat4 mvpMatrix;
   
   void main() {
@@ -14,13 +13,14 @@ const vSource = `
   }
 `;
 
-const fSource = `
+const fSource = `#version 300 es
   precision mediump float;
   
-  varying vec3 vColorCoord;
+  in vec3 vColorCoord;
+  out vec4 outColor;
   
   void main() {
-    gl_FragColor = vec4(vColorCoord, 1);
+    outColor = vec4(vColorCoord, 1);
   }
 `;
 
