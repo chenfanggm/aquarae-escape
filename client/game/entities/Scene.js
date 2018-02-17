@@ -3,17 +3,14 @@ import sceneManager from '../managers/sceneManager';
 
 
 class Scene {
-  constructor(id, meta) {
+  constructor(id=uuid(), meta = {}) {
     this.gl = aquarae.gl;
-    this.id = id || uuid();
     if (meta) {
       this.meta = meta;
     }
     this.children = [];
     sceneManager.add(id, this);
-  }
 
-  init() {
     this.meta && this.meta.objects && this.meta.objects.forEach((obj) => {
       this.addChild(new obj.clazz(obj.opts));
     });
@@ -21,7 +18,15 @@ class Scene {
     this.meta && this.meta.guis && this.meta.guis.forEach((gui) => {
       this.addChild(new gui.clazz(gui.opts));
     });
+  }
 
+  preload() {
+    return Promise.all(this.children.map((obj) => {
+      return obj.preload();
+    }));
+  }
+
+  init() {
     this.children.forEach((obj) => {
       obj.init();
     });

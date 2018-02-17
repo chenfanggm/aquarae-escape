@@ -8,12 +8,7 @@ import MeshRenderer from '../entities/MeshRenderer';
 class Susan extends GameObject {
   constructor(opts) {
     super(opts);
-
-    this.material = {
-      program: shaderManager.get('simpleDiffuseShader')
-    };
-
-    this.addComponent(new MeshRenderer(this));
+    this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseShader')));
   }
 
   init() {
@@ -24,17 +19,23 @@ class Susan extends GameObject {
   preload() {
     this.isReady = false;
     const promises = [
-      resourceManager.loadJson('/models/susan/susan.json')
-        .then((model) => {
-          const mesh = model.meshes[0];
-          this.mesh.vertices = mesh.vertices;
-          this.mesh.indices = [].concat.apply([], mesh.faces);
-          this.mesh.normals = mesh.normals;
-          this.mesh.uvs = mesh.texturecoords[0];
-        }),
-      resourceManager.loadAndApplyTexture('/models/susan/susan.png', this, true)
+      resourceManager.loadJson('/models/susan/susan.json'),
+      resourceManager.loadImage('/models/susan/susan.png')
     ];
-    return Promise.all(promises);
+    return Promise.all(promises)
+      .then((data) => {
+        // mesh
+        const mesh = data[0].meshes[0];
+        this.mesh.vertices = mesh.vertices;
+        this.mesh.indices = [].concat.apply([], mesh.faces);
+        this.mesh.normals = mesh.normals;
+        this.mesh.uvs = mesh.texturecoords[0];
+        // textures
+        this.textures.push({
+          data: data[1],
+          isFlipY: true
+        });
+      });
   }
 
   update() {

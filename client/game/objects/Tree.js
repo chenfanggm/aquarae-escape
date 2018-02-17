@@ -8,12 +8,7 @@ import MeshRenderer from '../entities/MeshRenderer';
 class Tree extends GameObject {
   constructor(opts) {
     super(opts);
-
-    this.material = {
-      program: shaderManager.get('simpleDiffuseShader')
-    };
-
-    this.addComponent(new MeshRenderer(this));
+    this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseShader')));
   }
 
   init() {
@@ -22,7 +17,6 @@ class Tree extends GameObject {
   }
 
   preload() {
-    this.isReady = false;
     const promises = [
       resourceManager.loadJson('/models/tree/tree.json')
         .then((model) => {

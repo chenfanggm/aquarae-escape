@@ -31,19 +31,22 @@ class Game {
     gameManager.setGame(this);
   }
 
-  preloadResource() {
-    console.info('Pre-loading resources...');
+  preload() {
+    console.info('Pre loading resources...');
     const resourcesToLoad = [
       //resourceManager.loadText()
     ];
     return Promise.all(resourcesToLoad)
       .then(() => {
-        console.info('Resources loaded!');
+        return sceneManager.preload();
+      })
+      .then(() => {
+        console.info('Resources pre loaded!');
       });
   }
 
   start() {
-    this.preloadResource()
+    this.preload()
       .then(() => {
         console.info('Initiating game...');
         this.init();

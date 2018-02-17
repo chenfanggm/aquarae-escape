@@ -36,8 +36,8 @@ class ShaderProgram {
 
   enableAttr(attrName, attrType, index, stride, offset, isNormalized = this.gl.FALSE) {
     const attr = this.gl.getAttribLocation(this.program, attrName);
-    this.gl.vertexAttribPointer(attr, index, attrType, isNormalized, stride, offset);
     this.gl.enableVertexAttribArray(attr);
+    this.gl.vertexAttribPointer(attr, index, attrType, isNormalized, stride, offset);
   }
 
   setFloatAttr(attrName, value) {

@@ -11,23 +11,16 @@ class GameObject {
     this.children = [];
     this.components = [];
     this.transform = new Transform(this, opts.transform);
-    this.mesh = {
-      vertexBuffer: this.gl.createBuffer(),
-      indexBuffer: this.gl.createBuffer(),
-      uvBuffer: this.gl.createBuffer(),
-      texBuffer: this.gl.createTexture(),
-      normalBuffer: this.gl.createBuffer(),
-      primitiveType: this.gl.TRIANGLES,
-      vertices: null,
-      indices: null,
-      uvs: null,
-      normals: null,
-    };
+    this.mesh = {};
     this.material = null;
-    this.isReady = true;
-
+    this.textures = [];
     this.addComponent(this.transform);
     objectManager.add(this);
+    this.isReady = false;
+  }
+
+  preload() {
+    return Promise.resolve();
   }
 
   init() {

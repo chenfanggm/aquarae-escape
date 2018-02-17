@@ -9,25 +9,16 @@ import meta from './meta';
 
 
 class MainScene extends Scene {
-  constructor(id) {
-    super(id, meta);
+  constructor() {
+    super('mainScene', meta);
     this.receivedCMDHandler = this.receivedCMDHandler.bind(this);
   }
 
-  init() {
-    // // camera
-    // camera
-    // this.cameraFov = 45
-    // this.cameraNear = 0.1
-    // this.cameraFar = 1000
-    // this.cameraAspect = this.width / this.height
-    // this.mainCamera = new THREE.PerspectiveCamera(this.cameraFov, this.cameraAspect, this.cameraNear, this.cameraFar)
-    // objectManager.add('mainCamera', this.mainCamera)
-    // mainCamera.position.set(0, 50, 40)
-    // mainCamera.lookAt(0, 0, 0)
-    // this.cameraControls = new THREE.OrbitAndPanControls(mainCamera, aquarae.canvas.domElement)
-    // this.cameraControls.target.set(0, 0, 5)
+  preload() {
+    return super.preload();
+  }
 
+  init() {
     socketService.registerCMDHandler(this.receivedCMDHandler);
     super.init();
   }

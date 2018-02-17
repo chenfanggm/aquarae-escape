@@ -9,9 +9,15 @@ class GuiObject {
     this.name = opts.name || this.id;
     this.children = [];
     this.components = [];
+    this.mesh = {};
     this.material = null;
-    this.isReady = true;
+    this.textures = [];
     objectManager.add(this);
+    this.isReady = false;
+  }
+
+  preload() {
+    return Promise.resolve();
   }
 
   init() {

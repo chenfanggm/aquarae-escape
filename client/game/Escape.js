@@ -12,19 +12,25 @@ import { loginUser } from './services/authService';
 
 
 class Escape extends Game {
-
-  init() {
+  constructor(opts) {
+    super(opts);
     this.width = this.canvas.width;
     this.height = this.canvas.height;
     this.bgColor = 0xC2C3C4;
-    // scene
-    sceneManager.setCurScene(new MainScene('mainScene'));
-    // shader
+
+  }
+
+  preload() {
     shaderManager.register([
       new ShaderProgram(simpleStandardShader),
       new ShaderProgram(simpleDiffuseShader),
       new ShaderProgram(bitmapFontShader)
     ]);
+    sceneManager.setCurScene(new MainScene());
+    return super.preload();
+  }
+
+  init() {
     // player
     this.player = new Player({
       id: uuid()

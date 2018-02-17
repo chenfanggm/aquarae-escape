@@ -4,6 +4,10 @@ class SceneManager {
     this.curScene = null;
   }
 
+  preload() {
+    return this.curScene.preload();
+  }
+
   init() {
     this.curScene.init();
   }

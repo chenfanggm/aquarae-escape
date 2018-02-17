@@ -1,4 +1,3 @@
-import timeManager from '../managers/timeManager';
 import shaderManager from '../managers/shaderManager';
 import resourceManager from '../managers/resourceManager';
 import GameObject from '../entities/GameObject';
@@ -13,29 +12,28 @@ class Plane extends GameObject {
     this.height = height || 1;
     this.widthSegments = Math.floor(widthSegments) || 1;
     this.heightSegments = Math.floor(heightSegments) || 1;
-
-    this.material = {
-      program: shaderManager.get('simpleDiffuseShader')
-    };
-
-    this.geometry = this.generatePlane(this.width, this.height, this.widthSegments, this.heightSegments);
-    this.mesh = {
-      ...this.mesh,
-      ...this.geometry
-    };
-    this.addComponent(new MeshRenderer(this));
+    this.mesh = this.generatePlane(this.width, this.height, this.widthSegments, this.heightSegments);
+    this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseShader')));
   }
 
   init() {
-    this.preload().then(() => { super.init(); });
+    this.preload().then(() => {
+      super.init();
+    });
   }
 
   preload() {
-    this.isReady = false;
     const promises = [
-      resourceManager.loadAndApplyTexture('/textures/tile/tile_sand.jpg', this)
+      resourceManager.loadImage('/textures/tile/tile_sand.jpg')
     ];
-    return Promise.all(promises);
+    return Promise.all(promises)
+      .then((datas) => {
+        datas.forEach((data) => {
+          this.textures.push({
+            data
+          });
+        });
+      });
   }
 
   generatePlane(width, height, widthSegments, heightSegments) {
@@ -48,10 +46,10 @@ class Plane extends GameObject {
     const unitWidth = width / gridX;
     const unitHeight = height / gridZ;
     // buffers
-    let indices = [];
-    let vertices = [];
-    let normals = [];
-    let uvs = [];
+    const indices = [];
+    const vertices = [];
+    const normals = [];
+    const uvs = [];
 
     // generate vertices, normals and uvs
     for ( let iz = 0; iz < gridZ1; iz++ ) {
@@ -68,10 +66,10 @@ class Plane extends GameObject {
     // indices
     for (let iz = 0; iz < gridZ; iz++ ) {
       for (let ix = 0; ix < gridX; ix++ ) {
-        let a = ix + gridX1 * iz;
-        let b = ix + gridX1 * ( iz + 1 );
-        let c = (ix + 1) + gridX1 * (iz + 1);
-        let d = ( ix + 1 ) + gridX1 * iz;
+        const a = ix + gridX1 * iz;
+        const b = ix + gridX1 * ( iz + 1 );
+        const c = (ix + 1) + gridX1 * (iz + 1);
+        const d = ( ix + 1 ) + gridX1 * iz;
         // faces
         indices.push( a, b, d );
         indices.push( b, c, d );
@@ -84,11 +82,6 @@ class Plane extends GameObject {
       indices,
       uvs
     };
-    // build geometry
-    // this.setIndex( indices )
-    // this.addAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) )
-    // this.addAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) )
-    // this.addAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) )
   }
 }
 

@@ -8,9 +8,6 @@ import MeshRenderer from '../entities/MeshRenderer';
 class Cube extends GameObject {
   constructor(opts) {
     super(opts);
-    this.material = {
-      program: shaderManager.get('simpleDiffuseShader')
-    };
     this.mesh = {
       ...this.mesh,
       vertices: [
@@ -119,7 +116,7 @@ class Cube extends GameObject {
       ]
     };
 
-    this.addComponent(new MeshRenderer(this));
+    this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseShader')));
   }
 
   init() {
@@ -127,11 +124,17 @@ class Cube extends GameObject {
   }
 
   preload() {
-    this.isReady = false;
     const promises = [
-      resourceManager.loadAndApplyTexture('/textures/cube/wood_crate.png', this)
+      resourceManager.loadImage('/textures/cube/wood_crate.png')
     ];
-    return Promise.all(promises);
+    return Promise.all(promises)
+      .then((datas) => {
+        datas.forEach((data) => {
+          this.textures.push({
+            data
+          });
+        });
+      });
   }
 
 }

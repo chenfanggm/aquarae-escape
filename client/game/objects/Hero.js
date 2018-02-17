@@ -8,11 +8,7 @@ import MeshRenderer from '../entities/MeshRenderer';
 class Hero extends GameObject {
   constructor(opts) {
     super(opts);
-    this.material = {
-      program: shaderManager.get('simpleDiffuseShader')
-    };
     this.mesh = {
-      ...this.mesh,
       vertices: [
         -0.5, 0.5, -0.5,
         -0.5, 0.5, 0.5,
@@ -119,7 +115,7 @@ class Hero extends GameObject {
       ]
     };
 
-    this.addComponent(new MeshRenderer(this));
+    this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseShader')));
   }
 
   init() {
@@ -127,11 +123,17 @@ class Hero extends GameObject {
   }
 
   preload() {
-    this.isReady = false;
     const promises = [
-      resourceManager.loadAndApplyTexture('/textures/cube/wood_crate.png', this)
+      resourceManager.loadImage('/textures/cube/wood_crate.png')
     ];
-    return Promise.all(promises);
+    return Promise.all(promises)
+      .then((datas) => {
+        datas.forEach((data) => {
+          this.textures.push({
+            data
+          });
+        });
+      });
   }
 
 }
