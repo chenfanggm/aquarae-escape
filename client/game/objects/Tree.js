@@ -11,11 +11,6 @@ class Tree extends GameObject {
     this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseShader')));
   }
 
-  init() {
-    this.transform.rotate([-90, 0, 0]);
-    this.preload().then(() => { super.init(); });
-  }
-
   preload() {
     const promises = [
       resourceManager.loadJson('/models/tree/tree.json')
@@ -28,6 +23,11 @@ class Tree extends GameObject {
         })
     ];
     return Promise.all(promises);
+  }
+
+  init() {
+    this.transform.rotate([-90, 0, 0]);
+    super.init();
   }
 
   update() {

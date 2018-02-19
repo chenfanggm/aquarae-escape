@@ -10,17 +10,16 @@ class Scene {
     }
     this.children = [];
     sceneManager.add(id, this);
-
-    this.meta && this.meta.objects && this.meta.objects.forEach((obj) => {
-      this.addChild(new obj.clazz(obj.opts));
-    });
-
-    this.meta && this.meta.guis && this.meta.guis.forEach((gui) => {
-      this.addChild(new gui.clazz(gui.opts));
-    });
   }
 
   preload() {
+    console.log('Scene: Pre loading...');
+    this.meta && this.meta.objects && this.meta.objects.forEach((obj) => {
+      this.addChild(new obj.clazz(obj.opts));
+    });
+    this.meta && this.meta.guis && this.meta.guis.forEach((gui) => {
+      this.addChild(new gui.clazz(gui.opts));
+    });
     return Promise.all(this.children.map((obj) => {
       return obj.preload();
     }));
@@ -28,7 +27,7 @@ class Scene {
 
   init() {
     this.children.forEach((obj) => {
-      obj.init();
+      return obj.init();
     });
   }
 

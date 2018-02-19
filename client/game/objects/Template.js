@@ -3,6 +3,10 @@ import sceneManager from '../managers/sceneManager';
 
 
 class Template extends GameObject {
+  preload() {
+    return super.preload()
+  }
+
   init() {
     super.init();
   }

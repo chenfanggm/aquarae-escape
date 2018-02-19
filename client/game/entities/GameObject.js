@@ -19,6 +19,13 @@ class GameObject {
     this.isReady = false;
   }
 
+  spawn() {
+    this.preload()
+      .then(() => {
+        this.init();
+      });
+  }
+
   preload() {
     return Promise.resolve();
   }

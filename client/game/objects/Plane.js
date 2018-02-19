@@ -16,24 +16,15 @@ class Plane extends GameObject {
     this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseShader')));
   }
 
-  init() {
-    this.preload().then(() => {
-      super.init();
-    });
-  }
-
   preload() {
-    const promises = [
+    return Promise.all([
       resourceManager.loadImage('/textures/tile/tile_sand.jpg')
-    ];
-    return Promise.all(promises)
-      .then((datas) => {
-        datas.forEach((data) => {
+        .then((response) => {
           this.textures.push({
-            data
+            data: response
           });
-        });
-      });
+        })
+    ]);
   }
 
   generatePlane(width, height, widthSegments, heightSegments) {

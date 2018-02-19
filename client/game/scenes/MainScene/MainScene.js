@@ -14,10 +14,6 @@ class MainScene extends Scene {
     this.receivedCMDHandler = this.receivedCMDHandler.bind(this);
   }
 
-  preload() {
-    return super.preload();
-  }
-
   init() {
     socketService.registerCMDHandler(this.receivedCMDHandler);
     super.init();
@@ -43,9 +39,9 @@ class MainScene extends Scene {
       transform: { position }
     });
     player.addComponent(new PlayerController(player));
-    player.init();
+    player.spawn();
     this.addChild(player);
-    console.log('Player spawned!', player.id);
+    console.log('Player: Spawned!', player.id);
   }
 
   spawnOtherPlayer({ id, position }) {
@@ -56,7 +52,7 @@ class MainScene extends Scene {
     spawned.addComponent(new AgentController(spawned));
     spawned.init();
     this.addChild(spawned);
-    console.log('One another player spawned!', spawned.id);
+    console.log('Player: One another player spawned!', spawned.id);
   }
 }
 

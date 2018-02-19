@@ -31,53 +31,54 @@ class Game {
     gameManager.setGame(this);
   }
 
-  preload() {
-    console.info('Pre loading resources...');
-    const resourcesToLoad = [
-      //resourceManager.loadText()
-    ];
-    return Promise.all(resourcesToLoad)
-      .then(() => {
-        return sceneManager.preload();
-      })
-      .then(() => {
-        console.info('Resources pre loaded!');
-      });
-  }
-
   start() {
     this.preload()
       .then(() => {
-        console.info('Initiating game...');
-        this.init();
+        console.info('Game: Initiating...');
+        return this.init();
+      })
+      .then(() => {
+        this.loop();
       });
   }
 
-  reload() {
-    this.reset();
-    this.start();
+  preload() {
+    console.info('Game: Pre loading...');
+    // game level preload
+    return Promise.all([
+      //resourceManager.loadText()
+    ])
+      .then(() => {
+        // scene level preload
+        return sceneManager.preload();
+      })
+      .then(() => {
+        console.info('Game: Finish loading!');
+      });
   }
 
   init() {
+    this.setWindowSize(this.width, this.height);
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.frontFace(this.gl.CCW);
     this.gl.cullFace(this.gl.BACK);
     this.gl.enable(this.gl.CULL_FACE);
-    this.setSize(this.width, this.height);
     this.setClearColor(this.bgColor, 1);
     inputManager.init();
     sceneManager.init();
 
-    return socketService.init()
+    return Promise.all([
+      socketService.init()
+    ])
       .then(() => {
-        console.log('Game initiated!');
+        console.log('Game: Initiated!');
       });
   }
 
   loop() {
     window.requestAnimationFrame(this.logicLoop);
     window.requestAnimationFrame(this.renderLoop);
-    console.log('Loop started!');
+    console.log('Game: Loop started!');
   }
 
   logicLoop(timestamp) {
@@ -139,7 +140,7 @@ class Game {
     shaderManager.reset();
   }
 
-  setSize(width, height) {
+  setWindowSize(width, height) {
     this.width = width;
     this.height = height;
     this.gl.viewport(0, 0, this.width, this.height);

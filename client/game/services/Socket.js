@@ -14,7 +14,7 @@ class Socket {
     return new Promise((resolve, reject) => {
       this.ws = new WebSocket(`${config.server.protocol}://${config.server.host}:${config.server.port}`);
       this.ws.onopen = () => {
-        console.log('Socket is opened!');
+        console.log('Socket: Is connected!');
         this.isAlive = true;
         resolve(this.ws);
       };

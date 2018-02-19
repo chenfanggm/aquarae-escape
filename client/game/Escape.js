@@ -14,10 +14,7 @@ import { loginUser } from './services/authService';
 class Escape extends Game {
   constructor(opts) {
     super(opts);
-    this.width = this.canvas.width;
-    this.height = this.canvas.height;
     this.bgColor = 0xC2C3C4;
-
   }
 
   preload() {
@@ -31,12 +28,11 @@ class Escape extends Game {
   }
 
   init() {
-    // player
     this.player = new Player({
       id: uuid()
     });
 
-    super.init()
+    return super.init()
       .then(() => {
         return loginUser(this.player);
       })
@@ -49,9 +45,6 @@ class Escape extends Game {
             scene.spawnOtherPlayer(user);
           }
         });
-      })
-      .then(() => {
-        this.loop();
       });
   }
 }

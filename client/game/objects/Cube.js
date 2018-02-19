@@ -119,22 +119,16 @@ class Cube extends GameObject {
     this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseShader')));
   }
 
-  init() {
-    this.preload().then(() => { super.init(); });
-  }
-
   preload() {
-    const promises = [
+    return Promise.all([
       resourceManager.loadImage('/textures/cube/wood_crate.png')
-    ];
-    return Promise.all(promises)
-      .then((datas) => {
-        datas.forEach((data) => {
+        .then((response) => {
           this.textures.push({
-            data
+            data: response
           });
-        });
-      });
+        })
+    ]);
+
   }
 
 }

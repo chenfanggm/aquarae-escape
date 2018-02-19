@@ -11,31 +11,29 @@ class Susan extends GameObject {
     this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseShader')));
   }
 
-  init() {
-    this.transform.rotate([-90, 0, 0]);
-    this.preload().then(() => { super.init(); });
+  preload() {
+    return Promise.all([
+      resourceManager.loadJson('/models/susan/susan.json')
+        .then((response) => {
+          const mesh = response.meshes[0];
+          this.mesh.vertices = mesh.vertices;
+          this.mesh.indices = [].concat.apply([], mesh.faces);
+          this.mesh.normals = mesh.normals;
+          this.mesh.uvs = mesh.texturecoords[0];
+        }),
+      resourceManager.loadImage('/models/susan/susan.png')
+        .then((response) => {
+          this.textures.push({
+            data: response,
+            isFlipY: true
+          });
+        })
+    ]);
   }
 
-  preload() {
-    this.isReady = false;
-    const promises = [
-      resourceManager.loadJson('/models/susan/susan.json'),
-      resourceManager.loadImage('/models/susan/susan.png')
-    ];
-    return Promise.all(promises)
-      .then((data) => {
-        // mesh
-        const mesh = data[0].meshes[0];
-        this.mesh.vertices = mesh.vertices;
-        this.mesh.indices = [].concat.apply([], mesh.faces);
-        this.mesh.normals = mesh.normals;
-        this.mesh.uvs = mesh.texturecoords[0];
-        // textures
-        this.textures.push({
-          data: data[1],
-          isFlipY: true
-        });
-      });
+  init() {
+    this.transform.rotate([-90, 0, 0]);
+    super.init();
   }
 
   update() {
