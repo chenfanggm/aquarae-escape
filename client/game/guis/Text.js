@@ -1,6 +1,6 @@
 import shaderManager from '../managers/shaderManager';
 import GuiObject from '../entities/GuiObject';
-import GuiRenderer from '../entities/GuiRenderer';
+import GuiRenderer from '../components/GuiRenderer';
 
 
 class Text extends GuiObject {

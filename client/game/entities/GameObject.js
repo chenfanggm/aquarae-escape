@@ -1,29 +1,22 @@
 import uuid from 'uuid/v4';
 import objectManager from '../managers/objectManager';
-import Transform from './Transform';
+import Transform from '../components/Transform';
 
 
 class GameObject {
   constructor(opts = {}) {
     this.gl = aquarae.gl;
+    this.isReady = false;
     this.id = opts.id || uuid();
     this.name = opts.name || this.id;
     this.children = [];
     this.components = [];
-    this.transform = new Transform(this, opts.transform);
     this.mesh = {};
-    this.material = null;
     this.textures = [];
+    this.material = null;
+    this.transform = new Transform(this, opts.transform);
     this.addComponent(this.transform);
     objectManager.add(this);
-    this.isReady = false;
-  }
-
-  spawn() {
-    this.preload()
-      .then(() => {
-        this.init();
-      });
   }
 
   preload() {
@@ -31,48 +24,48 @@ class GameObject {
   }
 
   init() {
-    this.components.forEach((component) => {
-      component.init();
-    });
     this.children.forEach((obj) => {
       obj.init();
+    });
+    this.components.forEach((component) => {
+      component.init();
     });
     this.isReady = true;
   }
 
   input() {
-    this.components.forEach((component) => {
-      component.input();
-    });
     this.children.forEach((obj) => {
       obj.input();
+    });
+    this.components.forEach((component) => {
+      component.input();
     });
   }
 
   enqueue() {
-    this.components.forEach((component) => {
-      component.enqueue();
-    });
     this.children.forEach((obj) => {
       obj.enqueue();
+    });
+    this.components.forEach((component) => {
+      component.enqueue();
     });
   }
 
   update() {
-    this.components.forEach((component) => {
-      component.update();
-    });
     this.children.forEach((obj) => {
       obj.update();
+    });
+    this.components.forEach((component) => {
+      component.update();
     });
   }
 
   render() {
-    this.components.forEach((component) => {
-      component.render();
-    });
     this.children.forEach((obj) => {
       obj.render();
+    });
+    this.components.forEach((component) => {
+      component.render();
     });
   }
 
@@ -91,6 +84,13 @@ class GameObject {
 
   addComponent(component) {
     this.components.push(component);
+  }
+
+  spawn() {
+    this.preload()
+      .then(() => {
+        this.init();
+      });
   }
 }
 

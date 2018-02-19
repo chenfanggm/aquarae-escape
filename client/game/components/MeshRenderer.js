@@ -1,11 +1,12 @@
 import * as glm from '../libs/gl-matrix';
-import GameComponent from './GameComponent';
+import GameComponent from '../entities/GameComponent';
 
 
 class MeshRenderer extends GameComponent {
   constructor(owner, program) {
     super(owner);
     this.program = program;
+    this.indexCount = 0;
     this.textureBuffers = [];
     this.modelMatrix = glm.mat4.create();
     this.viewMatrix = glm.mat4.create();
@@ -20,17 +21,19 @@ class MeshRenderer extends GameComponent {
   }
 
   render() {
-    this.program.enable();
-    this.textureBuffers.forEach((textureBuffer, index) => {
-      this.gl.activeTexture(this.gl[`TEXTURE${index}`]);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, textureBuffer);
-    });
-    this.gl.bindVertexArray(this.vao);
-    this.computeMatrix();
-    this.gl.drawElements(this.gl.TRIANGLES, this.owner.mesh.indices.length, this.gl.UNSIGNED_SHORT, 0);
-    this.gl.bindTexture(this.gl.TEXTURE_2D, null);
-    this.gl.bindVertexArray(null);
-    this.program.disable();
+    if (this.indexCount > 0) {
+      this.program.enable();
+      this.textureBuffers.forEach((textureBuffer, index) => {
+        this.gl.activeTexture(this.gl[`TEXTURE${index}`]);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, textureBuffer);
+      });
+      this.gl.bindVertexArray(this.vao);
+      this.computeMatrix();
+      this.gl.drawElements(this.gl.TRIANGLES, this.indexCount, this.gl.UNSIGNED_SHORT, 0);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+      this.gl.bindVertexArray(null);
+      this.program.disable();
+    }
   }
 
   initVAO() {
@@ -48,6 +51,7 @@ class MeshRenderer extends GameComponent {
     const indexBuffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
     this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.owner.mesh.indices), this.gl.STATIC_DRAW);
+    this.indexCount = this.owner.mesh.indices.length;
 
     // uvs
     if (this.owner.mesh.uvs) {
@@ -89,7 +93,7 @@ class MeshRenderer extends GameComponent {
 
   computeMatrix() {
     glm.mat4.identity(this.modelMatrix);
-    glm.mat4.mul(this.modelMatrix, this.modelMatrix, this.owner.transform.getTransformMatrix());
+    glm.mat4.mul(this.modelMatrix, this.modelMatrix, this.owner.transform.getMatrix());
     glm.mat4.lookAt(this.viewMatrix, new Float32Array([0, 15, 15]), [0, 0, 0], [0, 1, 0]);
     glm.mat4.perspective(this.projMatrix, glm.glMatrix.toRadian(45), aquarae.canvas.width / aquarae.canvas.height, 0.1, 1000.0);
     this.program.setMatrixUniform('modelMatrix', this.modelMatrix);

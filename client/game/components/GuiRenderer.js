@@ -1,5 +1,5 @@
 import * as glm from '../libs/gl-matrix';
-import GameComponent from './GameComponent';
+import GameComponent from '../entities/GameComponent';
 import resourceManager from '../managers/resourceManager';
 import inputManager from '../managers/inputManager';
 
