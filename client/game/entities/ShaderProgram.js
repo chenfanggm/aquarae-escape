@@ -5,6 +5,8 @@ class ShaderProgram {
   constructor({ id, vSource, fSource }) {
     this.gl = aquarae.gl;
     this.id = id;
+    this.uniLocations = {};
+    this.attrLocations = {};
     this.program = this.gl.createProgram();
     this.add([new Shader(vSource, this.gl.VERTEX_SHADER), new Shader(fSource, this.gl.FRAGMENT_SHADER)]);
     this.link();
@@ -40,29 +42,47 @@ class ShaderProgram {
     this.gl.vertexAttribPointer(attr, index, attrType, isNormalized, stride, offset);
   }
 
+  getAttrLocation(attrName) {
+    let attrLocation = this.attrLocations[attrName];
+    if (!attrLocation) {
+      attrLocation = this.gl.getAttribLocation(this.program, attrName);
+      this.attrLocations[attrName] = attrLocation;
+    }
+    return attrLocation;
+  }
+
   setFloatAttr(attrName, value) {
-    const attr = this.gl.getAttribLocation(this.program, attrName);
-    this.gl.vertexAttrib1f(attr, value);
+    const attrLocation = this.getAttrLocation(attrName);
+    this.gl.vertexAttrib1f(attrLocation, value);
+  }
+
+  getUniLocation(uniName) {
+    let uniLocation = this.uniLocations[uniName];
+    if (!uniLocation) {
+      uniLocation = this.gl.getUniformLocation(this.program, uniName);
+      this.uniLocations[uniName] = uniLocation;
+    }
+    return uniLocation;
   }
 
   setMatrixUniform(uniName, value) {
-    const uniform = this.gl.getUniformLocation(this.program, uniName);
-    this.gl.uniformMatrix4fv(uniform, false, value);
+    const uniLocation = this.getUniLocation(uniName);
+    this.gl.uniformMatrix4fv(uniLocation, false, value);
   }
 
   setFloatUniform(uniName, value) {
-    const uniform = this.gl.getUniformLocation(this.program, uniName);
-    this.gl.uniform1f(uniform, value);
+    const uniLocation = this.gl.getUniformLocation(this.program, uniName);
+    this.gl.uniform1f(uniLocation, value);
   }
 
   setVec2Uniform(uniName, value) {
-    const uniform = this.gl.getUniformLocation(this.program, uniName);
-    this.gl.uniform2fv(uniform, value);
+    const uniLocation = this.gl.getUniformLocation(this.program, uniName);
+    this.gl.uniform2fv(uniLocation, value);
   }
 
   setVec3Uniform(uniName, value) {
-    const uniform = this.gl.getUniformLocation(this.program, uniName);
-    this.gl.uniform3fv(uniform, value);
+    const uniLocation = this.gl.getUniformLocation(this.program, uniName);
+    this.gl.uniform3fv(uniLocation, value);
   }
 }
 

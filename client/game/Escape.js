@@ -6,7 +6,7 @@ import MainScene from './scenes/MainScene';
 import ShaderProgram from './entities/ShaderProgram';
 import Player from './entities/Player';
 import simpleDiffuseShader from './shaders/simpleDiffuseShader';
-import simpleStandardShader from './shaders/simpleStandardShader';
+import simpleStandardShader from './shaders/simpleStaticShader';
 import bitmapFontShader from './shaders/bitmapFontShader';
 import { loginUser } from './services/authService';
 
