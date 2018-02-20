@@ -8,6 +8,7 @@ import MeshRenderer from '../components/MeshRenderer';
 class Tree extends GameObject {
   constructor(opts) {
     super(opts);
+    this.name = 'tree';
     this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseShader')));
   }
 

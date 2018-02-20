@@ -8,6 +8,7 @@ class Plane extends GameObject {
   constructor(opts) {
     super(opts);
     const { width, height, widthSegments, heightSegments } = opts;
+    this.name = 'plane';
     this.width = width || 1;
     this.height = height || 1;
     this.widthSegments = Math.floor(widthSegments) || 1;

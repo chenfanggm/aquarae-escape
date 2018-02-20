@@ -14,6 +14,20 @@ class MainScene extends Scene {
     this.receivedCMDHandler = this.receivedCMDHandler.bind(this);
   }
 
+  preload() {
+    // prefab
+    const cube3 = new Cube({
+      transform: { position: [1, 1, 0] }
+    });
+    const cube4 = new Cube({
+      transform: { position: [-1, 1, 0] }
+    });
+    this.addChild(cube3);
+    this.addChild(cube4);
+
+    return super.preload()
+  }
+
   init() {
     socketService.registerCMDHandler(this.receivedCMDHandler);
     super.init();

@@ -8,6 +8,7 @@ import MeshRenderer from '../components/MeshRenderer';
 class Susan extends GameObject {
   constructor(opts) {
     super(opts);
+    this.name = 'susan';
     this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseShader')));
   }
 

@@ -1,12 +1,13 @@
 import * as glm from '../libs/gl-matrix';
 import GameComponent from '../entities/GameComponent';
+import modelManager from '../managers/modelManager';
 
 
 class MeshRenderer extends GameComponent {
   constructor(owner, program) {
     super(owner);
     this.program = program;
-    this.indexCount = 0;
+    this.indexCount = null;
     this.textureBuffers = [];
     this.modelMatrix = glm.mat4.create();
     this.viewMatrix = glm.mat4.create();
@@ -21,7 +22,9 @@ class MeshRenderer extends GameComponent {
   }
 
   render() {
-    if (this.indexCount > 0) {
+    if (!this.indexCount) {
+      this.indexCount = this.owner.mesh && this.owner.mesh.indices && this.owner.mesh.indices.length || null;
+    } else if (this.indexCount > 0) {
       this.program.enable();
       this.textureBuffers.forEach((textureBuffer, index) => {
         this.gl.activeTexture(this.gl[`TEXTURE${index}`]);
@@ -37,6 +40,13 @@ class MeshRenderer extends GameComponent {
   }
 
   initVAO() {
+    const model = modelManager.get(this.owner.name);
+    if (model) {
+      this.vao = model.vao;
+      this.textureBuffers = model.textureBuffers;
+      return;
+    }
+
     // vao
     this.vao = this.gl.createVertexArray();
     this.gl.bindVertexArray(this.vao);
@@ -84,6 +94,12 @@ class MeshRenderer extends GameComponent {
         this.gl.bindTexture(this.gl.TEXTURE_2D, null);
       });
     }
+
+    // save as prefab
+    modelManager.add(this.owner.name, {
+      vao: this.vao,
+      textureBuffers: this.textureBuffers
+    });
 
     // clean
     this.gl.bindVertexArray(null);

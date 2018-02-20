@@ -1,4 +1,3 @@
-import timeManager from '../managers/timeManager';
 import shaderManager from '../managers/shaderManager';
 import resourceManager from '../managers/resourceManager';
 import GameObject from '../entities/GameObject';
@@ -8,6 +7,7 @@ import MeshRenderer from '../components/MeshRenderer';
 class Hero extends GameObject {
   constructor(opts) {
     super(opts);
+    this.name = 'hero';
     this.mesh = {
       vertices: [
         -0.5, 0.5, -0.5,

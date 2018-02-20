@@ -8,7 +8,7 @@ class GameObject {
     this.gl = aquarae.gl;
     this.isReady = false;
     this.id = opts.id || uuid();
-    this.name = opts.name || this.id;
+    this.name = this.name || opts.name || this.id;
     this.children = [];
     this.components = [];
     this.mesh = {};

@@ -1,4 +1,3 @@
-import timeManager from '../managers/timeManager';
 import shaderManager from '../managers/shaderManager';
 import resourceManager from '../managers/resourceManager';
 import GameObject from '../entities/GameObject';
@@ -8,6 +7,7 @@ import MeshRenderer from '../components/MeshRenderer';
 class Cube extends GameObject {
   constructor(opts) {
     super(opts);
+    this.name = 'cube';
     this.mesh = {
       ...this.mesh,
       vertices: [
@@ -128,9 +128,7 @@ class Cube extends GameObject {
           });
         })
     ]);
-
   }
-
 }
 
 export default Cube;
