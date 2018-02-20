@@ -13,7 +13,7 @@ class Scene {
   }
 
   preload() {
-    console.log('Scene: Pre loading...');
+    console.log('[Scene] Pre loading...');
     this.meta && this.meta.objects && this.meta.objects.forEach((obj) => {
       this.addChild(new obj.clazz(obj.opts));
     });

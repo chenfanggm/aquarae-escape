@@ -14,7 +14,7 @@ class Socket {
     return new Promise((resolve, reject) => {
       this.ws = new WebSocket(`${config.server.protocol}://${config.server.host}:${config.server.port}`);
       this.ws.onopen = () => {
-        console.log('Socket: Is connected!');
+        console.log('[Socket] Is connected!');
         this.isAlive = true;
         resolve(this.ws);
       };
@@ -25,7 +25,7 @@ class Socket {
           msgMeta = JSON.parse(message.data);
         } catch (err) {
           msgMeta = message.data;
-          console.log('WS got none JSON message:', msgMeta);
+          console.log('[Socket] Got none JSON message:', msgMeta);
         }
 
         if (msgMeta.type === 'cmd') {
@@ -53,11 +53,11 @@ class Socket {
       };
 
       this.ws.onerror = (err) => {
-        console.log('WS got error: ', err);
+        console.log('[Socket] Got error: ', err);
         this.isAlive = false;
       };
       this.ws.onclose = () => {
-        console.log('WS is closed!');
+        console.log('[Socket] Is closed!');
         this.isAlive = false;
       };
     });

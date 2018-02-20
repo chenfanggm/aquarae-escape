@@ -34,7 +34,7 @@ class Game {
   start() {
     this.preload()
       .then(() => {
-        console.info('Game: Initiating...');
+        console.log('[Game] Initiating...');
         return this.init();
       })
       .then(() => {
@@ -43,7 +43,7 @@ class Game {
   }
 
   preload() {
-    console.info('Game: Pre loading...');
+    console.log('[Game] Pre loading...');
     // game level preload
     return Promise.all([
       //resourceManager.loadText()
@@ -53,7 +53,7 @@ class Game {
         return sceneManager.preload();
       })
       .then(() => {
-        console.info('Game: Finish loading!');
+        console.log('[Game] Finish loading!');
       });
   }
 
@@ -71,14 +71,14 @@ class Game {
       socketService.init()
     ])
       .then(() => {
-        console.log('Game: Initiated!');
+        console.log('[Game] Initiated!');
       });
   }
 
   loop() {
     window.requestAnimationFrame(this.logicLoop);
     window.requestAnimationFrame(this.renderLoop);
-    console.log('Game: Loop started!');
+    console.log('[Game] Loop started!');
   }
 
   logicLoop(timestamp) {

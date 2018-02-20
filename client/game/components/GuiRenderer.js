@@ -26,7 +26,7 @@ class GuiRenderer extends GameComponent {
       });
 
     inputManager.on(this, 'click', (event) => {
-      console.log('clicked hello world');
+      console.log('[Mouse] clicked hello world');
     });
   }
 

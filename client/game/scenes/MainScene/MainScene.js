@@ -38,7 +38,7 @@ class MainScene extends Scene {
       case 'spawn': {
         const player = gameManager.getGame().getCurPlayer();
         if (cmd.userId !== player.id) {
-          console.log('Received CMD spawn:', cmd);
+          console.log('[Socket] Received CMD spawn:', cmd);
           this.spawnOtherPlayer({ id: cmd.userId, position: cmd.data.position });
         }
       }
@@ -55,7 +55,7 @@ class MainScene extends Scene {
     player.addComponent(new PlayerController(player));
     player.spawn();
     this.addChild(player);
-    console.log('Player: Spawned!', player.id);
+    console.log('[Player] Spawned!', player.id);
   }
 
   spawnOtherPlayer({ id, position }) {
@@ -66,7 +66,7 @@ class MainScene extends Scene {
     spawned.addComponent(new AgentController(spawned));
     spawned.init();
     this.addChild(spawned);
-    console.log('Player: One another player spawned!', spawned.id);
+    console.log('[Player] One another player spawned!', spawned.id);
   }
 }
 

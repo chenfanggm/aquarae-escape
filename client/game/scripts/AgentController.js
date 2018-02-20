@@ -20,7 +20,6 @@ class AgentController extends GameComponent {
   }
 
   receivedUserCMDHandler(cmd) {
-    console.log(cmd);
     switch (cmd.type) {
       case 'move':
         this.originalPos = this.owner.transform.position;
