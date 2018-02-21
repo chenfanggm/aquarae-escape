@@ -1,10 +1,13 @@
 import socketService from '../../services/socketService';
-import Scene from '../../entities/Scene';
-import Hero from '../../objects/Hero';
-import Cube from '../../objects/Cube';
 import PlayerController from '../../scripts/PlayerController';
 import AgentController from '../../scripts/AgentController';
+import MainCameraController from '../../scripts/MainCameraController';
 import gameManager from '../../managers/gameManager';
+import cameraManager from '../../managers/cameraManager';
+import Scene from '../../entities/Scene';
+import Camera from '../../entities/Camera';
+import Hero from '../../objects/Hero';
+import Cube from '../../objects/Cube';
 import meta from './meta';
 
 
@@ -25,12 +28,24 @@ class MainScene extends Scene {
     this.addChild(cube3);
     this.addChild(cube4);
 
+    const mainCamera = new Camera({
+      transform: { position: [0, 15, 15] }
+    });
+    mainCamera.addComponent(new MainCameraController(mainCamera));
+    this.addChild(mainCamera);
+    cameraManager.setMainCamera(mainCamera);
+
     return super.preload()
   }
 
   init() {
     socketService.registerCMDHandler(this.receivedCMDHandler);
     super.init();
+  }
+
+  input() {
+
+    super.input();
   }
 
   receivedCMDHandler(cmd) {

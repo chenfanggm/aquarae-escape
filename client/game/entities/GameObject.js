@@ -1,6 +1,6 @@
 import uuid from 'uuid/v4';
 import objectManager from '../managers/objectManager';
-import Transform from '../components/Transform';
+import Transform from './Transform';
 
 
 class GameObject {
@@ -15,7 +15,6 @@ class GameObject {
     this.textures = [];
     this.material = null;
     this.transform = new Transform(this, opts.transform);
-    this.addComponent(this.transform);
     objectManager.add(this);
   }
 
@@ -91,6 +90,10 @@ class GameObject {
       .then(() => {
         this.init();
       });
+  }
+
+  setPosition(pos) {
+    this.transform.setPosition(pos);
   }
 }
 

@@ -1,6 +1,7 @@
 import * as glm from '../libs/gl-matrix';
 import GameComponent from '../entities/GameComponent';
 import modelManager from '../managers/modelManager';
+import cameraManager from '../managers/cameraManager';
 
 
 class MeshRenderer extends GameComponent {
@@ -108,9 +109,13 @@ class MeshRenderer extends GameComponent {
   }
 
   computeMatrix() {
+    // model
     glm.mat4.identity(this.modelMatrix);
     glm.mat4.mul(this.modelMatrix, this.modelMatrix, this.owner.transform.getMatrix());
-    glm.mat4.lookAt(this.viewMatrix, new Float32Array([0, 15, 15]), [0, 0, 0], [0, 1, 0]);
+    // view
+    const mainCamera = cameraManager.getMainCamera();
+    glm.mat4.lookAt(this.viewMatrix, mainCamera.transform.position, [0, 0, 0], [0, 1, 0]);
+    // projection
     glm.mat4.perspective(this.projMatrix, glm.glMatrix.toRadian(45), aquarae.canvas.width / aquarae.canvas.height, 0.1, 1000.0);
     this.program.setMatrixUniform('modelMatrix', this.modelMatrix);
     this.program.setMatrixUniform('viewMatrix', this.viewMatrix);

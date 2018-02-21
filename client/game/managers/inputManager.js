@@ -7,7 +7,9 @@ class InputManager {
     this.keyMap = {};
     this.axis = {
       Horizontal: 0,
-      Vertical: 0
+      Vertical: 0,
+      ViceHorizontal: 0,
+      ViceVertical: 0
     };
     this.mouse = {
       position: { x: 0, y: 0 }
@@ -78,6 +80,7 @@ class InputManager {
   }
 
   updateAxis() {
+    // horizontal
     if (this.keyMap[KeyCode.KEY_A] || this.keyMap[KeyCode.KEY_LEFT]) {
       this.axis.Horizontal = -1;
     } else if (this.keyMap[KeyCode.KEY_D] || this.keyMap[KeyCode.KEY_RIGHT]) {
@@ -85,13 +88,29 @@ class InputManager {
     } else {
       this.axis.Horizontal = 0;
     }
-
+    // vertical
     if (this.keyMap[KeyCode.KEY_W] || this.keyMap[KeyCode.KEY_UP]) {
       this.axis.Vertical = 1;
     } else if (this.keyMap[KeyCode.KEY_S] || this.keyMap[KeyCode.KEY_DOWN]) {
       this.axis.Vertical = -1;
     } else {
       this.axis.Vertical = 0;
+    }
+    // vice horizontal
+    if (this.keyMap[KeyCode.KEY_J]) {
+      this.axis.ViceHorizontal = -1;
+    } else if (this.keyMap[KeyCode.KEY_L]) {
+      this.axis.ViceHorizontal = 1;
+    } else {
+      this.axis.ViceHorizontal = 0;
+    }
+    // vice vertical
+    if (this.keyMap[KeyCode.KEY_I]) {
+      this.axis.ViceVertical = 1;
+    } else if (this.keyMap[KeyCode.KEY_K]) {
+      this.axis.ViceVertical = -1;
+    } else {
+      this.axis.ViceVertical = 0;
     }
   }
 

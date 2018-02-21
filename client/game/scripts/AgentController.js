@@ -53,7 +53,7 @@ class AgentController extends GameComponent {
     glm.vec3.mul(p0, glm.vec3.fromValues(1.0 - animationCompletion, 1.0 - animationCompletion, 1.0 - animationCompletion), this.originalPos);
     glm.vec3.mul(p1, glm.vec3.fromValues(animationCompletion, animationCompletion, animationCompletion), this.targetPos);
     glm.vec3.add(targetPos, p0, p1);
-    this.owner.transform.setPosition(targetPos);
+    this.owner.setPosition(targetPos);
   }
 }
 

@@ -1,10 +1,9 @@
 import * as glm from '../libs/gl-matrix';
-import GameComponent from '../entities/GameComponent';
 
 
-class Transform extends GameComponent {
+class Transform {
   constructor(owner, opts = {}) {
-    super(owner);
+    this.owner = owner;
     this.origin = glm.vec3.fromValues(0, 0, 0);
     this.position = opts.position || glm.vec3.fromValues(0, 0, 0);
     this.rotation = glm.quat.create();

@@ -1,12 +1,11 @@
 import * as glm from '../libs/gl-matrix';
 import timeManager from '../managers/timeManager';
-import inputManager from '../managers/inputManager';
 import GameComponent from '../entities/GameComponent';
-import socketService from '../services/socketService';
 import utils from '../entities/utils';
+import inputManager from "../managers/inputManager";
 
 
-class PlayerController extends GameComponent {
+class MainCameraController extends GameComponent {
   constructor(owner) {
     super(owner);
     this.directInput = { x: 0, y: 0 };
@@ -14,54 +13,24 @@ class PlayerController extends GameComponent {
     this.tentativePos = this.owner.transform.position;
     this.targetPos = this.owner.transform.position;
     this.targetAnimationStart = timeManager.getTimeElapsed();
-    this.isGround = false;
     this.moveSpeed = 3;
     this.rotationSpeed = 120;
-    this.receivedUserCMDHandler = this.receivedUserCMDHandler.bind(this);
-  }
-
-  init() {
-    socketService.registerUserCMDHandler(this.owner.id, this.receivedUserCMDHandler);
-  }
-
-  receivedUserCMDHandler(cmd) {
-    switch (cmd.type) {
-      case 'move':
-        this.originalPos = this.owner.transform.position;
-        this.targetPos = this.tentativePos = cmd.data.position;
-        this.targetAnimationStart = timeManager.getTimeElapsed();
-        break;
-      default:
-        break;
-    }
   }
 
   input() {
-    this.directInput.x = inputManager.getAxis('Horizontal');
-    this.directInput.y = inputManager.getAxis('Vertical');
-  }
-
-  enqueue() {
-    if (this.directInput.x !== 0 || this.directInput.y !== 0) {
-      const newPos = glm.vec3.create();
-      glm.vec3.scale(newPos, this.owner.transform.forward, this.directInput.y * this.moveSpeed * this.SERVER_BROADCAST_INTERVAL / 1000);
-      glm.vec3.add(newPos, this.tentativePos, newPos);
-      const newOrient = this.owner.transform.rotation;
-      this.tentativePos = newPos;
-      socketService.enqueueCmd({
-        type: 'move',
-        userId: this.owner.id,
-        data: {
-          position: newPos,
-          orientation: newOrient
-        }
-      });
-    }
+    this.directInput.x = inputManager.getAxis('ViceHorizontal');
+    this.directInput.y = inputManager.getAxis('ViceVertical');
   }
 
   update() {
     const deltaTime = timeManager.getDeltaTime();
-    this.doRotate(deltaTime);
+    if (this.directInput.x !== 0 || this.directInput.y !== 0) {
+      const newPos = glm.vec3.create();
+      glm.vec3.scale(newPos, this.owner.transform.forward, this.directInput.y * this.moveSpeed * this.SERVER_BROADCAST_INTERVAL / 1000);
+      glm.vec3.add(this.targetPos, this.targetPos, newPos);
+      glm.vec3.scale(newPos, this.owner.transform.right, this.directInput.x * this.moveSpeed * this.SERVER_BROADCAST_INTERVAL / 1000);
+      glm.vec3.add(this.targetPos, this.targetPos, newPos);
+    }
     this.doMove(deltaTime);
   }
 
@@ -73,7 +42,6 @@ class PlayerController extends GameComponent {
     const diff = glm.vec3.create();
     glm.vec3.subtract(diff, this.targetPos, this.owner.transform.position);
     glm.vec3.normalize(diff, diff);
-
     const animationCompletion = utils.getAnimationCompletion(this.targetAnimationStart);
     const targetPos = glm.vec3.create();
     const p0 = glm.vec3.create();
@@ -85,4 +53,4 @@ class PlayerController extends GameComponent {
   }
 }
 
-export default PlayerController;
+export default MainCameraController;
