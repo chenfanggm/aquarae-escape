@@ -9,6 +9,7 @@ import simpleDiffuseShader from './shaders/simpleDiffuseShader';
 import simpleStandardShader from './shaders/simpleStaticShader';
 import bitmapFontShader from './shaders/bitmapFontShader';
 import { loginUser } from './services/authService';
+import simpleDiffuseSpeculateShader from "./shaders/simpleDiffuseSpecularShader";
 
 
 class Escape extends Game {
@@ -21,6 +22,7 @@ class Escape extends Game {
     shaderManager.register([
       new ShaderProgram(simpleStandardShader),
       new ShaderProgram(simpleDiffuseShader),
+      new ShaderProgram(simpleDiffuseSpeculateShader),
       new ShaderProgram(bitmapFontShader)
     ]);
     sceneManager.setCurScene(new MainScene());

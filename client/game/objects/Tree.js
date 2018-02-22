@@ -9,7 +9,7 @@ class Tree extends GameObject {
   constructor(opts) {
     super(opts);
     this.name = 'tree';
-    this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseShader')));
+    this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseSpecularShader')));
   }
 
   preload() {

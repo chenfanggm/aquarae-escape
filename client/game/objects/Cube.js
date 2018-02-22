@@ -116,7 +116,7 @@ class Cube extends GameObject {
       ]
     };
 
-    this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseShader')));
+    this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseSpecularShader')));
   }
 
   preload() {

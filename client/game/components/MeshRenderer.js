@@ -15,7 +15,7 @@ class MeshRenderer extends GameComponent {
     this.modelMatrix = glm.mat4.create();
     this.viewMatrix = glm.mat4.create();
     this.projMatrix = glm.mat4.create();
-    this.ambientIntensity = [0.2, 0.2, 0.2];
+    this.ambientColor = [0.2, 0.2, 0.2];
     this.sunPosition = [15, 15, 15];
     this.sunIntensity = [0.9, 0.9, 0.9];
     this.sunColor = [255, 255, 255];
@@ -133,11 +133,12 @@ class MeshRenderer extends GameComponent {
         this.sunIntensity = light.intensity;
       }
     });
-    this.program.setVec3Uniform('ambientIntensity', this.ambientIntensity);
+    this.program.setVec3Uniform('ambientColor', this.ambientColor);
     this.program.setVec3Uniform('sunLight.position', this.sunPosition);
     this.program.setVec3Uniform('sunLight.color', this.sunColor);
     this.program.setFloatUniform('sunLight.intensity', this.sunIntensity);
-
+    this.program.setFloatUniform('shineDamper', this.owner.material.shineDamper);
+    this.program.setFloatUniform('reflectivity', this.owner.material.reflectivity);
   }
 }
 

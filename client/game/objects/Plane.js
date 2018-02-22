@@ -14,7 +14,7 @@ class Plane extends GameObject {
     this.widthSegments = Math.floor(widthSegments) || 1;
     this.heightSegments = Math.floor(heightSegments) || 1;
     this.mesh = this.generatePlane(this.width, this.height, this.widthSegments, this.heightSegments);
-    this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseShader')));
+    this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseSpecularShader')));
   }
 
   preload() {

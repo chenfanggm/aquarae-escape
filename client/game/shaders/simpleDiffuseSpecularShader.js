@@ -1,0 +1,84 @@
+const vSource = `#version 300 es
+  precision mediump float;
+  
+  struct DirectLight {
+    vec3 position;
+    vec3 color;
+    float intensity;
+  };
+  
+  layout(location = 0) in vec3 vPosition;
+  layout(location = 1) in vec2 vTexture;
+  layout(location = 2) in vec3 vNormal;  
+  uniform mat4 modelMatrix;
+  uniform mat4 viewMatrix;
+  uniform mat4 projMatrix;
+  uniform DirectLight sunLight;
+  
+  out vec2 fTexture;
+  out vec3 fNormal;
+  out vec3 fToSunVector;
+  out vec3 fToCameraVector;
+
+  
+  void main() {
+    vec4 worldPosition = modelMatrix * vec4(vPosition, 1.0);    
+    fNormal = (modelMatrix * vec4(vNormal, 0.0)).xyz;
+    fToSunVector = sunLight.position - worldPosition.xyz;
+    fToCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
+    
+    fTexture = vTexture;
+
+    gl_Position = projMatrix * viewMatrix * worldPosition;
+  }
+`;
+
+const fSource = `#version 300 es
+  precision mediump float;
+  
+  struct DirectLight {
+    vec3 position;
+    vec3 color;
+    float intensity;
+  };
+  
+  in vec2 fTexture;
+  in vec3 fNormal;
+  in vec3 fToSunVector;
+  in vec3 fToCameraVector;
+  uniform vec3 ambientColor;
+  uniform float shineDamper;
+  uniform float reflectivity;
+  uniform DirectLight sunLight;
+  uniform sampler2D sampler;
+  
+  out vec4 outColor;
+  
+  void main() {
+    vec3 normalizedSurfaceNormal = normalize(fNormal);
+    vec3 normalizedToSunVector = normalize(fToSunVector);  
+    vec3 normalizedSunDirection = -normalizedToSunVector;
+    vec3 normalizedToCameraVector = normalize(fToCameraVector);
+    vec3 normalizedReflectedSunDirection = reflect(normalizedSunDirection, normalizedSurfaceNormal);
+
+    float diffuseFactor = dot(normalizedSurfaceNormal, normalizedToSunVector);
+    float brightness = max(diffuseFactor, 0.0);
+    vec3 diffuseColor = vec3(sunLight.intensity) * brightness * sunLight.color;
+    vec3 lightColor = ambientColor + diffuseColor;    
+
+    float specularFactor = dot(normalizedReflectedSunDirection, normalizedSurfaceNormal);
+    specularFactor = max(specularFactor, 0.0);
+    float dampedFactor = pow(specularFactor, shineDamper);    
+    vec3 specularColor = dampedFactor * reflectivity * lightColor;
+    
+    vec4 texel = texture(sampler, fTexture);
+    
+    outColor = vec4(lightColor, 1.0) * texel + vec4(specularColor, 1.0);
+  }
+`;
+
+export default {
+  id: 'simpleDiffuseSpecularShader',
+  vSource,
+  fSource
+};

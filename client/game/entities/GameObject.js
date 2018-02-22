@@ -13,7 +13,10 @@ class GameObject {
     this.components = [];
     this.mesh = {};
     this.textures = [];
-    this.material = null;
+    this.material = {
+      shineDamper: 1,
+      reflectivity: 0
+    };
     this.transform = new Transform(this, opts.transform);
     objectManager.add(this);
   }
