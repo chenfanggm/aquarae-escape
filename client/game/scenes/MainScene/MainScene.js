@@ -9,6 +9,7 @@ import Camera from '../../entities/Camera';
 import Hero from '../../objects/Hero';
 import Cube from '../../objects/Cube';
 import meta from './meta';
+import DirectLight from "../../entities/DirectLight";
 
 
 class MainScene extends Scene {
@@ -18,7 +19,15 @@ class MainScene extends Scene {
   }
 
   preload() {
-    // prefab
+    // camera
+    const mainCamera = new Camera({
+      transform: { position: [0, 15, 15] }
+    });
+    mainCamera.addComponent(new MainCameraController(mainCamera));
+    this.addChild(mainCamera);
+    cameraManager.setMainCamera(mainCamera);
+
+    // objects
     const cube3 = new Cube({
       transform: { position: [1, 1, 0] }
     });
@@ -28,12 +37,13 @@ class MainScene extends Scene {
     this.addChild(cube3);
     this.addChild(cube4);
 
-    const mainCamera = new Camera({
-      transform: { position: [0, 15, 15] }
+    // lights
+    const directLight = new DirectLight({
+      transform: { position: [15, 15, 15] },
+      color: [1, 1, 1],
+      intensity: 1
     });
-    mainCamera.addComponent(new MainCameraController(mainCamera));
-    this.addChild(mainCamera);
-    cameraManager.setMainCamera(mainCamera);
+    this.addLight(directLight);
 
     return super.preload()
   }
@@ -44,7 +54,6 @@ class MainScene extends Scene {
   }
 
   input() {
-
     super.input();
   }
 

@@ -1,7 +1,9 @@
 import * as glm from '../libs/gl-matrix';
 import GameComponent from '../entities/GameComponent';
 import modelManager from '../managers/modelManager';
+import sceneManager from '../managers/sceneManager';
 import cameraManager from '../managers/cameraManager';
+import DirectLight from "../entities/DirectLight";
 
 
 class MeshRenderer extends GameComponent {
@@ -14,8 +16,9 @@ class MeshRenderer extends GameComponent {
     this.viewMatrix = glm.mat4.create();
     this.projMatrix = glm.mat4.create();
     this.ambientIntensity = [0.2, 0.2, 0.2];
-    this.sunDirection = [3.0, 3.0, 3.0];
+    this.sunPosition = [15, 15, 15];
     this.sunIntensity = [0.9, 0.9, 0.9];
+    this.sunColor = [255, 255, 255];
   }
 
   init() {
@@ -120,9 +123,21 @@ class MeshRenderer extends GameComponent {
     this.program.setMatrixUniform('modelMatrix', this.modelMatrix);
     this.program.setMatrixUniform('viewMatrix', this.viewMatrix);
     this.program.setMatrixUniform('projMatrix', this.projMatrix);
+    // lights
+    const curScene = sceneManager.getCurScene();
+    const lights = curScene.getLights();
+    lights.forEach((light) => {
+      if (light instanceof DirectLight) {
+        this.sunPosition = light.transform.position;
+        this.sunColor = light.color;
+        this.sunIntensity = light.intensity;
+      }
+    });
     this.program.setVec3Uniform('ambientIntensity', this.ambientIntensity);
-    this.program.setVec3Uniform('sunLight.direction', this.sunDirection);
-    this.program.setVec3Uniform('sunLight.intensity', this.sunIntensity);
+    this.program.setVec3Uniform('sunLight.position', this.sunPosition);
+    this.program.setVec3Uniform('sunLight.color', this.sunColor);
+    this.program.setFloatUniform('sunLight.intensity', this.sunIntensity);
+
   }
 }
 

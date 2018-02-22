@@ -5,9 +5,8 @@ import sceneManager from '../managers/sceneManager';
 class Scene {
   constructor(id=uuid(), meta = {}) {
     this.gl = aquarae.gl;
-    if (meta) {
-      this.meta = meta;
-    }
+    this.meta = meta || {};
+    this.lights = [];
     this.children = [];
     sceneManager.add(id, this);
   }
@@ -68,6 +67,14 @@ class Scene {
 
   addChild(obj) {
     this.children.push(obj);
+  }
+
+  addLight(light) {
+    this.lights.push(light);
+  }
+
+  getLights() {
+    return this.lights;
   }
 
   remove(obj) {
