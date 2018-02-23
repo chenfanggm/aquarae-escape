@@ -55,8 +55,8 @@ const fSource = `#version 300 es
     vec3 diffuse = vec3(sunLight.intensity) * brightness * sunLight.color;
     
     vec3 lightMix = ambientIntensity + diffuse;
-    vec4 texel = texture(sampler, fTexture);
-    outColor = vec4(lightMix, 1.0) * texel;
+    vec4 textureColor = texture(sampler, fTexture);
+    outColor = vec4(lightMix, 1.0) * textureColor;
   }
 `;
 

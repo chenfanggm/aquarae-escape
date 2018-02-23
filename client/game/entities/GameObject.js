@@ -18,6 +18,8 @@ class GameObject {
       reflectivity: 0
     };
     this.transform = new Transform(this, opts.transform);
+    this.isHasTransparency = false;
+    this.isHasFakeLighting = false;
     objectManager.add(this);
   }
 

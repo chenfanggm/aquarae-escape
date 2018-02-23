@@ -61,8 +61,8 @@ class Game {
     this.setWindowSize(this.width, this.height);
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.frontFace(this.gl.CCW);
-    this.gl.cullFace(this.gl.BACK);
     this.gl.enable(this.gl.CULL_FACE);
+    this.gl.cullFace(this.gl.BACK);
     this.setClearColor(this.bgColor, 1);
     inputManager.init();
     sceneManager.init();

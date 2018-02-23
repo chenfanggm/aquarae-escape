@@ -28,7 +28,12 @@ class MeshRenderer extends GameComponent {
   render() {
     if (!this.indexCount) {
       this.indexCount = this.owner.mesh && this.owner.mesh.indices && this.owner.mesh.indices.length || null;
-    } else if (this.indexCount > 0) {
+    }
+
+    if (this.indexCount > 0) {
+      if (this.owner.isHasTransparency) {
+        this.disableCulling();
+      }
       this.program.enable();
       this.textureBuffers.forEach((textureBuffer, index) => {
         this.gl.activeTexture(this.gl[`TEXTURE${index}`]);
@@ -37,9 +42,13 @@ class MeshRenderer extends GameComponent {
       this.gl.bindVertexArray(this.vao);
       this.computeMatrix();
       this.gl.drawElements(this.gl.TRIANGLES, this.indexCount, this.gl.UNSIGNED_SHORT, 0);
+      this.enableCulling();
       this.gl.bindTexture(this.gl.TEXTURE_2D, null);
       this.gl.bindVertexArray(null);
       this.program.disable();
+      if (this.owner.isHasTransparency) {
+        this.enableCulling();
+      }
     }
   }
 
@@ -139,6 +148,17 @@ class MeshRenderer extends GameComponent {
     this.program.setFloatUniform('sunLight.intensity', this.sunIntensity);
     this.program.setFloatUniform('shineDamper', this.owner.material.shineDamper);
     this.program.setFloatUniform('reflectivity', this.owner.material.reflectivity);
+    this.program.setFloatUniform('isHasFakeLighting', this.owner.isHasFakeLighting ? 1 : 0);
+  }
+
+  enableCulling() {
+    this.gl.enable(this.gl.CULL_FACE);
+    this.gl.cullFace(this.gl.BACK);
+  }
+
+  disableCulling() {
+    this.gl.disable(this.gl.CULL_FACE);
+
   }
 }
 

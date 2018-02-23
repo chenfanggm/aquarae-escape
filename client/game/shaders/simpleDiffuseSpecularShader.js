@@ -14,6 +14,7 @@ const vSource = `#version 300 es
   uniform mat4 viewMatrix;
   uniform mat4 projMatrix;
   uniform DirectLight sunLight;
+  uniform float isHasFakeLighting;
   
   out vec2 fTexture;
   out vec3 fNormal;
@@ -23,7 +24,11 @@ const vSource = `#version 300 es
   
   void main() {
     vec4 worldPosition = modelMatrix * vec4(vPosition, 1.0);    
-    fNormal = (modelMatrix * vec4(vNormal, 0.0)).xyz;
+    vec3 actualNormal = vNormal;
+    if(isHasFakeLighting > 0.5) {
+      actualNormal = vec3(0.0, 1.0, 0.0);
+    }
+    fNormal = (modelMatrix * vec4(actualNormal, 0.0)).xyz;
     fToSunVector = sunLight.position - worldPosition.xyz;
     fToCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
     
@@ -71,9 +76,11 @@ const fSource = `#version 300 es
     float dampedFactor = pow(specularFactor, shineDamper);    
     vec3 specularColor = dampedFactor * reflectivity * lightColor;
     
-    vec4 texel = texture(sampler, fTexture);
-    
-    outColor = vec4(lightColor, 1.0) * texel + vec4(specularColor, 1.0);
+    vec4 textureColor = texture(sampler, fTexture);
+    if (textureColor.a < 0.5) {
+      discard;
+    }
+    outColor = vec4(lightColor, 1.0) * textureColor + vec4(specularColor, 1.0);
   }
 `;
 
