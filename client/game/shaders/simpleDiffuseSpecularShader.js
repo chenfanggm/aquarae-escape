@@ -20,10 +20,10 @@ const vSource = `#version 300 es
   out vec3 fNormal;
   out vec3 fToSunVector;
   out vec3 fToCameraVector;
-  out float visibility;
+  out float fVisibility;
 
-  const float fogDensity = 0.02;
-  const float fogGradient = 1.5;
+  const float fogDensity = 0.03;
+  const float fogGradient = 3.0;
   
   void main() {
     vec4 worldPosition = modelMatrix * vec4(vPosition, 1.0);    
@@ -32,13 +32,14 @@ const vSource = `#version 300 es
     if(isHasFakeLighting > 0.5) {
       actualNormal = vec3(0.0, 1.0, 0.0);
     }
+    
     fNormal = (modelMatrix * vec4(actualNormal, 0.0)).xyz;
     fToSunVector = sunLight.position - worldPosition.xyz;
     fToCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
     
     float viewDistance = length(viewPosition.xyz);
-    visibility = exp(-pow((viewDistance * fogDensity), fogGradient));
-    visibility = clamp(visibility, 0.0, 1.0);
+    fVisibility = exp(-pow((viewDistance * fogDensity), fogGradient));
+    fVisibility = clamp(fVisibility, 0.0, 1.0);
     
     fTexture = vTexture;
 
@@ -59,7 +60,7 @@ const fSource = `#version 300 es
   in vec3 fNormal;
   in vec3 fToSunVector;
   in vec3 fToCameraVector;
-  in float visibility;
+  in float fVisibility;
   uniform vec3 fogColor;
   uniform vec3 ambientColor;
   uniform float shineDamper;
@@ -90,8 +91,9 @@ const fSource = `#version 300 es
     if (textureColor.a < 0.5) {
       discard;
     }
+    
     outColor = vec4(lightColor, 1.0) * textureColor + vec4(specularColor, 1.0);
-    outColor = mix(vec4(fogColor, 1.0), outColor, visibility);
+    outColor = mix(vec4(fogColor, 1.0), outColor, fVisibility);
   }
 `;
 

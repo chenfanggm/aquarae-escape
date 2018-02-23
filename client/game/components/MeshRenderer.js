@@ -142,7 +142,7 @@ class MeshRenderer extends GameComponent {
         this.sunIntensity = light.intensity;
       }
     });
-    this.program.setVec3Uniform('fogColor', this.game.bgColor);
+    this.program.setVec3Uniform('fogColor', this.game.clearColor);
     this.program.setVec3Uniform('ambientColor', this.ambientColor);
     this.program.setVec3Uniform('sunLight.position', this.sunPosition);
     this.program.setVec3Uniform('sunLight.color', this.sunColor);

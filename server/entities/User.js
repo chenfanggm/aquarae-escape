@@ -1,8 +1,8 @@
 class User {
   constructor({id, position}) {
-    this.id = id
-    this.position = position
-    this.ws = null
+    this.id = id;
+    this.position = position;
+    this.ws = null;
   }
 }
 

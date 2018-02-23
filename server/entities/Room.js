@@ -3,15 +3,15 @@ import _debug from 'debug'
 import config from '../config'
 
 
-const debug = _debug('app:room')
+const debug = _debug('app:room');
 class Room {
   constructor() {
-    this.id = uuid()
-    this.users = {}
-    this.receivedCmds = []
-    this.broadcastLoop = null
-    this.USER_PER_ROOM = config.userPerRoom
-    this.BROADCAST_LOOP_INTERVAL = config.SERVER_BROADCAST_INTERVAL
+    this.id = uuid();
+    this.users = {};
+    this.receivedCmds = [];
+    this.broadcastLoop = null;
+    this.USER_PER_ROOM = config.userPerRoom;
+    this.BROADCAST_LOOP_INTERVAL = config.SERVER_BROADCAST_INTERVAL;
 
     this.flushCMDBuffer = this.flushCMDBuffer.bind(this)
   }
@@ -26,8 +26,8 @@ class Room {
       this.broadcastLoop = setInterval(this.flushCMDBuffer, this.BROADCAST_LOOP_INTERVAL)
     }
     // add user to room
-    this.users[user.id] = user
-    debug(`Added a new user to room, total user: ${Object.values(this.users).length}`)
+    this.users[user.id] = user;
+    debug(`Added a new user to room, total user: ${Object.values(this.users).length}`);
     // inform other user with the new spawn
     const cmd = {
       type: 'spawn',
@@ -35,8 +35,8 @@ class Room {
       data: {
         position: user.position
       }
-    }
-    this.enqueueCMD([cmd])
+    };
+    this.enqueueCMD([cmd]);
   }
 
   getAllUser() {
@@ -44,7 +44,7 @@ class Room {
   }
 
   removeUser(user) {
-    delete this.users[user.id]
+    delete this.users[user.id];
     if (Object.values(this.users).length === 0) {
       clearInterval(this.broadcastLoop)
     }
@@ -59,28 +59,28 @@ class Room {
   }
 
   flushCMDBuffer() {
-    const cmdCopy = this.receivedCmds
-    this.receivedCmds = []
+    const cmdCopy = this.receivedCmds;
+    this.receivedCmds = [];
     this.broadcastCMD(cmdCopy)
   }
 
   broadcastCMD(receivedCmds) {
-    const broadcastCmds = {}
+    const broadcastCmds = {};
     // filter last command of the same time
     receivedCmds.forEach((commands) => {
       for (let i = commands.length - 1; i >= 0; i--) {
-        const cmd = commands[i]
-        const hash = `${cmd.userId}-${cmd.type}`
+        const cmd = commands[i];
+        const hash = `${cmd.userId}-${cmd.type}`;
         if (!broadcastCmds[hash]) {
           broadcastCmds[hash] = cmd
         }
       }
-    })
-    const users = Object.values(this.users)
-    const commands = Object.values(broadcastCmds)
+    });
+    const users = Object.values(this.users);
+    const commands = Object.values(broadcastCmds);
     if (users.length > 0 && commands.length > 0) {
-      debug(`Broadcast ${commands.length} commands to ${users.length} users`)
-      debug('Commands:', commands)
+      debug(`Broadcast ${commands.length} commands to ${users.length} users`);
+      debug('Commands:', commands);
       users.forEach((user) => {
         if (user.ws && user.ws.readyState === user.ws.OPEN) {
           user.ws.send(JSON.stringify({

@@ -14,7 +14,7 @@ class Game {
   constructor({ gl, canvas }) {
     this.gl = gl;
     this.canvas = canvas;
-    this.bgColor = this.getClearColor('0xB3B3B3');
+    this.clearColor = this.getClearColor('0xC3C3C3');
     this.logicTimePerUpdate = 1000 / config.game.logicFPS;
     this.frameTimePerUpdate = 1000 / config.game.renderFPS;
     this.prevTime = this.nowTime = 0;
@@ -121,7 +121,7 @@ class Game {
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.cullFace(this.gl.BACK);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-    this.gl.clearColor(this.bgColor[0], this.bgColor[1], this.bgColor[2], 1.0);
+    this.gl.clearColor(this.clearColor[0], this.clearColor[1], this.clearColor[2], 1.0);
     sceneManager.getCurScene().render();
   }
 

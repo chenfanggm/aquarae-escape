@@ -1,4 +1,5 @@
 import * as glm from '../libs/gl-matrix';
+import KeyCode from 'keycode-js';
 import timeManager from '../managers/timeManager';
 import inputManager from '../managers/inputManager';
 import GameComponent from '../entities/GameComponent';
@@ -14,8 +15,10 @@ class PlayerController extends GameComponent {
     this.tentativePos = this.owner.transform.position;
     this.targetPos = this.owner.transform.position;
     this.targetAnimationStart = timeManager.getTimeElapsed();
-    this.isGround = false;
+    this.isGround = true;
     this.moveSpeed = 3;
+    this.jumpSpeed = 3;
+    this.fallSpeed = 3;
     this.rotationSpeed = 120;
     this.receivedUserCMDHandler = this.receivedUserCMDHandler.bind(this);
   }
@@ -39,15 +42,40 @@ class PlayerController extends GameComponent {
   input() {
     this.directInput.x = inputManager.getAxis('Horizontal');
     this.directInput.y = inputManager.getAxis('Vertical');
+    this.directInput.up = inputManager.getKey(KeyCode.KEY_SPACE) ? 1 : 0;
   }
 
   enqueue() {
-    if (this.directInput.x !== 0 || this.directInput.y !== 0) {
-      const newPos = glm.vec3.create();
-      glm.vec3.scale(newPos, this.owner.transform.forward, this.directInput.y * this.moveSpeed * this.SERVER_BROADCAST_INTERVAL / 1000);
-      glm.vec3.add(newPos, this.tentativePos, newPos);
-      const newOrient = this.owner.transform.rotation;
+    let isDirty = false;
+    const newPos = glm.vec3.create();
+    const diff = glm.vec3.create();
+    const newOrient = this.owner.transform.rotation;
+
+    if (this.isGround && this.directInput.up !== 0) {
+      isDirty = true;
+      this.isGround = false;
+      glm.vec3.scale(diff, this.owner.transform.up , this.directInput.up * this.jumpSpeed);
+      glm.vec3.add(newPos, this.tentativePos, diff);
       this.tentativePos = newPos;
+    } else if (!this.isGround) {
+      isDirty = true;
+      glm.vec3.scale(diff, this.owner.transform.up , -this.fallSpeed * this.game.logicTimePerUpdate / 1000);
+      glm.vec3.add(newPos, this.tentativePos, diff);
+      if (newPos[1] <= 0.5) {
+        newPos[1] = 0.5;
+        this.isGround = true;
+      }
+      this.tentativePos = newPos;
+    }
+
+    if (this.directInput.x !== 0 || this.directInput.y !== 0) {
+      isDirty = true;
+      glm.vec3.scale(diff, this.owner.transform.forward, this.directInput.y * this.moveSpeed * this.game.logicTimePerUpdate / 1000);
+      glm.vec3.add(newPos, this.tentativePos, diff);
+      this.tentativePos = newPos;
+    }
+
+    if (isDirty) {
       socketService.enqueueCmd({
         type: 'move',
         userId: this.owner.id,
