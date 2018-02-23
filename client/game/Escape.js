@@ -13,11 +13,6 @@ import simpleDiffuseSpeculateShader from "./shaders/simpleDiffuseSpecularShader"
 
 
 class Escape extends Game {
-  constructor(opts) {
-    super(opts);
-    this.bgColor = 0xC2C3C4;
-  }
-
   preload() {
     shaderManager.register([
       new ShaderProgram(simpleStandardShader),

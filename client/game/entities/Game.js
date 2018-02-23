@@ -14,6 +14,7 @@ class Game {
   constructor({ gl, canvas }) {
     this.gl = gl;
     this.canvas = canvas;
+    this.bgColor = this.getClearColor('0xB3B3B3');
     this.logicTimePerUpdate = 1000 / config.game.logicFPS;
     this.frameTimePerUpdate = 1000 / config.game.renderFPS;
     this.prevTime = this.nowTime = 0;
@@ -23,7 +24,6 @@ class Game {
     this.width = this.canvas.width;
     this.height = this.canvas.height;
     this.devicePixelRatio = window.devicePixelRatio || 1;
-    this.bgColor = 0xFFFFFF;
     // server related
     this.player = null;
     this.renderLoop = this.renderLoop.bind(this);
@@ -59,11 +59,6 @@ class Game {
 
   init() {
     this.setWindowSize(this.width, this.height);
-    this.gl.enable(this.gl.DEPTH_TEST);
-    this.gl.frontFace(this.gl.CCW);
-    this.gl.enable(this.gl.CULL_FACE);
-    this.gl.cullFace(this.gl.BACK);
-    this.setClearColor(this.bgColor, 1);
     inputManager.init();
     sceneManager.init();
 
@@ -121,7 +116,12 @@ class Game {
   }
 
   render() {
+    this.gl.enable(this.gl.DEPTH_TEST);
+    this.gl.frontFace(this.gl.CCW);
+    this.gl.enable(this.gl.CULL_FACE);
+    this.gl.cullFace(this.gl.BACK);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+    this.gl.clearColor(this.bgColor[0], this.bgColor[1], this.bgColor[2], 1.0);
     sceneManager.getCurScene().render();
   }
 
@@ -146,10 +146,10 @@ class Game {
     this.gl.viewport(0, 0, this.width, this.height);
   }
 
-  setClearColor(colorHex = '0xFFFFFF', alpha = 1.0) {
+  getClearColor(colorHex = '0xFFFFFF', alpha = 1.0) {
     const rgb = utils.hexToRGB(colorHex);
     const rgba = [...rgb, alpha];
-    this.gl.clearColor(rgba[0] / 255, rgba[1] / 255, rgba[2] / 255, rgba[3]);
+    return [rgba[0] / 255, rgba[1] / 255, rgba[2] / 255];
   }
 
   getCurPlayer() {
