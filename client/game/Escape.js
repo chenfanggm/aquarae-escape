@@ -1,6 +1,7 @@
 import uuid from 'uuid/v4';
 import sceneManager from './managers/sceneManager';
 import shaderManager from './managers/shaderManager';
+import timeManager from './managers/timeManager';
 import Game from './entities/Game';
 import MainScene from './scenes/MainScene';
 import ShaderProgram from './entities/ShaderProgram';
@@ -9,7 +10,7 @@ import simpleDiffuseShader from './shaders/simpleDiffuseShader';
 import simpleStandardShader from './shaders/simpleStaticShader';
 import bitmapFontShader from './shaders/bitmapFontShader';
 import { loginUser } from './services/authService';
-import simpleDiffuseSpeculateShader from "./shaders/simpleDiffuseSpecularShader";
+import simpleDiffuseSpeculateShader from './shaders/simpleDiffuseSpecularShader';
 
 
 class Escape extends Game {
@@ -33,8 +34,13 @@ class Escape extends Game {
       .then(() => {
         return loginUser(this.player);
       })
-      .then((users) => {
+      .then(({users, epoch}) => {
         const scene = sceneManager.getCurScene();
+        if (epoch === 0) {
+          timeManager.startEpoch();
+        } else {
+          throw new Error('[Error] Game not start with epoch time 0');
+        }
         users.forEach((user) => {
           if (user.id === this.player.id) {
             scene.spawnPlayer(user);

@@ -1,11 +1,10 @@
 import config from '../config';
-
+import timeManager from '../managers/timeManager';
+import cmdManager from '../managers/cmdManager';
 
 class Socket {
   constructor() {
     this.isAlive = false;
-    this.cmdlisteners = [];
-    this.userCmdListeners = {};
     this.apiListeners = {};
     this.lastSendTime = Date.now();
   }
@@ -29,22 +28,11 @@ class Socket {
         }
 
         if (msgMeta.type === 'cmd') {
+          timeManager.setCurEpoch(msgMeta.epoch);
           const commands = msgMeta.data;
           commands.forEach((cmd) => {
-            
-            this.cmdlisteners.forEach((listener) => {
-              listener(cmd);
-            });
-
-            const userId = cmd.userId;
-            if (userId)  {
-              if (this.userCmdListeners[userId]) {
-                this.userCmdListeners[userId].forEach((listener) => {
-                  listener(cmd);
-                });
-              }
-            }
-            
+            cmd.epoch = msgMeta.epoch;
+            cmdManager.enqueue(cmd);
           });
         } else if (msgMeta.type === 'api' && this.apiListeners[msgMeta.id]) {
           this.apiListeners[msgMeta.id](msgMeta.data);

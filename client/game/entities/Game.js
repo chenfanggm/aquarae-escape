@@ -8,6 +8,7 @@ import resourceManager from '../managers/resourceManager';
 import socketService from '../services/socketService';
 import utils from './utils';
 import config from '../config';
+import cmdManager from "../managers/cmdManager";
 
 
 class Game {
@@ -90,6 +91,7 @@ class Game {
     if (timeManager.getDeltaTime() > this.frameTimePerUpdate) {
       this.input();
       this.enqueue();
+      this.processServerCMD();
       this.update();
       this.render();
       timeManager.updateTimer(timestamp);
@@ -109,6 +111,10 @@ class Game {
 
   enqueue() {
     sceneManager.getCurScene().enqueue();
+  }
+
+  processServerCMD() {
+    cmdManager.process();
   }
 
   update() {

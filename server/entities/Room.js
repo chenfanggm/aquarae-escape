@@ -12,6 +12,7 @@ class Room {
     this.broadcastLoop = null;
     this.USER_PER_ROOM = config.userPerRoom;
     this.BROADCAST_LOOP_INTERVAL = config.SERVER_BROADCAST_INTERVAL;
+    this.curEpoch = 0;
 
     this.flushCMDBuffer = this.flushCMDBuffer.bind(this)
   }
@@ -61,6 +62,7 @@ class Room {
   flushCMDBuffer() {
     const cmdCopy = this.receivedCmds;
     this.receivedCmds = [];
+    this.curEpoch++;
     this.broadcastCMD(cmdCopy)
   }
 
@@ -78,14 +80,15 @@ class Room {
     });
     const users = Object.values(this.users);
     const commands = Object.values(broadcastCmds);
-    if (users.length > 0 && commands.length > 0) {
-      debug(`Broadcast ${commands.length} commands to ${users.length} users`);
-      debug('Commands:', commands);
+    if (users.length > 0) {
+      //debug(`Broadcast ${commands.length} commands to ${users.length} users`);
+      //debug('Commands:', commands);
       users.forEach((user) => {
         if (user.ws && user.ws.readyState === user.ws.OPEN) {
           user.ws.send(JSON.stringify({
             type: 'cmd',
-            data: commands
+            data: commands,
+            epoch: this.curEpoch
           }))
         } else {
           this.removeUser(user.id)

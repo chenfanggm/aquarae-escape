@@ -1,15 +1,15 @@
-import socketService from '../../services/socketService';
 import PlayerController from '../../scripts/PlayerController';
 import AgentController from '../../scripts/AgentController';
 import MainCameraController from '../../scripts/MainCameraController';
 import gameManager from '../../managers/gameManager';
 import cameraManager from '../../managers/cameraManager';
+import cmdManager from '../../managers/cmdManager';
 import Scene from '../../entities/Scene';
 import Camera from '../../entities/Camera';
 import Hero from '../../objects/Hero';
 import Cube from '../../objects/Cube';
 import meta from './meta';
-import DirectLight from "../../entities/DirectLight";
+import DirectLight from '../../entities/DirectLight';
 
 
 class MainScene extends Scene {
@@ -49,7 +49,7 @@ class MainScene extends Scene {
   }
 
   init() {
-    socketService.registerCMDHandler(this.receivedCMDHandler);
+    cmdManager.registerCMDHandler(this.receivedCMDHandler);
     super.init();
   }
 

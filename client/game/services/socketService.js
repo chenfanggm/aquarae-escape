@@ -1,7 +1,6 @@
 import uuid from 'uuid/v4';
 import Socket from './Socket';
 import gameManager from '../managers/gameManager';
-import objectManager from '../managers/objectManager';
 
 
 class SocketService {
@@ -12,18 +11,6 @@ class SocketService {
 
   init() {
     return this.socket.init();
-  }
-
-  registerCMDHandler(callback) {
-    this.socket.cmdlisteners.push(callback);
-  }
-
-  registerUserCMDHandler(userId, callback) {
-    if (this.socket.userCmdListeners[userId]) {
-      this.socket.userCmdListeners[userId].push(callback);
-    } else {
-      this.socket.userCmdListeners[userId] = [callback];
-    }
   }
 
   enqueueCmd(cmd) {

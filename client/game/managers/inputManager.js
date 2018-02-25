@@ -1,6 +1,6 @@
 import KeyCode from 'keycode-js';
 import gameManager from './gameManager';
-
+import timeManager from './timeManager';
 
 class InputManager {
   constructor() {

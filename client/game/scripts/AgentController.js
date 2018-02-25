@@ -1,7 +1,7 @@
 import * as glm from '../libs/gl-matrix';
 import timeManager from '../managers/timeManager';
+import cmdManager from '../managers/cmdManager';
 import GameComponent from '../entities/GameComponent';
-import socketService from '../services/socketService';
 import utils from '../entities/utils';
 
 
@@ -16,7 +16,7 @@ class AgentController extends GameComponent {
   }
 
   init() {
-    socketService.registerUserCMDHandler(this.owner.id, this.receivedUserCMDHandler);
+    cmdManager.registerUserCMDHandler(this.owner.id, this.receivedUserCMDHandler);
   }
 
   receivedUserCMDHandler(cmd) {

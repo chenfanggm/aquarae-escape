@@ -7,7 +7,7 @@ export const loginUser = (player) => {
       if (data.users) {
         console.log('[Player] Logged in!');
         player.isConnected = true;
-        resolve(data.users);
+        resolve(data);
       } else {
         reject(new Error('[Player] Failed to login user.'));
       }
