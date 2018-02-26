@@ -1,5 +1,5 @@
 
-class ObjectManager {
+class RendererManager {
   constructor() {
     this.objs = {};
   }
@@ -33,5 +33,5 @@ class ObjectManager {
   }
 }
 
-const objectManager = new ObjectManager();
-export default objectManager;
+const rendererManager = new RendererManager();
+export default rendererManager;

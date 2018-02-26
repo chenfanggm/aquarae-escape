@@ -1,6 +1,5 @@
 import timeManager from '../managers/timeManager';
 import shaderManager from '../managers/shaderManager';
-import resourceManager from '../managers/resourceManager';
 import GameObject from '../entities/GameObject';
 import MeshRenderer from '../components/MeshRenderer';
 
@@ -9,21 +8,9 @@ class Tree extends GameObject {
   constructor(opts) {
     super(opts);
     this.name = 'tree';
-    this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseSpecularShader')));
-  }
-
-  preload() {
-    const promises = [
-      resourceManager.loadJson('/models/tree/tree.json')
-        .then((model) => {
-          const mesh = model.meshes[0];
-          this.mesh.vertices = mesh.vertices;
-          this.mesh.indices = [].concat.apply([], mesh.faces);
-          this.mesh.normals = mesh.normals;
-          this.mesh.uvs = mesh.texturecoords[0];
-        })
-    ];
-    return Promise.all(promises);
+    this.modelName = 'tree';
+    this.program = shaderManager.get('simpleDiffuseSpecularShader');
+    this.addComponent(new MeshRenderer(this, this.program));
   }
 
   init() {

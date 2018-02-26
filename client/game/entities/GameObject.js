@@ -1,5 +1,6 @@
 import uuid from 'uuid/v4';
 import objectManager from '../managers/objectManager';
+import modelManager from '../managers/modelManager';
 import Transform from './Transform';
 
 
@@ -11,26 +12,31 @@ class GameObject {
     this.name = this.name || opts.name || this.id;
     this.children = [];
     this.components = [];
-    this.mesh = {};
-    this.textures = [];
-    this.material = {
-      shineDamper: 1,
-      reflectivity: 0
-    };
     this.transform = new Transform(this, opts.transform);
-    this.isHasTransparency = false;
-    this.isHasFakeLighting = false;
+    this.modelName = null;
+    this.model = null;
+    this.program = null;
     objectManager.add(this);
   }
 
   preload() {
+    if (this.modelName) {
+      this.model = modelManager.get(this.modelName);
+      return this.model.preload();
+    }
     return Promise.resolve();
   }
 
   init() {
+    // children
     this.children.forEach((obj) => {
       obj.init();
     });
+    // models
+    this.model && this.model.init({
+      program: this.program
+    });
+    // components
     this.components.forEach((component) => {
       component.init();
     });

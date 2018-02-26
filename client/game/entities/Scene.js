@@ -1,5 +1,7 @@
-import uuid from 'uuid/v4';
 import sceneManager from '../managers/sceneManager';
+import modelManager from '../managers/modelManager';
+import Camera from '../entities/Camera';
+import Light from '../entities/Light';
 
 
 class Scene {
@@ -16,12 +18,27 @@ class Scene {
 
   preload() {
     console.log('[Scene] Pre loading...');
-    this.meta && this.meta.objects && this.meta.objects.forEach((obj) => {
-      this.addChild(new obj.clazz(obj.opts));
-    });
-    this.meta && this.meta.guis && this.meta.guis.forEach((gui) => {
-      this.addChild(new gui.clazz(gui.opts));
-    });
+    // models
+    if(this.meta && this.meta.models) {
+      this.meta.models.forEach((model) => {
+        modelManager.add(model.name, new model.clazz(model.opts));
+      });
+    }
+
+    // objects
+    if (this.meta && this.meta.objects) {
+      this.meta.objects.forEach((obj) => {
+        this.addChild(new obj.clazz(obj.opts));
+      });
+    }
+
+    // gui
+    if (this.meta && this.meta.guis) {
+      this.meta.guis.forEach((gui) => {
+        this.addChild(new gui.clazz(gui.opts));
+      });
+    }
+
     return Promise.all(this.children.map((obj) => {
       return obj.preload();
     }));
@@ -73,22 +90,17 @@ class Scene {
   }
 
   addChild(obj) {
+    if (obj instanceof Camera) {
+      if (this.cameras[obj.name]) throw new Error(`Camera with name [${obj.name}] already exist in scene [${this.name}]`);
+      this.cameras[obj.name] = obj;
+    } else if (obj instanceof Light) {
+      this.lights.push(obj);
+    }
     this.children.push(obj);
-  }
-
-  addLight(light) {
-    this.lights.push(light);
-    this.addChild(light);
   }
 
   getLights() {
     return this.lights;
-  }
-
-  addCamera(camera) {
-    if (this.cameras[camera.name]) throw new Error(`Camera with name [${camera.name}] already exist in scene [${this.name}]`);
-    this.cameras[camera.name] = camera;
-    this.addChild(camera);
   }
 
   getCamera(name) {

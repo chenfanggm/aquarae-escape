@@ -1,29 +1,24 @@
 
 class ModelManager {
   constructor() {
-    this.prefab = {};
+    this.models = {};
   }
 
-  add(name, vao) {
-    if (this.prefab[name]) throw new Error(`object ${name} already exist`);
-    this.prefab[name] = vao;
-  }
-
-  remove(name) {
-    delete this.prefab[name];
+  add(name, model) {
+    if (this.models[name]) throw new Error(`Model ${name} already exist`);
+    this.models[name] = model;
   }
 
   get(name) {
-    if (this.prefab[name]) return this.prefab[name];
-    return null;
+    if (this.models[name]) return this.models[name];
+    throw new Error(`Not existing model with name: ${name}`);
   }
 
-  getAll() {
-    return Object.values(this.prefab);
-  }
-
-  reset() {
-    this.prefab = {};
+  remove(model) {
+    if (typeof model === 'object') {
+      delete this.models[model.name];
+    }
+    delete this.models[model];
   }
 }
 

@@ -18,11 +18,9 @@ class GuiRenderer extends GameComponent {
     this.projMatrix = glm.mat4.create();
     this.textures = [];
 
-    this.texture = resourceManager.loadImage('/textures/font/font.jpg')
-      .then((data) => {
-        this.textures.push({
-          data
-        });
+    resourceManager.loadImage('/textures/font/font.jpg')
+      .then((image) => {
+        this.textures.push(image);
       });
 
     inputManager.on(this, 'click', (event) => {
@@ -101,7 +99,7 @@ class GuiRenderer extends GameComponent {
         this.textureBuffers.push(textureBuffer);
         this.gl.bindTexture(this.gl.TEXTURE_2D, textureBuffer);
         this.gl.pixelStorei(this.gl.UNPACK_FLIP_Y_WEBGL, texture.isFlipY || false);
-        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, texture.data.width, texture.data.height, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, texture.data);
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, texture.width, texture.height, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, texture);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);

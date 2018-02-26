@@ -1,6 +1,5 @@
 import timeManager from '../managers/timeManager';
 import shaderManager from '../managers/shaderManager';
-import resourceManager from '../managers/resourceManager';
 import GameObject from '../entities/GameObject';
 import MeshRenderer from '../components/MeshRenderer';
 
@@ -9,27 +8,9 @@ class Susan extends GameObject {
   constructor(opts) {
     super(opts);
     this.name = 'susan';
-    this.addComponent(new MeshRenderer(this, shaderManager.get('simpleDiffuseSpecularShader')));
-  }
-
-  preload() {
-    return Promise.all([
-      resourceManager.loadJson('/models/susan/susan.json')
-        .then((response) => {
-          const mesh = response.meshes[0];
-          this.mesh.vertices = mesh.vertices;
-          this.mesh.indices = [].concat.apply([], mesh.faces);
-          this.mesh.normals = mesh.normals;
-          this.mesh.uvs = mesh.texturecoords[0];
-        }),
-      resourceManager.loadImage('/models/susan/susan.png')
-        .then((response) => {
-          this.textures.push({
-            data: response,
-            isFlipY: true
-          });
-        })
-    ]);
+    this.modelName = 'susan';
+    this.program = shaderManager.get('simpleDiffuseSpecularShader');
+    this.addComponent(new MeshRenderer(this, this.program));
   }
 
   init() {

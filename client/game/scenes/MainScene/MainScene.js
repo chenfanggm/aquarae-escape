@@ -25,7 +25,15 @@ class MainScene extends Scene {
       transform: { position: [0, 15, 15] }
     });
     mainCamera.addComponent(new MainCameraController(mainCamera));
-    this.addCamera(mainCamera);
+    this.addChild(mainCamera);
+
+    // lights
+    const directLight = new DirectLight({
+      transform: { position: [15, 15, 15] },
+      color: [1, 1, 1],
+      intensity: 1
+    });
+    this.addChild(directLight);
 
     // objects
     const cube3 = new Cube({
@@ -36,14 +44,6 @@ class MainScene extends Scene {
     });
     this.addChild(cube3);
     this.addChild(cube4);
-
-    // lights
-    const directLight = new DirectLight({
-      transform: { position: [15, 15, 15] },
-      color: [1, 1, 1],
-      intensity: 1
-    });
-    this.addLight(directLight);
 
     return super.preload()
   }
@@ -59,13 +59,12 @@ class MainScene extends Scene {
 
   receivedCMDHandler(cmd) {
     switch (cmd.type) {
-      case 'spawn': {
+      case 'spawn':
         const player = gameManager.getGame().getCurPlayer();
         if (cmd.userId !== player.id) {
           console.log('[Socket] Received CMD spawn:', cmd);
           this.spawnOtherPlayer({ id: cmd.userId, position: cmd.data.position });
         }
-      }
         break;
     }
   }
