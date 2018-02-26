@@ -6,8 +6,8 @@ class GameComponent {
 
   constructor(owner) {
     this.gl = aquarae.gl;
-    this.owner = owner;
     this.game = gameManager.getGame();
+    this.owner = owner;
     this.SERVER_BROADCAST_INTERVAL = serverConfig.SERVER_BROADCAST_INTERVAL;
   }
 

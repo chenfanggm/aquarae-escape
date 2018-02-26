@@ -2,6 +2,7 @@ import sceneManager from '../managers/sceneManager';
 import modelManager from '../managers/modelManager';
 import Camera from '../entities/Camera';
 import Light from '../entities/Light';
+import utils from "./utils";
 
 
 class Scene {
@@ -9,6 +10,7 @@ class Scene {
     if (!name) throw new Error('Name is required for creating scene.');
     this.name = name;
     this.gl = aquarae.gl;
+    this.clearColor = this.createClearColor('0xC3C3C3');
     this.meta = {};
     this.children = [];
     this.lights = [];
@@ -70,14 +72,6 @@ class Scene {
     });
   }
 
-  render() {
-    this.children.forEach((obj) => {
-      if (obj.isReady) {
-        obj.render();
-      }
-    });
-  }
-
   reset() {
     this.children.forEach((obj) => {
       obj.reset();
@@ -106,6 +100,16 @@ class Scene {
   getCamera(name) {
     if (!this.cameras[name]) throw new Error(`Camera with name [${name}] not exist in scene [${this.name}]`);
     return this.cameras[name];
+  }
+
+  setClearColor(color) {
+    this.clearColor = color;
+  }
+
+  createClearColor(colorHex = '0xFFFFFF', alpha = 1.0) {
+    const rgb = utils.hexToRGB(colorHex);
+    const rgba = [...rgb, alpha];
+    return [rgba[0] / 255, rgba[1] / 255, rgba[2] / 255];
   }
 
   remove(obj) {

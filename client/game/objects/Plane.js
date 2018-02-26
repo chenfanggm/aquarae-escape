@@ -1,7 +1,7 @@
 import shaderManager from '../managers/shaderManager';
 import resourceManager from '../managers/resourceManager';
 import GameObject from '../entities/GameObject';
-import MeshRenderer from '../components/MeshRenderer';
+import MeshRenderer from '../entities/MeshRenderer';
 import modelManager from "../managers/modelManager";
 
 
@@ -10,8 +10,7 @@ class Plane extends GameObject {
     super(opts);
     this.name = 'plane';
     this.modelName = 'plane';
-    this.program = shaderManager.get('simpleDiffuseSpecularShader');
-    this.addComponent(new MeshRenderer(this, this.program));
+    this.renderer = new MeshRenderer(this, shaderManager.get('simpleDiffuseSpecularShader'));
   }
 }
 

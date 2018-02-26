@@ -1,6 +1,6 @@
 import shaderManager from '../managers/shaderManager';
 import GameObject from '../entities/GameObject';
-import MeshRenderer from '../components/MeshRenderer';
+import MeshRenderer from '../entities/MeshRenderer';
 
 
 class Hero extends GameObject {
@@ -8,8 +8,7 @@ class Hero extends GameObject {
     super(opts);
     this.name = 'hero';
     this.modelName = 'cube';
-    this.program = shaderManager.get('simpleDiffuseSpecularShader');
-    this.addComponent(new MeshRenderer(this, this.program));
+    this.renderer = new MeshRenderer(this, shaderManager.get('simpleDiffuseSpecularShader'));
   }
 }
 

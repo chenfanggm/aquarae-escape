@@ -61,7 +61,7 @@ const fSource = `#version 300 es
 `;
 
 export default {
-  id: 'simpleDiffuseShader',
+  name: 'simpleDiffuseShader',
   vSource,
   fSource
 };

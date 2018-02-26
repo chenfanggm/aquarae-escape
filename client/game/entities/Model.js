@@ -3,6 +3,7 @@ export default class Model {
     const { mesh, textures, material } = opts;
     this.gl = aquarae.gl;
     this.mesh = mesh || null;
+    this.indexCount = null;
     this.textures = textures || [];
     this.material = material || {
       shineDamper: 1,

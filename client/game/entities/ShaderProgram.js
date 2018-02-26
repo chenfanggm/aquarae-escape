@@ -2,9 +2,9 @@ import Shader from './Shader';
 
 
 class ShaderProgram {
-  constructor({ id, vSource, fSource }) {
+  constructor({ name, vSource, fSource }) {
     this.gl = aquarae.gl;
-    this.id = id;
+    this.name = name;
     this.uniLocations = {};
     this.attrLocations = {};
     this.program = this.gl.createProgram();
@@ -51,11 +51,6 @@ class ShaderProgram {
     return attrLocation;
   }
 
-  setFloatAttr(attrName, value) {
-    const attrLocation = this.getAttrLocation(attrName);
-    this.gl.vertexAttrib1f(attrLocation, value);
-  }
-
   getUniLocation(uniName) {
     let uniLocation = this.uniLocations[uniName];
     if (!uniLocation) {
@@ -65,22 +60,32 @@ class ShaderProgram {
     return uniLocation;
   }
 
+  setFloatAttr(attrName, value) {
+    if (typeof value === 'undefined') throw new Error('Trying set undefined value');
+    const attrLocation = this.getAttrLocation(attrName);
+    this.gl.vertexAttrib1f(attrLocation, value);
+  }
+
   setMatrixUniform(uniName, value) {
+    if (typeof value === 'undefined') throw new Error('Trying set undefined value');
     const uniLocation = this.getUniLocation(uniName);
     this.gl.uniformMatrix4fv(uniLocation, false, value);
   }
 
   setFloatUniform(uniName, value) {
+    if (typeof value === 'undefined') throw new Error('Trying set undefined value');
     const uniLocation = this.gl.getUniformLocation(this.program, uniName);
     this.gl.uniform1f(uniLocation, value);
   }
 
   setVec2Uniform(uniName, value) {
+    if (typeof value === 'undefined') throw new Error('Trying set undefined value');
     const uniLocation = this.gl.getUniformLocation(this.program, uniName);
     this.gl.uniform2fv(uniLocation, value);
   }
 
   setVec3Uniform(uniName, value) {
+    if (typeof value === 'undefined') throw new Error('Trying set undefined value');
     const uniLocation = this.gl.getUniformLocation(this.program, uniName);
     this.gl.uniform3fv(uniLocation, value);
   }

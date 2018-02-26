@@ -25,7 +25,7 @@ const fSource = `#version 300 es
 `;
 
 export default {
-  id: 'simpleStandardShader',
+  name: 'simpleStandardShader',
   vSource,
   fSource
 };

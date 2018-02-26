@@ -2,6 +2,7 @@ import uuid from 'uuid/v4';
 import objectManager from '../managers/objectManager';
 import modelManager from '../managers/modelManager';
 import Transform from './Transform';
+import rendererManager from "../managers/rendererManager";
 
 
 class GameObject {
@@ -15,7 +16,6 @@ class GameObject {
     this.transform = new Transform(this, opts.transform);
     this.modelName = null;
     this.model = null;
-    this.program = null;
     objectManager.add(this);
   }
 
@@ -32,10 +32,15 @@ class GameObject {
     this.children.forEach((obj) => {
       obj.init();
     });
+
     // models
-    this.model && this.model.init({
-      program: this.program
-    });
+    if (this.model) {
+      this.model.init({
+        program: this.renderer.program
+      });
+      rendererManager.add(this);
+    }
+
     // components
     this.components.forEach((component) => {
       component.init();
@@ -67,15 +72,6 @@ class GameObject {
     });
     this.components.forEach((component) => {
       component.update();
-    });
-  }
-
-  render() {
-    this.children.forEach((obj) => {
-      obj.render();
-    });
-    this.components.forEach((component) => {
-      component.render();
     });
   }
 

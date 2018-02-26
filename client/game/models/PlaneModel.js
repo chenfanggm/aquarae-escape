@@ -5,12 +5,12 @@ import resourceManager from '../managers/resourceManager';
 export default class PlaneModel extends Model {
   constructor(opts = {}) {
     super(opts);
-    const { width, height, widthSegments, heightSegments } = opts;
     this.name = 'plane';
+    const { width, height, widthSegments, heightSegments } = opts;
     this.width = width || 1;
     this.height = height || 1;
-    this.widthSegments = (widthSegments && Math.floor(widthSegments)) || 1;
-    this.heightSegments = (heightSegments && Math.floor(heightSegments)) || 1;
+    this.widthSegments = widthSegments && Math.floor(widthSegments) || 1;
+    this.heightSegments = heightSegments && Math.floor(heightSegments) || 1;
     this.mesh = this.generatePlane(this.width, this.height, this.widthSegments, this.heightSegments);
   }
   

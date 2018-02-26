@@ -1,7 +1,7 @@
 import timeManager from '../managers/timeManager';
 import shaderManager from '../managers/shaderManager';
 import GameObject from '../entities/GameObject';
-import MeshRenderer from '../components/MeshRenderer';
+import MeshRenderer from '../entities/MeshRenderer';
 
 
 class Susan extends GameObject {
@@ -9,8 +9,7 @@ class Susan extends GameObject {
     super(opts);
     this.name = 'susan';
     this.modelName = 'susan';
-    this.program = shaderManager.get('simpleDiffuseSpecularShader');
-    this.addComponent(new MeshRenderer(this, this.program));
+    this.renderer = new MeshRenderer(this, shaderManager.get('simpleDiffuseSpecularShader'));
   }
 
   init() {
@@ -24,7 +23,6 @@ class Susan extends GameObject {
     this.transform.rotate([0, 0, eulerAngleDiffY]);
     super.update();
   }
-
 }
 
 export default Susan;

@@ -5,7 +5,7 @@ import resourceManager from '../managers/resourceManager';
 export default class SusanModel extends Model {
   constructor(opts) {
     super(opts);
-    this.name = 'plane';
+    this.name = 'susan';
   }
   
   preload() {

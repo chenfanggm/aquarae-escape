@@ -1,7 +1,7 @@
 import timeManager from '../managers/timeManager';
 import shaderManager from '../managers/shaderManager';
 import GameObject from '../entities/GameObject';
-import MeshRenderer from '../components/MeshRenderer';
+import MeshRenderer from '../entities/MeshRenderer';
 
 
 class Tree extends GameObject {
@@ -9,8 +9,7 @@ class Tree extends GameObject {
     super(opts);
     this.name = 'tree';
     this.modelName = 'tree';
-    this.program = shaderManager.get('simpleDiffuseSpecularShader');
-    this.addComponent(new MeshRenderer(this, this.program));
+    this.renderer = new MeshRenderer(this, shaderManager.get('simpleDiffuseSpecularShader'));
   }
 
   init() {

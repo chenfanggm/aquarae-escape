@@ -29,7 +29,7 @@ const fSource = `#version 300 es
 `;
 
 export default {
-  id: 'bitmapFontShader',
+  name: 'bitmapFontShader',
   vSource,
   fSource
 };

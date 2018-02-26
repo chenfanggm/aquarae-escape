@@ -4,18 +4,17 @@ import inputManager from '../managers/inputManager';
 import sceneManager from '../managers/sceneManager';
 import objectManager from '../managers/objectManager';
 import shaderManager from '../managers/shaderManager';
-import resourceManager from '../managers/resourceManager';
+import rendererManager from '../managers/rendererManager';
+import cmdManager from '../managers/cmdManager';
 import socketService from '../services/socketService';
 import utils from './utils';
 import config from '../config';
-import cmdManager from "../managers/cmdManager";
 
 
 class Game {
   constructor({ gl, canvas }) {
     this.gl = gl;
     this.canvas = canvas;
-    this.clearColor = this.getClearColor('0xC3C3C3');
     this.logicTimePerUpdate = 1000 / config.game.logicFPS;
     this.frameTimePerUpdate = 1000 / config.game.renderFPS;
     this.prevTime = this.nowTime = 0;
@@ -62,6 +61,7 @@ class Game {
     this.setWindowSize(this.width, this.height);
     inputManager.init();
     sceneManager.init();
+    rendererManager.init();
 
     return Promise.all([
       socketService.init()
@@ -122,13 +122,7 @@ class Game {
   }
 
   render() {
-    this.gl.enable(this.gl.DEPTH_TEST);
-    this.gl.frontFace(this.gl.CCW);
-    this.gl.enable(this.gl.CULL_FACE);
-    this.gl.cullFace(this.gl.BACK);
-    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-    this.gl.clearColor(this.clearColor[0], this.clearColor[1], this.clearColor[2], 1.0);
-    sceneManager.getCurScene().render();
+    rendererManager.render();
   }
 
   reset() {
@@ -150,12 +144,6 @@ class Game {
     this.width = width;
     this.height = height;
     this.gl.viewport(0, 0, this.width, this.height);
-  }
-
-  getClearColor(colorHex = '0xFFFFFF', alpha = 1.0) {
-    const rgb = utils.hexToRGB(colorHex);
-    const rgba = [...rgb, alpha];
-    return [rgba[0] / 255, rgba[1] / 255, rgba[2] / 255];
   }
 
   getCurPlayer() {
