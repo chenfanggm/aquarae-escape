@@ -8,10 +8,13 @@ import utils from '../entities/utils';
 class AgentController extends GameComponent {
   constructor(owner) {
     super(owner);
+    this.receivedInput = { x: 0, y: 0 };
     this.originalPos = this.owner.transform.position;
     this.targetPos = this.originalPos;
     this.targetAnimationStart = timeManager.getTimeElapsed();
     this.isGround = false;
+    this.moveSpeed = 3;
+    this.rotationSpeed = 120;
     this.receivedUserCMDHandler = this.receivedUserCMDHandler.bind(this);
   }
 
@@ -22,12 +25,8 @@ class AgentController extends GameComponent {
   receivedUserCMDHandler(cmd) {
     switch (cmd.type) {
       case 'move':
-        this.originalPos = this.owner.transform.position;
-        this.targetPos = cmd.data.position;
-        const q = cmd.data.orientation;
-        this.owner.transform.rotation = q; // is a Quaternion
-        glm.mat4.fromQuat(this.owner.transform.rotationMatrix, q);
-        this.targetAnimationStart = timeManager.getTimeElapsed();
+        if (cmd.data.y !== undefined) this.receivedInput.y = cmd.data.y;
+        if (cmd.data.x !== undefined) this.receivedInput.x = cmd.data.x;
         break;
       default:
         break;
@@ -37,23 +36,29 @@ class AgentController extends GameComponent {
   update() {
     const deltaTime = timeManager.getDeltaTime();
     this.doRotate(deltaTime);
-    this.doMove();
+    this.doMove(deltaTime);
   }
 
-  doRotate(deltaTime) {}
+  doRotate(deltaTime) {
+    this.owner.transform.rotate([0, -this.receivedInput.x * this.rotationSpeed * deltaTime / 1000, 0]);
+  }
 
-  doMove() {
-    const diff = glm.vec3.create();
-    glm.vec3.subtract(diff, this.targetPos, this.owner.transform.position);
-    glm.vec3.normalize(diff, diff);
-    const animationCompletion = utils.getAnimationCompletion(this.targetAnimationStart);
-    const targetPos = glm.vec3.create();
-    const p0 = glm.vec3.create();
-    const p1 = glm.vec3.create();
-    glm.vec3.mul(p0, glm.vec3.fromValues(1.0 - animationCompletion, 1.0 - animationCompletion, 1.0 - animationCompletion), this.originalPos);
-    glm.vec3.mul(p1, glm.vec3.fromValues(animationCompletion, animationCompletion, animationCompletion), this.targetPos);
-    glm.vec3.add(targetPos, p0, p1);
-    this.owner.setPosition(targetPos);
+  doMove(deltaTime) {
+    const newPos = glm.vec3.create();
+    glm.vec3.scale(newPos, this.owner.transform.forward, this.receivedInput.y * this.moveSpeed * deltaTime / 1000);
+    glm.vec3.add(newPos, newPos, this.owner.transform.position);
+    this.owner.setPosition(newPos);
+
+    if(0) {
+      const animationCompletion = utils.getAnimationCompletion(this.targetAnimationStart);
+      const targetPos = glm.vec3.create();
+      const p0 = glm.vec3.create();
+      const p1 = glm.vec3.create();
+      glm.vec3.mul(p0, glm.vec3.fromValues(1.0 - animationCompletion, 1.0 - animationCompletion, 1.0 - animationCompletion), this.originalPos);
+      glm.vec3.mul(p1, glm.vec3.fromValues(animationCompletion, animationCompletion, animationCompletion), this.targetPos);
+      glm.vec3.add(targetPos, p0, p1);
+      this.owner.setPosition(targetPos);
+    }
   }
 }
 

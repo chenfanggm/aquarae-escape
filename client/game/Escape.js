@@ -39,7 +39,8 @@ class Escape extends Game {
         if (epoch === 0) {
           timeManager.startEpoch();
         } else {
-          throw new Error('[Error] Game not start with epoch time 0');
+          timeManager.startEpoch();
+          //throw new Error('[Error] Game not start with epoch time 0');
         }
         users.forEach((user) => {
           if (user.id === this.player.id) {

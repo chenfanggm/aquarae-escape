@@ -87,7 +87,7 @@ class MainScene extends Scene {
       transform: { position }
     });
     spawned.addComponent(new AgentController(spawned));
-    spawned.init();
+    spawned.spawn();
     this.addChild(spawned);
     console.log('[Player] One another player spawned!', spawned.id);
   }

@@ -12,18 +12,18 @@ class PlayerController extends GameComponent {
   constructor(owner) {
     super(owner);
     this.curDirectInput = this.lastDirectInput = { x: 0, y: 0 };
+    this.receivedInput = { x: 0, y: 0 };
     this.originalPos = this.owner.transform.position;
     this.tentativePos = this.owner.transform.position;
     this.targetPos = this.owner.transform.position;
     this.targetAnimationStart = timeManager.getTimeElapsed();
     this.isGround = true;
     this.moveSpeed = 3;
+    this.rotationSpeed = 120;
     this.jumpSpeed = 3;
     this.fallSpeed = 3;
-    this.rotationSpeed = 120;
     this.receivedUserCMDHandler = this.receivedUserCMDHandler.bind(this);
 
-    this.receivedInput = { x:0, y:0 };
   }
 
   init() {
