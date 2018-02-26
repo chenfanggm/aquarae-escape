@@ -3,12 +3,15 @@ import sceneManager from '../managers/sceneManager';
 
 
 class Scene {
-  constructor(id=uuid(), meta = {}) {
+  constructor(name) {
+    if (!name) throw new Error('Name is required for creating scene.');
+    this.name = name;
     this.gl = aquarae.gl;
-    this.meta = meta || {};
-    this.lights = [];
+    this.meta = {};
     this.children = [];
-    sceneManager.add(id, this);
+    this.lights = [];
+    this.cameras = {};
+    sceneManager.add(name, this);
   }
 
   preload() {
@@ -65,16 +68,32 @@ class Scene {
     this.children = [];
   }
 
+  setMeta(meta) {
+    this.meta = meta;
+  }
+
   addChild(obj) {
     this.children.push(obj);
   }
 
   addLight(light) {
     this.lights.push(light);
+    this.addChild(light);
   }
 
   getLights() {
     return this.lights;
+  }
+
+  addCamera(camera) {
+    if (this.cameras[camera.name]) throw new Error(`Camera with name [${camera.name}] already exist in scene [${this.name}]`);
+    this.cameras[camera.name] = camera;
+    this.addChild(camera);
+  }
+
+  getCamera(name) {
+    if (!this.cameras[name]) throw new Error(`Camera with name [${name}] not exist in scene [${this.name}]`);
+    return this.cameras[name];
   }
 
   remove(obj) {

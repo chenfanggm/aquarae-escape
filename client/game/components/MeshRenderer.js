@@ -2,7 +2,6 @@ import * as glm from '../libs/gl-matrix';
 import GameComponent from '../entities/GameComponent';
 import modelManager from '../managers/modelManager';
 import sceneManager from '../managers/sceneManager';
-import cameraManager from '../managers/cameraManager';
 import DirectLight from "../entities/DirectLight";
 
 
@@ -125,7 +124,7 @@ class MeshRenderer extends GameComponent {
     glm.mat4.identity(this.modelMatrix);
     glm.mat4.mul(this.modelMatrix, this.modelMatrix, this.owner.transform.getMatrix());
     // view
-    const mainCamera = cameraManager.getMainCamera();
+    const mainCamera = sceneManager.getCurScene().getCamera('mainCamera');
     glm.mat4.lookAt(this.viewMatrix, mainCamera.transform.position, [0, 0, 0], [0, 1, 0]);
     // projection
     glm.mat4.perspective(this.projMatrix, glm.glMatrix.toRadian(45), aquarae.canvas.width / aquarae.canvas.height, 0.1, 1000.0);
