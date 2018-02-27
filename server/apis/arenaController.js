@@ -10,8 +10,7 @@ module.exports = [{
     if (arenaService.getUser(userId)) throw new Error('Logged in as an existing user!');
 
     const user = new User({
-      id: userId,
-      position: [3, 0.5, 3]
+      id: userId
     });
     user.ws = ws;
     const room = arenaService.addUserToRoom(user);

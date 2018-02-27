@@ -4,6 +4,10 @@ class User {
     this.position = position;
     this.ws = null;
   }
+
+  setPosition(position) {
+    this.position = position;
+  }
 }
 
 export default User

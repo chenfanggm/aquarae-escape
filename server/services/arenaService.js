@@ -18,6 +18,24 @@ class ArenaService {
     this.wsToUser.set(user.ws, user);
     debug(`A new user logged in, total user: ${Object.values(this.users).length}`);
     const room = this.findNextAvailableRoom();
+    const curPlayerCount = Object.values(room.users).length;
+    switch (curPlayerCount) {
+      case 0:
+        user.setPosition([5, 0.5, 0]);
+        break;
+      case 1:
+        user.setPosition([0, 0.5, 5]);
+        break;
+      case 2:
+        user.setPosition([-5, 0.5, 0]);
+        break;
+      case 3:
+        user.setPosition([0, 0.5, -5]);
+        break;
+      case 4:
+        user.setPosition([0, 0.5, 0]);
+        break;
+    }
     room.addUser(user);
     user.room = room;
     this.rooms[room.id] = room;
