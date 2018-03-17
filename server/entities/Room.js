@@ -66,18 +66,26 @@ class Room {
     this.broadcastCMD(cmdCopy)
   }
 
-  broadcastCMD(receivedCmds) {
-    const broadcastCmds = {};
+  mergeCMD(receivedCmds) {
+    const mergedCmds = {};
     // filter last command of the same time
     receivedCmds.forEach((commands) => {
       for (let i = commands.length - 1; i >= 0; i--) {
         const cmd = commands[i];
         const hash = `${cmd.userId}-${cmd.type}`;
-        if (!broadcastCmds[hash]) {
-          broadcastCmds[hash] = cmd
+        if (!mergedCmds[hash]) {
+          mergedCmds[hash] = cmd
+        } else {
+          mergedCmds[hash].data = Object.assign(mergedCmds[hash].data,
+            receivedCmds.data);
         }
       }
     });
+    return mergedCmds;
+  }
+
+  broadcastCMD(receivedCmds) {
+    const broadcastCmds = this.mergeCMD(receivedCmds);
     const users = Object.values(this.users);
     const commands = Object.values(broadcastCmds);
     if (users.length > 0) {

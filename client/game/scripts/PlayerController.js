@@ -11,7 +11,8 @@ import utils from '../entities/utils';
 class PlayerController extends GameComponent {
   constructor(owner) {
     super(owner);
-    this.curDirectInput = this.lastDirectInput = { x: 0, y: 0 };
+    this.curDirectInput = { x: 0, y: 0 };
+    this.lastDirectInput = { x: 0, y: 0 };
     this.receivedInput = { x: 0, y: 0 };
     this.originalPos = this.owner.transform.position;
     this.tentativePos = this.owner.transform.position;
@@ -42,7 +43,6 @@ class PlayerController extends GameComponent {
   }
 
   input() {
-    this.lastDirectInput = {...this.curDirectInput};
     this.curDirectInput.x = inputManager.getAxis('Horizontal');
     this.curDirectInput.y = inputManager.getAxis('Vertical');
     this.curDirectInput.up = inputManager.getKey(KeyCode.KEY_SPACE) ? 1 : 0;
@@ -53,13 +53,14 @@ class PlayerController extends GameComponent {
     const movePayload = {};
     if (this.curDirectInput.x !== this.lastDirectInput.x) {
       isDirty = true;
-      movePayload.x = this.curDirectInput.x;
+      movePayload.x          = this.curDirectInput.x;
     }
 
     if (this.curDirectInput.y !== this.lastDirectInput.y) {
       isDirty = true;
-      movePayload.y = this.curDirectInput.y;
+      movePayload.y          = this.curDirectInput.y;
     }
+
 
     if (isDirty) {
       socketService.enqueueCmd({
@@ -69,6 +70,10 @@ class PlayerController extends GameComponent {
         curEpochOffset: timeManager.getCurEpochOffset()
       });
     }
+
+
+    this.lastDirectInput.x = this.curDirectInput.x;
+    this.lastDirectInput.y = this.curDirectInput.y;
   }
 
   update() {

@@ -24,6 +24,8 @@ class SocketService {
       const cmd = this.outCommandBuffer[i];
       if (!uniqueCmds[cmd.type]) {
         uniqueCmds[cmd.type] = cmd;
+      } else {
+        uniqueCmds[cmd.type].data = Object.assign(uniqueCmds[cmd.type].data, cmd.data);
       }
     }
     this.sendCMD(Object.values(uniqueCmds));
