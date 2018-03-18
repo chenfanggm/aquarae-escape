@@ -9,11 +9,11 @@ class Room {
     this.id = uuid();
     this.users = {};
     this.receivedCmds = [];
+    this.flushedCmds = [];
     this.broadcastLoop = null;
     this.USER_PER_ROOM = config.userPerRoom;
     this.BROADCAST_LOOP_INTERVAL = config.SERVER_BROADCAST_INTERVAL;
     this.curEpoch = 0;
-
     this.flushCMDBuffer = this.flushCMDBuffer.bind(this)
   }
 
@@ -34,7 +34,7 @@ class Room {
       type: 'spawn',
       userId: user.id,
       data: {
-        position: user.position
+        position: user.position,
       }
     };
     this.enqueueCMD([cmd]);
@@ -63,6 +63,7 @@ class Room {
     const cmdCopy = this.receivedCmds;
     this.receivedCmds = [];
     this.curEpoch++;
+    console.log(cmdCopy);
     this.broadcastCMD(cmdCopy)
   }
 
@@ -93,11 +94,13 @@ class Room {
       //debug('Commands:', commands);
       users.forEach((user) => {
         if (user.ws && user.ws.readyState === user.ws.OPEN) {
-          user.ws.send(JSON.stringify({
+          const userBroadcastCmd = {
             type: 'cmd',
             data: commands,
             epoch: this.curEpoch
-          }))
+          };
+          user.ws.send(JSON.stringify(userBroadcastCmd));
+          this.flushedCmds.push(userBroadcastCmd);
         } else {
           this.removeUser(user.id)
         }

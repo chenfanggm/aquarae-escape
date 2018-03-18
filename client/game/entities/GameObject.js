@@ -66,12 +66,12 @@ class GameObject {
     });
   }
 
-  update() {
+  update(deltaTime) {
     this.children.forEach((obj) => {
-      obj.update();
+      obj.update(deltaTime);
     });
     this.components.forEach((component) => {
-      component.update();
+      component.update(deltaTime);
     });
   }
 
@@ -93,7 +93,7 @@ class GameObject {
   }
 
   spawn() {
-    this.preload()
+    return this.preload()
       .then(() => {
         this.init();
       });

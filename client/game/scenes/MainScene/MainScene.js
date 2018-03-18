@@ -76,9 +76,11 @@ class MainScene extends Scene {
       transform: { position }
     });
     player.addComponent(new PlayerController(player));
-    player.spawn();
-    this.addChild(player);
-    console.log('[Player] Spawned!', player.id);
+    return player.spawn()
+      .then(() => {
+        this.addChild(player);
+        console.log('[Player] Spawned!', player.id);
+      });
   }
 
   spawnOtherPlayer({ id, position }) {
@@ -87,9 +89,11 @@ class MainScene extends Scene {
       transform: { position }
     });
     spawned.addComponent(new AgentController(spawned));
-    spawned.spawn();
-    this.addChild(spawned);
-    console.log('[Player] One another player spawned!', spawned.id);
+    return spawned.spawn()
+      .then(() => {
+        this.addChild(spawned);
+        console.log('[Player] One another player spawned!', spawned.id);
+      });
   }
 }
 

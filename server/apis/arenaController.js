@@ -25,6 +25,7 @@ module.exports = [{
       id: apiMeta.id,
       data: {
         users,
+        flushedCmds: room.flushedCmds,
         epoch: room.curEpoch
       }
     }))

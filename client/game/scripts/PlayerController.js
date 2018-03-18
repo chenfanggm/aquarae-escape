@@ -53,12 +53,12 @@ class PlayerController extends GameComponent {
     const movePayload = {};
     if (this.curDirectInput.x !== this.lastDirectInput.x) {
       isDirty = true;
-      movePayload.x          = this.curDirectInput.x;
+      movePayload.x = this.curDirectInput.x;
     }
 
     if (this.curDirectInput.y !== this.lastDirectInput.y) {
       isDirty = true;
-      movePayload.y          = this.curDirectInput.y;
+      movePayload.y = this.curDirectInput.y;
     }
 
 
@@ -76,9 +76,7 @@ class PlayerController extends GameComponent {
     this.lastDirectInput.y = this.curDirectInput.y;
   }
 
-  update() {
-    if (timeManager.getCurEpochOffset() >= 100) return;
-    const deltaTime = timeManager.getDeltaTime();
+  update(deltaTime) {
     this.doRotate(deltaTime);
     this.doMove(deltaTime);
   }

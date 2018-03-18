@@ -25,6 +25,7 @@ class AgentController extends GameComponent {
   receivedUserCMDHandler(cmd) {
     switch (cmd.type) {
       case 'move':
+        console.log('agent received cmd', cmd);
         if (cmd.data.y !== undefined) this.receivedInput.y = cmd.data.y;
         if (cmd.data.x !== undefined) this.receivedInput.x = cmd.data.x;
         break;
@@ -33,10 +34,10 @@ class AgentController extends GameComponent {
     }
   }
 
-  update() {
-    const deltaTime = timeManager.getDeltaTime();
+  update(deltaTime) {
     this.doRotate(deltaTime);
     this.doMove(deltaTime);
+    console.log("pos = " + this.owner.transform.position);
   }
 
   doRotate(deltaTime) {

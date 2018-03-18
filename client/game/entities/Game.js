@@ -7,7 +7,6 @@ import shaderManager from '../managers/shaderManager';
 import rendererManager from '../managers/rendererManager';
 import cmdManager from '../managers/cmdManager';
 import socketService from '../services/socketService';
-import utils from './utils';
 import config from '../config';
 
 
@@ -15,7 +14,7 @@ class Game {
   constructor({ gl, canvas }) {
     this.gl = gl;
     this.canvas = canvas;
-    this.logicTimePerUpdate = 1000 / config.game.logicFPS;
+    this.logicTimePerEpoch = 1000 / config.game.logicFPS;
     this.frameTimePerUpdate = 1000 / config.game.renderFPS;
     this.prevTime = this.nowTime = 0;
     this.runningLoop = null;
@@ -38,6 +37,7 @@ class Game {
         return this.init();
       })
       .then(() => {
+        cmdManager.preCatchProcess();
         this.loop();
       });
   }
@@ -79,7 +79,7 @@ class Game {
 
   logicLoop(timestamp) {
     timeManager.setNowTime(timestamp);
-    if (timeManager.getLogicDeltaTime() > this.logicTimePerUpdate) {
+    if (timeManager.getLogicDeltaTime() > this.logicTimePerEpoch) {
       this.sync();
       timeManager.updateLogicTimer(timestamp);
     }
@@ -92,7 +92,7 @@ class Game {
       this.input();
       this.enqueue();
       this.processServerCMD();
-      this.update();
+      this.update(timeManager.getDeltaTime());
       this.render();
       timeManager.updateTimer(timestamp);
     }
@@ -117,8 +117,9 @@ class Game {
     cmdManager.process();
   }
 
-  update() {
-    sceneManager.getCurScene().update();
+  update(deltaTime) {
+    console.log('scene', sceneManager.getCurScene())
+    sceneManager.getCurScene().update(deltaTime);
   }
 
   render() {

@@ -11,6 +11,7 @@ import simpleDiffuseShader from './shaders/simpleDiffuseShader';
 import simpleStandardShader from './shaders/simpleStaticShader';
 import bitmapFontShader from './shaders/bitmapFontShader';
 import simpleDiffuseSpeculateShader from './shaders/simpleDiffuseSpecularShader';
+import cmdManager from "./managers/cmdManager";
 
 
 class Escape extends Game {
@@ -34,21 +35,32 @@ class Escape extends Game {
       .then(() => {
         return loginUser(this.player);
       })
-      .then(({users, epoch}) => {
+      .then(({users, flushedCmds, epoch}) => {
         const scene = sceneManager.getCurScene();
-        if (epoch === 0) {
-          timeManager.startEpoch();
-        } else {
-          timeManager.startEpoch();
-          //throw new Error('[Error] Game not start with epoch time 0');
-        }
-        users.forEach((user) => {
-          if (user.id === this.player.id) {
-            scene.spawnPlayer(user);
-          } else {
-            scene.spawnOtherPlayer(user);
+        const newEnqueueCmds = [];
+        flushedCmds.forEach((cmdBundle) => {
+          if (cmdBundle.data.length > 0) {
+            cmdBundle.data.forEach((cmd) => {
+              if (cmd.type === 'spawn') return;
+              cmd.epoch = cmdBundle.epoch;
+              newEnqueueCmds.push(cmd);
+            })
           }
         });
+        cmdManager.setCmdQueue(newEnqueueCmds);
+        const spawnPromises = [];
+        users.forEach((user) => {
+          if (user.id === this.player.id) {
+            spawnPromises.push(scene.spawnPlayer(user));
+          } else {
+            spawnPromises.push(scene.spawnOtherPlayer(user));
+          }
+        });
+        return Promise.all(spawnPromises)
+          .then(() => {
+            timeManager.startEpoch();
+            timeManager.setCurEpoch(epoch);
+          });
       });
   }
 }

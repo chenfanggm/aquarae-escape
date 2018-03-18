@@ -64,10 +64,11 @@ class Scene {
     });
   }
 
-  update() {
+  update(deltaTime) {
     this.children.forEach((obj) => {
       if (obj.isReady) {
-        obj.update();
+        console.log('update here', obj);
+        obj.update(deltaTime);
       }
     });
   }

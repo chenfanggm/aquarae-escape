@@ -1,3 +1,6 @@
+import config from '../config';
+
+
 class TimeManager {
   constructor() {
     this.prevTime = 0;
@@ -5,6 +8,8 @@ class TimeManager {
     this.nowTime = 0;
     this.lastEpoch = this.curEpoch = -1;
     this.epochStartTime = -1;
+    this.logicTimePerEpoch = 1000 / config.game.logicFPS;
+    this.frameTimePerUpdate = 1000 / config.game.renderFPS;
   }
 
   reset() {
@@ -55,7 +60,7 @@ class TimeManager {
 
   getCurEpochOffset() {
     let curEpochOffset = Date.now() - timeManager.epochStartTime;
-    if (this.curEpochOffset > 100) this.curEpochOffset = 100;
+    if (this.curEpochOffset > this.logicTimePerEpoch) this.curEpochOffset = this.logicTimePerEpoch;
     return curEpochOffset;
   }
 
